@@ -1,0 +1,10 @@
+.vs/
+packages/
+
+*.suo
+*.user
+_ReSharper.*
+
+
+Musify/bin/
+Musify/obj/

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Musify (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Musify (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
