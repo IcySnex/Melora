@@ -13,8 +13,8 @@ public class AppStartupHandler
         navigation.SetCurrentIndex(0);
         navigation.Navigate("Home");
 
-        mainView.SetSize(1100, 600);
-        mainView.SetMinSize(540, 550);
+        mainView.SetSize(1100, 550);
+        mainView.SetMinSize(670, 550);
         mainView.SetIcon("icon.ico");
         mainView.Activate();
 

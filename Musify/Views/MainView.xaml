@@ -92,17 +92,16 @@
                 <NavigationViewItem Content="Home" Icon="Home" />
                 <NavigationViewItem Content="Settings" Icon="Setting" />
 
-                <NavigationViewItemHeader Content="Search" />
+                <NavigationViewItemHeader Content="Search" Opacity="0.7" />
 
                 <NavigationViewItem Content="Spotify" Icon="Audio" />
                 <NavigationViewItem Content="YouTube" Icon="Video" />
                 <NavigationViewItem Content="Lyrics" Icon="List" />
 
-                <NavigationViewItemHeader Content="Local" />
+                <NavigationViewItemHeader Content="Local" Opacity="0.7" />
 
                 <NavigationViewItem Content="Download" Icon="Download" />
                 <NavigationViewItem Content="Library" Icon="Library" />
-                <NavigationViewItem Content="FFMPEG" Icon="Admin" />
 
                 <!--<NavigationViewItemHeader Content="Syncing" />
 
