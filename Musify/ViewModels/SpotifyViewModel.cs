@@ -2,9 +2,12 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.UI.Xaml.Controls;
+using Musify.Enums;
 using Musify.Helpers;
 using Musify.Models;
 using Musify.Views;
+using System.Diagnostics;
 
 namespace Musify.ViewModels;
 
@@ -24,21 +27,13 @@ public partial class SpotifyViewModel : ObservableObject
         this.mainView = mainView;
         this.Config = config.Value;
 
-        SelectedTracks.CollectionChanged += (s, e) => OnPropertyChanged(nameof(IsDownloadBarVisible));
-
         GenerateRandomTracks(50);
+
+        SearchSorting = Config.Spotify.SearchSorting;
 
         logger.LogInformation("[SpotifyViewModel-.ctor] SpotifyViewModel has been initialized");
 
     }
-
-
-    public ObservableRangeCollection<Track> Tracks { get; } = [];
-
-    public ObservableRangeCollection<Track> SelectedTracks { get; } = [];
-
-
-    public bool IsDownloadBarVisible => SelectedTracks.Count > 0;
 
 
     readonly Random random = new();
@@ -64,6 +59,55 @@ public partial class SpotifyViewModel : ObservableObject
     }
 
 
+    public ObservableSortableRangeCollection<Track> Tracks { get; } = [];
+
+    public IList<object>? SelectedTracks { get; set; }
+
+    public bool CanDownloadTracks => SelectedTracks is not null && SelectedTracks.Count > 0;
+
+    public void OnTracksSelectionChanged(object _, SelectionChangedEventArgs _1) =>
+        OnPropertyChanged(nameof(CanDownloadTracks));
+
+
+    [ObservableProperty]
+    Sorting searchSorting;
+
+    partial void OnSearchSortingChanged(
+        Sorting value)
+    {
+        Config.Spotify.SearchSorting = value;
+        switch (value)
+        {
+            case Sorting.Default:
+                Tracks.OrderbyDefault();
+                break;
+            case Sorting.DefaultInv:
+                Tracks.OrderbyDefault(true);
+                break;
+            case Sorting.Title:
+                Tracks.OrderBy(track => track.Title);
+                break;
+            case Sorting.TitleInv:
+                Tracks.OrderBy(track => track.Title, true);
+                break;
+            case Sorting.Artist:
+                Tracks.OrderBy(track => track.Artist);
+                break;
+            case Sorting.ArtistInv:
+                Tracks.OrderBy(track => track.Artist, true);
+                break;
+            case Sorting.Duration:
+                Tracks.OrderBy(track => track.Duration);
+                break;
+            case Sorting.DurationInv:
+                Tracks.OrderBy(track => track.Duration, true);
+                break;
+        }
+
+        logger.LogInformation("[SpotifyViewModel-OnSearchSortingChanged] Resorted searched tracks: {sorting}", value);
+    }
+
+
     [RelayCommand]
     async Task SearchAsync(
         string query)
@@ -78,17 +122,16 @@ public partial class SpotifyViewModel : ObservableObject
         logger.LogInformation("[SpotifyViewModel-SearchAsync] Searched for query on Spotify: {query}", query);
     }
 
-
     [RelayCommand]
     async Task DownloadAsync()
     {
-        if (SelectedTracks.Count < 1)
+        if (!CanDownloadTracks)
         {
             await mainView.AlertAsync("Please select at least one track to start downloading.", "Something went wrong.");
             return;
         }
 
         await Task.Delay(1000);
-        logger.LogInformation("[SpotifyViewModel-DownloadAsync] Moved selected tracks to download queue: {count}", SelectedTracks.Count);
+        logger.LogInformation("[SpotifyViewModel-DownloadAsync] Moved selected tracks to download queue");
     }
 }

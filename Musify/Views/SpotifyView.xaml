@@ -14,10 +14,11 @@
         <!--  Track Container  -->
         <ScrollViewer>
             <ListView
-                Margin="{x:Bind viewModel.IsDownloadBarVisible, Mode=OneWay, Converter={StaticResource IsDownloadBarVisibleMarginConverter}}"
+                Name="TracksContainer"
+                Margin="{x:Bind viewModel.CanDownloadTracks, Mode=OneWay, Converter={StaticResource CanDownloadTracksMarginConverter}}"
                 ItemTemplate="{StaticResource SearchResultTemplate}"
                 ItemsSource="{x:Bind viewModel.Tracks}"
-                SelectionChanged="OnTracksSelectionChanged"
+                SelectionChanged="{x:Bind viewModel.OnTracksSelectionChanged}"
                 SelectionMode="Extended" />
         </ScrollViewer>
 
@@ -56,7 +57,7 @@
             <ComboBox
                 Grid.Column="4"
                 Width="120"
-                SelectedIndex="{x:Bind viewModel.Config.Spotify.SearchSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                SelectedIndex="{x:Bind viewModel.SearchSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
                 <ComboBoxItem Content="🠋 Default" />
                 <ComboBoxItem Content="🠉 Default" />
                 <ComboBoxItem Content="🠋 Title" />
@@ -75,8 +76,8 @@
             VerticalAlignment="Bottom"
             Background="{ThemeResource CardBackgroundAcrylicBrush}"
             CornerRadius="8"
-            IsHitTestVisible="{x:Bind viewModel.IsDownloadBarVisible, Mode=OneWay}"
-            Opacity="{x:Bind viewModel.IsDownloadBarVisible, Mode=OneWay, Converter={StaticResource BoolDoubleConverter}}">
+            IsHitTestVisible="{x:Bind viewModel.CanDownloadTracks, Mode=OneWay}"
+            Opacity="{x:Bind viewModel.CanDownloadTracks, Mode=OneWay, Converter={StaticResource BoolDoubleConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="4" />
