@@ -35,8 +35,12 @@ public partial class App : Application
             {
                 // Configuration
                 services.Configure<Config>(context.Configuration);
-                Config config = context.Configuration.Get<Config>() ?? new();
+                //Config config = context.Configuration.Get<Config>() ?? new();
 
+                // Add services
+                services.AddSingleton<AppStartupHandler>();
+                services.AddSingleton<Navigation>();
+                services.AddSingleton<JsonConverter>();
 
                 // Add ViewModels and MainView
                 services.AddSingleton<HomeViewModel>();
@@ -44,9 +48,6 @@ public partial class App : Application
 
                 services.AddSingleton<MainView>();
 
-                // Add services
-                services.AddSingleton<AppStartupHandler>();
-                services.AddSingleton<Navigation>();
             })
             .Build();
         Provider = host.Services;

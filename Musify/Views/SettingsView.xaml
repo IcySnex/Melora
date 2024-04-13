@@ -4,11 +4,280 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hlp="using:Musify.Helpers"
     xmlns:local="using:Musify.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
-        <TextBlock Text="Settings" />
-    </Grid>
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="8">
+            <!--  Spotify  -->
+            <ContentControl
+                hlp:Attributes.Description="Quality, Format, Save Lyrics..."
+                hlp:Attributes.Glyph="&#xE8D6;"
+                hlp:Attributes.Title="Spotify"
+                Template="{StaticResource SettingsExpander}">
+                <StackPanel Spacing="8">
+                    <!--  Quality  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The quality in which tracks get downloaded in"
+                        hlp:Attributes.Title="Quality"
+                        Template="{StaticResource SettingsCard}">
+                        <ComboBox Width="110" SelectedIndex="{x:Bind viewModel.Config.Spotify.Quality, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                            <ComboBoxItem Content="32 kbps" />
+                            <ComboBoxItem Content="64 kbps" />
+                            <ComboBoxItem Content="128 kbps" />
+                            <ComboBoxItem Content="160 kbps" />
+                            <ComboBoxItem Content="256 kbps" />
+                            <ComboBoxItem Content="320 kbps" />
+                        </ComboBox>
+                    </ContentControl>
+
+                    <!--  Format  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The audio format tracks get converted to"
+                        hlp:Attributes.Title="Format"
+                        Template="{StaticResource SettingsCard}">
+                        <ComboBox Width="90" SelectedIndex="{x:Bind viewModel.Config.Spotify.Format, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                            <ComboBoxItem Content="mp3" />
+                            <ComboBoxItem Content="wav" />
+                            <ComboBoxItem Content="m4a" />
+                            <ComboBoxItem Content="ogg" />
+                            <ComboBoxItem Content="flac" />
+                            <ComboBoxItem Content="webm" />
+                        </ComboBox>
+                    </ContentControl>
+
+                    <!--  Save Lyrics  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Whether to search &amp; save lyrics from genius.com automatically"
+                        hlp:Attributes.Title="Save Lyrics"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.Spotify.SaveLyrics, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  Save Artwork  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Whether to download &amp; save the artwork"
+                        hlp:Attributes.Title="Save Artwork"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.Spotify.SaveArtwork, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  Search Sorting  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The sorting of the search results"
+                        hlp:Attributes.Title="Search Sorting"
+                        Template="{StaticResource SettingsCard}">
+                        <ComboBox Width="120" SelectedIndex="{x:Bind viewModel.Config.Spotify.SearchSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                            <ComboBoxItem Content="🠋 Default" />
+                            <ComboBoxItem Content="🠉 Default" />
+                            <ComboBoxItem Content="🠋 Title" />
+                            <ComboBoxItem Content="🠉 Title" />
+                            <ComboBoxItem Content="🠋 Artist" />
+                            <ComboBoxItem Content="🠉 Artist" />
+                            <ComboBoxItem Content="🠋 Duration" />
+                            <ComboBoxItem Content="🠉 Duration" />
+                        </ComboBox>
+                    </ContentControl>
+                </StackPanel>
+            </ContentControl>
+
+            <!--  YouTube  -->
+            <ContentControl
+                hlp:Attributes.Description="Quality, Format, Save Description..."
+                hlp:Attributes.Glyph="&#xE714;"
+                hlp:Attributes.Title="Spotify"
+                Template="{StaticResource SettingsExpander}">
+                <StackPanel Spacing="8">
+                    <!--  Quality  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The quality in which videos get downloaded in"
+                        hlp:Attributes.Title="Quality"
+                        Template="{StaticResource SettingsCard}">
+                        <ComboBox Width="110" SelectedIndex="{x:Bind viewModel.Config.YouTube.Quality, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                            <ComboBoxItem Content="32 kbps" />
+                            <ComboBoxItem Content="64 kbps" />
+                            <ComboBoxItem Content="128 kbps" />
+                            <ComboBoxItem Content="160 kbps" />
+                            <ComboBoxItem Content="256 kbps" />
+                            <ComboBoxItem Content="320 kbps" />
+                        </ComboBox>
+                    </ContentControl>
+
+                    <!--  Format  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The audio format videos get converted to"
+                        hlp:Attributes.Title="Format"
+                        Template="{StaticResource SettingsCard}">
+                        <ComboBox Width="90" SelectedIndex="{x:Bind viewModel.Config.YouTube.Format, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                            <ComboBoxItem Content="mp3" />
+                            <ComboBoxItem Content="wav" />
+                            <ComboBoxItem Content="m4a" />
+                            <ComboBoxItem Content="ogg" />
+                            <ComboBoxItem Content="flac" />
+                            <ComboBoxItem Content="webm" />
+                        </ComboBox>
+                    </ContentControl>
+
+                    <!--  Save Description  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Whether to save video description"
+                        hlp:Attributes.Title="Save Description"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.YouTube.SaveDescription, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  Save Thumbnail  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Whether to download &amp; save the thumbnail"
+                        hlp:Attributes.Title="Save Thumbnail"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.YouTube.SaveThumbnail, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  Search Sorting  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The sorting of the search results"
+                        hlp:Attributes.Title="Search Sorting"
+                        Template="{StaticResource SettingsCard}">
+                        <ComboBox Width="120" SelectedIndex="{x:Bind viewModel.Config.YouTube.SearchSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                            <ComboBoxItem Content="🠋 Default" />
+                            <ComboBoxItem Content="🠉 Default" />
+                            <ComboBoxItem Content="🠋 Title" />
+                            <ComboBoxItem Content="🠉 Title" />
+                            <ComboBoxItem Content="🠋 Artist" />
+                            <ComboBoxItem Content="🠉 Artist" />
+                            <ComboBoxItem Content="🠋 Duration" />
+                            <ComboBoxItem Content="🠉 Duration" />
+                        </ComboBox>
+                    </ContentControl>
+                </StackPanel>
+            </ContentControl>
+
+            <!--  Downloads  -->
+            <ContentControl
+                hlp:Attributes.Description="Already exists behavior, Write current DateTime as release..."
+                hlp:Attributes.Glyph="&#xe896;"
+                hlp:Attributes.Title="Downloads"
+                Template="{StaticResource SettingsExpander}">
+                <StackPanel Spacing="8">
+                    <!--  Already exists behavior  -->
+                    <ContentControl
+                        hlp:Attributes.Description="What happens when trying to download a track which already exists"
+                        hlp:Attributes.Title="Already exists behavior"
+                        Template="{StaticResource SettingsCard}">
+                        <ComboBox Width="160" SelectedIndex="{x:Bind viewModel.Config.Downloads.AlreadyExistsBehavior, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                            <ComboBoxItem Content="Ask each time" />
+                            <ComboBoxItem Content="Skip track" />
+                            <ComboBoxItem Content="Overwrite track" />
+                        </ComboBox>
+                    </ContentControl>
+
+                    <!--  Write current DateTime as release  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Whether to save the current DateTime as the release"
+                        hlp:Attributes.Title="Write current DateTime as release"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.Downloads.WriteCurrentDateTimeAsRelease, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  Show Spotify tracks  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Whether to show Spotify tracks in the download queue"
+                        hlp:Attributes.Title="Show Spotify tracks"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.Downloads.ShowSpotifyTracks, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  Show YouTube tracks  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Whether to show YouTube tracks in the download queue"
+                        hlp:Attributes.Title="Show YouTube tracks"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.Downloads.ShowYouTubeTracks, Mode=TwoWay}" />
+                    </ContentControl>
+                </StackPanel>
+            </ContentControl>
+
+            <!--  Paths  -->
+            <ContentControl
+                hlp:Attributes.Description="Download location, Filename, FFMPEG location..."
+                hlp:Attributes.Glyph="&#xf12b;"
+                hlp:Attributes.Title="Paths"
+                Template="{StaticResource SettingsExpander}">
+                <StackPanel Spacing="8">
+                    <!--  Download location  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The location to which all tracks get downloaded to"
+                        hlp:Attributes.Title="Download location"
+                        Template="{StaticResource SettingsCard}">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <TextBox Width="350" Text="{x:Bind viewModel.PathsDownloadLocation, Mode=TwoWay}" />
+                            <Button
+                                Width="32"
+                                Height="32"
+                                Padding="0"
+                                Command="{x:Bind viewModel.SelectPathsDownloadLocationCommand}">
+                                <FontIcon Glyph="&#xe8a7;" />
+                            </Button>
+                        </StackPanel>
+                    </ContentControl>
+
+                    <!--  Filename  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Replacements: {title}, {artist}, {album}, {release} - Use '\' to create a Folder"
+                        hlp:Attributes.Title="Filename"
+                        Template="{StaticResource SettingsCard}">
+                        <TextBox Width="200" Text="{x:Bind viewModel.Config.Paths.Filename, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  FFMPEG location  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The location to the FFMPEG executable"
+                        hlp:Attributes.Title="FFMPEG location"
+                        Template="{StaticResource SettingsCard}">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <TextBox Width="350" Text="{x:Bind viewModel.PathsFFMPEGLocation, Mode=TwoWay}" />
+                            <Button
+                                Width="32"
+                                Height="32"
+                                Padding="0"
+                                Command="{x:Bind viewModel.SelectPathsFFMPEGLocationCommand}">
+                                <FontIcon Glyph="&#xe8a7;" />
+                            </Button>
+                        </StackPanel>
+                    </ContentControl>
+                </StackPanel>
+            </ContentControl>
+
+            <!--  Advanced  -->
+            <ContentControl
+                hlp:Attributes.Description="Spotify-YouTube search algorithm, Spotify search market..."
+                hlp:Attributes.Glyph="&#xec7a;"
+                hlp:Attributes.Title="Advanced"
+                Template="{StaticResource SettingsExpander}">
+                <StackPanel Spacing="8">
+                    <!--  Spotify-YouTube search algorithm  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Query which is used to get videos from YouTube to download - Replacements: {title}, {artist}"
+                        hlp:Attributes.Title="Spotify-YouTube search algorithm"
+                        Template="{StaticResource SettingsCard}">
+                        <TextBox Width="200" Text="{x:Bind viewModel.Config.Advanced.SpotifyYouTubeSearchAlgorithm, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  Spotify search market  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Region code for the Spotify search market - wikipedia.org/wiki/ISO_3166-1_alpha-2"
+                        hlp:Attributes.Title="Spotify search market"
+                        Template="{StaticResource SettingsCard}">
+                        <TextBox
+                            Width="80"
+                            MaxLength="2"
+                            Text="{x:Bind viewModel.Config.Advanced.SpotifySearchMarket, Mode=TwoWay}" />
+                    </ContentControl>
+                </StackPanel>
+            </ContentControl>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

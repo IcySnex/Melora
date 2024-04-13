@@ -8,6 +8,7 @@
     xmlns:local="using:Musify.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Musify"
+    Closed="OnClosed"
     mc:Ignorable="d">
 
     <Grid Name="MainGrid" x:FieldModifier="public">

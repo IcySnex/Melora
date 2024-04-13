@@ -10,12 +10,17 @@ using Microsoft.UI.Xaml.Media;
 using Musify.Helpers;
 using Windows.Foundation;
 using WinRT.Interop;
+using Microsoft.Extensions.Options;
+using Musify.Models;
+using Musify.Services;
 
 namespace Musify.Views;
 
 public sealed partial class MainView : Window
 {
     readonly ILogger<MainView> logger;
+    readonly Config config;
+    readonly JsonConverter jsonConverter;
 
     readonly IntPtr hWnd;
     readonly WindowId id;
@@ -24,9 +29,13 @@ public sealed partial class MainView : Window
 
 
     public MainView(
-        ILogger<MainView> logger)
+        ILogger<MainView> logger,
+        IOptions<Config> config,
+        JsonConverter jsonConverter)
     {
         this.logger = logger;
+        this.config = config.Value;
+        this.jsonConverter = jsonConverter;
 
         hWnd = WindowNative.GetWindowHandle(this);
         id = Win32Interop.GetWindowIdFromWindow(hWnd);
@@ -40,6 +49,15 @@ public sealed partial class MainView : Window
         InitializeComponent();
 
         logger.LogInformation("MainView has been created and intialized");
+    }
+
+
+    void OnClosed(object _, WindowEventArgs _1)
+    {
+        string jsonConfig = jsonConverter.ToString(config);
+        File.WriteAllText("config.json", jsonConfig);
+
+        logger.LogInformation("[MainView-Closed] Closed main window.");
     }
 
 
@@ -106,5 +124,14 @@ public sealed partial class MainView : Window
             PrimaryButtonText = primaryButton
         };
         return AlertAsync(dialog);
+    }
+
+
+    public void Initialize(
+        object target)
+    {
+        InitializeWithWindow.Initialize(target, hWnd);
+
+        logger.LogInformation("[MainView-Initialize] Target was initialized with window");
     }
 }
