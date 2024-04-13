@@ -109,10 +109,7 @@
                 <NavigationViewItem Content="Android" Icon="CellPhone" />-->
             </NavigationView.MenuItems>
 
-            <Frame
-                Name="ContentFrame"
-                Margin="24"
-                x:FieldModifier="public" />
+            <Frame Name="ContentFrame" x:FieldModifier="public" />
         </NavigationView>
     </Grid>
 </Window>

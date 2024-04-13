@@ -8,7 +8,122 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
-        <TextBlock Text="Home" />
-    </Grid>
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="4">
+            <!--  Search Banner  -->
+            <Grid Height="210" Margin="0,45,0,0">
+                <Rectangle RadiusX="8" RadiusY="8">
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Offset="0" Color="{ThemeResource AccentFillColorDisabled}" />
+                            <GradientStop Offset="0.9" Color="#007a7a7a" />
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+
+                <StackPanel Margin="0,-45,0,0" Spacing="12">
+                    <Image
+                        Width="90"
+                        Height="90"
+                        HorizontalAlignment="Center"
+                        Source="/icon.ico" />
+
+                    <TextBox
+                        Height="32"
+                        Margin="108,0"
+                        PlaceholderText="Search for a track..." />
+
+                    <TextBlock HorizontalAlignment="Center" Text="Search for" />
+                    <StackPanel
+                        Margin="0,-8,0,0"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        Spacing="4">
+                        <Button Content="Spotify" ToolTipService.ToolTip="Search for Spotify track" />
+                        <Button Content="YouTube" ToolTipService.ToolTip="Search for YouTube video" />
+                        <Button Content="Lyrics" ToolTipService.ToolTip="Search for lyrics" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+
+            <!--  Support Development  -->
+            <TextBlock Style="{StaticResource FlyoutPickerTitleTextBlockStyle}" Text="Support Development" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button
+                    Grid.Column="0"
+                    Height="70"
+                    HorizontalAlignment="Stretch"
+                    Command="{x:Bind viewModel.OpenBrowserCommand}"
+                    CommandParameter="https://github.com/IcySnex/Musify"
+                    ToolTipService.ToolTip="Open GitHub page">
+                    <StackPanel Spacing="8">
+                        <FontIcon Glyph="&#xE943;" />
+                        <TextBlock Text="GitHub" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    Grid.Column="2"
+                    Height="70"
+                    HorizontalAlignment="Stretch"
+                    Command="{x:Bind viewModel.CopyToClipboardCommand}"
+                    CommandParameter="https://github.com/IcySnex/Musify"
+                    ToolTipService.ToolTip="Copy GitHub page to clipboard">
+                    <StackPanel Spacing="8">
+                        <FontIcon Glyph="&#xE72D;" />
+                        <TextBlock Text="Share" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    Grid.Column="4"
+                    Height="70"
+                    HorizontalAlignment="Stretch"
+                    Command="{x:Bind viewModel.OpenBrowserCommand}"
+                    CommandParameter="https://discord.com/Z8kweuryux"
+                    ToolTipService.ToolTip="Open Discord invite">
+                    <StackPanel Spacing="8">
+                        <FontIcon Glyph="&#xE8BD;" />
+                        <TextBlock Text="Discord" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    Grid.Column="6"
+                    Height="70"
+                    HorizontalAlignment="Stretch"
+                    Command="{x:Bind viewModel.OpenBrowserCommand}"
+                    CommandParameter="https://www.youtube.com/@icysnex"
+                    ToolTipService.ToolTip="Open YouTube Channel">
+                    <StackPanel Spacing="8">
+                        <FontIcon Glyph="&#xE714;" />
+                        <TextBlock Text="YouTube" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!--  About Musify  -->
+            <TextBlock
+                Margin="0,8,0,0"
+                Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
+                Text="About Musify" />
+            <Grid
+                Padding="12"
+                Background="{ThemeResource ControlFillColorDefault}"
+                CornerRadius="4">
+                <TextBlock
+                    Opacity="0.8"
+                    Text="Musify allows to easily download music from Spotify &amp; YouTube while saving all meta data &amp; lyrics.&#x0a;You can also directly sync your downloaded music with iTunes or an Android device.&#x0a;Please note that downloading copyrighted tracks may be illegal in your country. Musify is not responsible for any damages, this is for educational purposes only!"
+                    TextWrapping="Wrap" />
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
 </Page>
