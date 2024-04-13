@@ -28,10 +28,7 @@
                         HorizontalAlignment="Center"
                         Source="/icon.ico" />
 
-                    <TextBox
-                        Height="32"
-                        Margin="108,0"
-                        PlaceholderText="Search for a track..." />
+                    <TextBox Margin="108,0" PlaceholderText="Search for a track..." />
 
                     <TextBlock HorizontalAlignment="Center" Text="Search for" />
                     <StackPanel
