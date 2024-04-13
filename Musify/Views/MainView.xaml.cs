@@ -4,8 +4,11 @@ using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Musify.Helpers;
+using Windows.Foundation;
 using WinRT.Interop;
 
 namespace Musify.Views;
@@ -48,6 +51,7 @@ public sealed partial class MainView : Window
         logger?.LogInformation("[MainView-SetIcon] Set app icon to path: {path}", path);
     }
 
+
     public void SetSize(
         int width,
         int height)
@@ -70,5 +74,37 @@ public sealed partial class MainView : Window
         Win32.OldWndProc = IntPtr.Size == 8 ? Win32.SetWindowLongPtr(hWnd, -16 | 0x4 | 0x8, Win32.NewWndProc) : Win32.SetWindowLong(hWnd, -16 | 0x4 | 0x8, Win32.NewWndProc);
 
         logger.LogInformation("[MainView-SetMinSize] Set minimum window size: {width}x{height}", width, height);
+    }
+
+
+    public IAsyncOperation<ContentDialogResult> AlertAsync(
+        ContentDialog dialog)
+    {
+        foreach (Popup popup in VisualTreeHelper.GetOpenPopupsForXamlRoot(Content.XamlRoot))
+            if (popup.Child is ContentDialog openDialog)
+                openDialog.Hide();
+
+        dialog.XamlRoot = Content.XamlRoot;
+        dialog.PrimaryButtonStyle = (Style)App.Current.Resources["AccentButtonStyle"];
+        dialog.Style = (Style)App.Current.Resources["DefaultContentDialogStyle"];
+
+        logger.LogInformation("[MainView-AlertAsync] ContentDialog was requested");
+        return dialog.ShowAsync();
+    }
+
+    public IAsyncOperation<ContentDialogResult> AlertAsync(
+        object content,
+        string? title = null,
+        string? closeButton = "Ok",
+        string? primaryButton = null)
+    {
+        ContentDialog dialog = new()
+        {
+            Content = content,
+            Title = title,
+            CloseButtonText = closeButton,
+            PrimaryButtonText = primaryButton
+        };
+        return AlertAsync(dialog);
     }
 }
