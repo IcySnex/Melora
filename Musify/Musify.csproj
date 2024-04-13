@@ -23,9 +23,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="DataTemplates\TrackTemplate.xaml" />
 		<None Remove="Views\HomeView.xaml" />
 		<None Remove="Views\MainView.xaml" />
 		<None Remove="Views\SettingsView.xaml" />
+		<None Remove="Views\SpotifyView.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -55,6 +57,11 @@
 	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Page Update="Views\SpotifyView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
 
 	<ItemGroup>
 	  <Page Update="Views\SettingsView.xaml">
@@ -69,5 +76,10 @@
 		<Page Update="Views\MainView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="DataTemplates\TrackTemplate.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	</ItemGroup>
 </Project>

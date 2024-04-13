@@ -5,15 +5,31 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:conv="using:Musify.Converters"
     xmlns:hlp="using:Musify.Helpers"
-    xmlns:local="using:Musify">
+    xmlns:local="using:Musify"
+    xmlns:md="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:tmplts="using:Musify.DataTemplates">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+
+                <tmplts:TrackTemplate />
             </ResourceDictionary.MergedDictionaries>
 
-            <!--  Styles  -->
+            <!--  Converters  -->
             <conv:EnumIntConverter x:Key="EnumIntConverter" />
+            <conv:BoolDoubleConverter x:Key="BoolDoubleConverter" />
+            <conv:IsDownloadBarVisibleMarginConverter x:Key="IsDownloadBarVisibleMarginConverter" />
+            <conv:TimeSpanStringConverter x:Key="TimeSpanStringConverter" />
+
+
+            <!--  Colors  -->
+            <md:AcrylicBrush
+                x:Key="CardBackgroundAcrylicBrush"
+                FallbackColor="{ThemeResource ControlSolidFillColorDefault}"
+                TintColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
+                TintLuminosityOpacity="0.7"
+                TintOpacity="0.0" />
 
 
             <!--  Styles  -->
@@ -22,69 +38,86 @@
                 <Setter Property="Width" Value="76" />
             </Style>
 
+            <Style BasedOn="{StaticResource DefaultCheckBoxStyle}" TargetType="CheckBox">
+                <Setter Property="MinWidth" Value="0" />
+            </Style>
+
             <Style BasedOn="{StaticResource DefaultTextBoxStyle}" TargetType="TextBox">
                 <Setter Property="Height" Value="32" />
             </Style>
 
+            <Style x:Name="VerticalDivider" TargetType="Rectangle">
+                <Setter Property="VerticalAlignment" Value="Stretch" />
+                <Setter Property="Width" Value="2" />
+                <Setter Property="RadiusX" Value="2" />
+                <Setter Property="RadiusY" Value="2" />
+                <Setter Property="Margin" Value="0,-5" />
+                <Setter Property="Fill" Value="{ThemeResource ControlStrokeColorDefault}" />
+            </Style>
+
 
             <!--  Controls  -->
-            <ControlTemplate x:Key="SettingsExpander">
-                <ContentControl HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                    <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                        <Expander.Header>
-                            <Grid Margin="10,16">
-                                <FontIcon
-                                    HorizontalAlignment="Left"
-                                    FontSize="25"
-                                    Glyph="{TemplateBinding hlp:Attributes.Glyph}" />
+            <ControlTemplate x:Key="SettingsExpander" TargetType="ContentControl">
+                <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                    <Expander.Header>
+                        <Grid Margin="10,16">
+                            <FontIcon
+                                HorizontalAlignment="Left"
+                                FontSize="25"
+                                Glyph="{TemplateBinding hlp:Attributes.Glyph}" />
 
-                                <TextBlock
-                                    Margin="46,0,0,0"
-                                    Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
-                                    Text="{TemplateBinding hlp:Attributes.Title}"
-                                    TextTrimming="CharacterEllipsis" />
-                                <TextBlock
-                                    Margin="46,20,0,0"
-                                    Opacity="0.8"
-                                    Text="{TemplateBinding hlp:Attributes.Description}"
-                                    TextTrimming="CharacterEllipsis" />
-                            </Grid>
-                        </Expander.Header>
+                            <TextBlock
+                                Margin="46,0,0,0"
+                                Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
+                                Text="{TemplateBinding hlp:Attributes.Title}"
+                                TextTrimming="CharacterEllipsis" />
+                            <TextBlock
+                                Margin="46,20,0,0"
+                                Opacity="0.8"
+                                Text="{TemplateBinding hlp:Attributes.Description}"
+                                TextTrimming="CharacterEllipsis" />
+                        </Grid>
+                    </Expander.Header>
 
-                        <ContentPresenter />
-                    </Expander>
-                </ContentControl>
+                    <ContentPresenter />
+                </Expander>
             </ControlTemplate>
 
-            <ControlTemplate x:Key="SettingsCard">
-                <ContentControl HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
-                    <Grid
-                        Padding="12"
-                        Background="{ThemeResource ControlFillColorDefault}"
-                        CornerRadius="4"
-                        ToolTipService.ToolTip="{TemplateBinding hlp:Attributes.Title}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="12" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+            <ControlTemplate x:Key="SettingsCard" TargetType="ContentControl">
+                <Grid
+                    Padding="12"
+                    HorizontalAlignment="Stretch"
+                    Background="{ThemeResource ControlFillColorDefault}"
+                    CornerRadius="4"
+                    ToolTipService.ToolTip="{TemplateBinding hlp:Attributes.Title}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                        <TextBlock
-                            FontSize="16"
-                            Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
-                            Text="{TemplateBinding hlp:Attributes.Title}"
-                            TextTrimming="CharacterEllipsis" />
-                        <TextBlock
-                            Margin="0,18,0,0"
-                            Opacity="0.8"
-                            Text="{TemplateBinding hlp:Attributes.Description}"
-                            TextTrimming="CharacterEllipsis" />
+                    <TextBlock
+                        FontSize="16"
+                        Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
+                        Text="{TemplateBinding hlp:Attributes.Title}"
+                        TextTrimming="CharacterEllipsis" />
+                    <TextBlock
+                        Margin="0,18,0,0"
+                        Opacity="0.8"
+                        Text="{TemplateBinding hlp:Attributes.Description}"
+                        TextTrimming="CharacterEllipsis" />
 
-                        <ContentPresenter Grid.Column="2" HorizontalAlignment="Right" />
-                    </Grid>
-                </ContentControl>
+                    <ContentPresenter Grid.Column="2" HorizontalAlignment="Right" />
+                </Grid>
             </ControlTemplate>
 
+            <ControlTemplate x:Key="WithHeader" TargetType="ContentControl">
+                <Grid HorizontalAlignment="Stretch">
+                    <TextBlock Margin="2,0,0,0" Text="{TemplateBinding hlp:Attributes.Title}" />
+
+                    <ContentPresenter Margin="0,22,0,0" />
+                </Grid>
+            </ControlTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

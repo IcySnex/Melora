@@ -45,6 +45,7 @@ public partial class App : Application
                 // Add ViewModels and MainView
                 services.AddSingleton<HomeViewModel>();
                 services.AddSingleton<SettingsViewModel>();
+                services.AddSingleton<SpotifyViewModel>();
 
                 services.AddSingleton<MainView>();
 
