@@ -7,6 +7,7 @@
     xmlns:hlp="using:Musify.Helpers"
     xmlns:local="using:Musify"
     xmlns:md="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:mdl="using:Musify.Models"
     xmlns:tmplts="using:Musify.DataTemplates">
     <Application.Resources>
         <ResourceDictionary>
@@ -14,6 +15,7 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
 
                 <tmplts:TrackTemplate />
+                <tmplts:LyricsSearchResultTemplate />
             </ResourceDictionary.MergedDictionaries>
 
             <!--  Converters  -->

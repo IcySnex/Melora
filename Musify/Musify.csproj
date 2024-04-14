@@ -23,8 +23,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="DataTemplates\LyricsSearchResultTemplate.xaml" />
 		<None Remove="DataTemplates\TrackTemplate.xaml" />
 		<None Remove="Views\HomeView.xaml" />
+		<None Remove="Views\LyricsView.xaml" />
 		<None Remove="Views\MainView.xaml" />
 		<None Remove="Views\SettingsView.xaml" />
 		<None Remove="Views\SpotifyView.xaml" />
@@ -58,6 +60,15 @@
 	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Page Update="DataTemplates\LyricsSearchResultTemplate.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="Views\LyricsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
 	<ItemGroup>
 	  <Page Update="Views\YouTubeView.xaml">
 	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
