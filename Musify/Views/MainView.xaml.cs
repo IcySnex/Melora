@@ -13,6 +13,8 @@ using WinRT.Interop;
 using Microsoft.Extensions.Options;
 using Musify.Models;
 using Musify.Services;
+using Microsoft.UI.Xaml.Input;
+using System;
 
 namespace Musify.Views;
 
@@ -58,6 +60,18 @@ public sealed partial class MainView : Window
         File.WriteAllText("config.json", jsonConfig);
 
         logger.LogInformation("[MainView-Closed] Closed main window.");
+    }
+
+    void OnRootLayoutPreviewKeyDown(object _, KeyRoutedEventArgs e)
+    {
+        if (LoadingPopupRootLayout.IsHitTestVisible)
+            e.Handled = true;
+    }
+
+    void OnLoadingPopupCancelButtonClicked(object _, RoutedEventArgs _1)
+    {
+        onCancelButtonClicked?.Invoke();
+        HideLoadingPopup();
     }
 
 
@@ -124,6 +138,26 @@ public sealed partial class MainView : Window
             PrimaryButtonText = primaryButton
         };
         return AlertAsync(dialog);
+    }
+
+
+    Action? onCancelButtonClicked;
+
+    public IProgress<string> ShowLoadingPopup(
+        Action? onCancelButtonClicked = null)
+    {
+        LoadingPopupRootLayout.Opacity = 1;
+        LoadingPopupRootLayout.IsHitTestVisible = true;
+        this.onCancelButtonClicked = onCancelButtonClicked;
+
+        return new Progress<string>(message => LoadingPopupTitleBlock.Text = message);
+    }
+
+    public void HideLoadingPopup()
+    {
+        LoadingPopupRootLayout.Opacity = 0;
+        LoadingPopupRootLayout.IsHitTestVisible = false;
+        onCancelButtonClicked = null;
     }
 
 

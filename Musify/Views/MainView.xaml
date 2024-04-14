@@ -11,7 +11,7 @@
     Closed="OnClosed"
     mc:Ignorable="d">
 
-    <Grid Name="MainGrid" x:FieldModifier="public">
+    <Grid x:FieldModifier="public" PreviewKeyDown="OnRootLayoutPreviewKeyDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="48" />
             <RowDefinition Height="*" />
@@ -112,5 +112,50 @@
 
             <Frame Name="ContentFrame" x:FieldModifier="public" />
         </NavigationView>
+
+        <ContentPresenter
+            Name="LoadingPopupRootLayout"
+            Grid.RowSpan="2"
+            Background="{ThemeResource ContentDialogSmokeFill}"
+            IsHitTestVisible="False"
+            Opacity="0">
+            <ContentPresenter.OpacityTransition>
+                <ScalarTransition />
+            </ContentPresenter.OpacityTransition>
+
+            <Grid
+                MinWidth="200"
+                MaxWidth="{StaticResource ContentDialogMaxWidth}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="{ThemeResource ContentDialogBackground}"
+                BorderBrush="{ThemeResource ContentDialogBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Translation="0,0,64">
+                <Grid.Shadow>
+                    <ThemeShadow />
+                </Grid.Shadow>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Padding="24" Background="{ThemeResource ContentDialogTopOverlay}">
+                    <TextBlock
+                        Name="LoadingPopupTitleBlock"
+                        HorizontalAlignment="Center"
+                        Text="Loading..." />
+                    <ProgressRing Margin="0,42,0,0" />
+                </Grid>
+
+                <Button
+                    Grid.Row="1"
+                    Margin="24"
+                    HorizontalAlignment="Stretch"
+                    Click="OnLoadingPopupCancelButtonClicked"
+                    Content="Cancel" />
+            </Grid>
+        </ContentPresenter>
     </Grid>
 </Window>

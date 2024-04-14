@@ -73,7 +73,7 @@ public partial class YouTubeViewModel : ObservableObject
     partial void OnSearchSortingChanged(
         Sorting value)
     {
-        Config.Spotify.SearchSorting = value;
+        Config.YouTube.SearchSorting = value;
         switch (value)
         {
             case Sorting.Default:
@@ -116,8 +116,33 @@ public partial class YouTubeViewModel : ObservableObject
             return;
         }
 
+        CancellationTokenSource cts = new();
+        IProgress<string> progress = mainView.ShowLoadingPopup(cts.Cancel);
+        logger.LogInformation("[YouTubeViewModel-SearchAsync] Staring search for query on YouTube...");
+
+        try
+        {
+            progress.Report("Starting work...");
+            await Task.Delay(1000, cts.Token);
+            progress.Report("Doing work...");
+            await Task.Delay(3000, cts.Token);
+            progress.Report("Finishing work...");
+            await Task.Delay(3000, cts.Token);
+
+            mainView.HideLoadingPopup();
+            logger.LogInformation("[YouTubeViewModel-SearchAsync] Searched for query on YouTube: {query}", query);
+        }
+        catch (OperationCanceledException)
+        {
+            logger.LogInformation("[YouTubeViewModel-SearchAsync] Cancelled search for query on YouTube");
+        }
+        catch (Exception ex)
+        {
+            await mainView.AlertAsync($"Failed to search for query on YouTube.\nException: {ex.Message}", "Something went wrong.");
+            logger.LogError("[YouTubeViewModel-SearchAsync] Failed to search for query on YouTube: {exception}", ex.Message);
+        }
+
         await Task.Delay(1000);
-        logger.LogInformation("[YouTubeViewModel-SearchAsync] Searched for query on YouTube: {query}", query);
     }
 
     [RelayCommand]
@@ -129,7 +154,30 @@ public partial class YouTubeViewModel : ObservableObject
             return;
         }
 
-        await Task.Delay(1000);
-        logger.LogInformation("[YouTubeViewModel-DownloadAsync] Moved selected videos to download queue");
+        CancellationTokenSource cts = new();
+        IProgress<string> progress = mainView.ShowLoadingPopup(cts.Cancel);
+        logger.LogInformation("[YouTubeViewModel-DownloadAsync] Staring move of selected videos to download queue...");
+
+        try
+        {
+            progress.Report("Starting work...");
+            await Task.Delay(1000, cts.Token);
+            progress.Report("Doing work...");
+            await Task.Delay(3000, cts.Token);
+            progress.Report("Finishing work...");
+            await Task.Delay(3000, cts.Token);
+
+            mainView.HideLoadingPopup();
+            logger.LogInformation("[YouTubeViewModel-DownloadAsync] Moved selected videos to download queue");
+        }
+        catch (OperationCanceledException)
+        {
+            logger.LogInformation("[YouTubeViewModel-DownloadAsync] Cancelled move of selected videos to download queue");
+        }
+        catch (Exception ex)
+        {
+            await mainView.AlertAsync($"Failed to move selected videos to download queue.\nException: {ex.Message}", "Something went wrong.");
+            logger.LogError("[YouTubeViewModel-DownloadAsync] Failed to move of selected videos to download queue: {exception}", ex.Message);
+        }
     }
 }

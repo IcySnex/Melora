@@ -106,7 +106,30 @@ public partial class LyricsViewModel : ObservableObject
             return;
         }
 
-        await Task.Delay(1000);
-        logger.LogInformation("[LyricsViewModel-SearchAsync] Searched for query on Genius: {query}", query);
+        CancellationTokenSource cts = new();
+        IProgress<string> progress = mainView.ShowLoadingPopup(cts.Cancel);
+        logger.LogInformation("[LyricsViewModel-SearchAsync] Staring search for query on Genius...");
+
+        try
+        {
+            progress.Report("Starting work...");
+            await Task.Delay(1000, cts.Token);
+            progress.Report("Doing work...");
+            await Task.Delay(3000, cts.Token);
+            progress.Report("Finishing work...");
+            await Task.Delay(3000, cts.Token);
+
+            mainView.HideLoadingPopup();
+            logger.LogInformation("[LyricsViewModel-SearchAsync] Searched for query on Genius: {query}", query);
+        }
+        catch (OperationCanceledException)
+        {
+            logger.LogInformation("[LyricsViewModel-SearchAsync] Cancelled search for query on Genius");
+        }
+        catch (Exception ex)
+        {
+            await mainView.AlertAsync($"Failed to search for query on Genius.\nException: {ex.Message}", "Something went wrong.");
+            logger.LogError("[LyricsViewModel-SearchAsync] Failed to search for query on Genius: {exception}", ex.Message);
+        }
     }
 }

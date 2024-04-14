@@ -116,8 +116,31 @@ public partial class SpotifyViewModel : ObservableObject
             return;
         }
 
-        await Task.Delay(1000);
-        logger.LogInformation("[SpotifyViewModel-SearchAsync] Searched for query on Spotify: {query}", query);
+        CancellationTokenSource cts = new();
+        IProgress<string> progress = mainView.ShowLoadingPopup(cts.Cancel);
+        logger.LogInformation("[SpotifyViewModel-SearchAsync] Staring search for query on Spotify...");
+
+        try
+        {
+            progress.Report("Starting work...");
+            await Task.Delay(1000, cts.Token);
+            progress.Report("Doing work...");
+            await Task.Delay(3000, cts.Token);
+            progress.Report("Finishing work...");
+            await Task.Delay(3000, cts.Token);
+
+            mainView.HideLoadingPopup();
+            logger.LogInformation("[SpotifyViewModel-SearchAsync] Searched for query on Spotify: {query}", query);
+        }
+        catch (OperationCanceledException)
+        {
+            logger.LogInformation("[SpotifyViewModel-SearchAsync] Cancelled search for query on Spotify");
+        }
+        catch (Exception ex)
+        {
+            await mainView.AlertAsync($"Failed to search for query on Spotify.\nException: {ex.Message}", "Something went wrong.");
+            logger.LogError("[SpotifyViewModel-SearchAsync] Failed to search for query on Spotify: {exception}", ex.Message);
+        }
     }
 
     [RelayCommand]
@@ -129,7 +152,30 @@ public partial class SpotifyViewModel : ObservableObject
             return;
         }
 
-        await Task.Delay(1000);
-        logger.LogInformation("[SpotifyViewModel-DownloadAsync] Moved selected tracks to download queue");
+        CancellationTokenSource cts = new();
+        IProgress<string> progress = mainView.ShowLoadingPopup(cts.Cancel);
+        logger.LogInformation("[SpotifyViewModel-DownloadAsync] Staring move of selected tracks to download queue...");
+
+        try
+        {
+            progress.Report("Starting work...");
+            await Task.Delay(1000, cts.Token);
+            progress.Report("Doing work...");
+            await Task.Delay(3000, cts.Token);
+            progress.Report("Finishing work...");
+            await Task.Delay(3000, cts.Token);
+
+            mainView.HideLoadingPopup();
+            logger.LogInformation("[SpotifyViewModel-DownloadAsync] Moved selected tracks to download queue");
+        }
+        catch (OperationCanceledException)
+        {
+            logger.LogInformation("[SpotifyViewModel-DownloadAsync] Cancelled move of selected tracks to download queue");
+        }
+        catch (Exception ex)
+        {
+            await mainView.AlertAsync($"Failed to move selected tracks to download queue.\nException: {ex.Message}", "Something went wrong.");
+            logger.LogError("[SpotifyViewModel-DownloadAsync] Failed to move of selected tracks to download queue: {exception}", ex.Message);
+        }
     }
 }
