@@ -46,6 +46,7 @@ public partial class App : Application
                 services.AddSingleton<HomeViewModel>();
                 services.AddSingleton<SettingsViewModel>();
                 services.AddSingleton<SpotifyViewModel>();
+                services.AddSingleton<YouTubeViewModel>();
 
                 services.AddSingleton<MainView>();
 

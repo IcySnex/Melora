@@ -147,8 +147,8 @@
                             <ComboBoxItem Content="🠉 Default" />
                             <ComboBoxItem Content="🠋 Title" />
                             <ComboBoxItem Content="🠉 Title" />
-                            <ComboBoxItem Content="🠋 Artist" />
-                            <ComboBoxItem Content="🠉 Artist" />
+                            <ComboBoxItem Content="🠋 Channel" />
+                            <ComboBoxItem Content="🠉 Channel" />
                             <ComboBoxItem Content="🠋 Duration" />
                             <ComboBoxItem Content="🠉 Duration" />
                         </ComboBox>
