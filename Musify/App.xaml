@@ -19,7 +19,7 @@
             <!--  Converters  -->
             <conv:EnumIntConverter x:Key="EnumIntConverter" />
             <conv:BoolDoubleConverter x:Key="BoolDoubleConverter" />
-            <conv:CanDownloadTracksMarginConverter x:Key="CanDownloadTracksMarginConverter" />
+            <conv:CanDownloadMarginConverter x:Key="CanDownloadMarginConverter" />
             <conv:TimeSpanStringConverter x:Key="TimeSpanStringConverter" />
 
 
