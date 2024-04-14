@@ -12,6 +12,6 @@ public sealed partial class SpotifyView : Page
     {
         InitializeComponent();
 
-        viewModel.SelectedTracks = TracksContainer.SelectedItems;
+        viewModel.SelectedTracks = TrackContainer.SelectedItems;
     }
 }

@@ -14,7 +14,7 @@
         <!--  Track Container  -->
         <ScrollViewer>
             <ListView
-                Name="TracksContainer"
+                Name="TrackContainer"
                 Margin="{x:Bind viewModel.CanDownloadTracks, Mode=OneWay, Converter={StaticResource CanDownloadTracksMarginConverter}}"
                 ItemTemplate="{StaticResource SearchResultTemplate}"
                 ItemsSource="{x:Bind viewModel.Tracks}"

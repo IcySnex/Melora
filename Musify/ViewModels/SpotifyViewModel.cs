@@ -7,7 +7,6 @@ using Musify.Enums;
 using Musify.Helpers;
 using Musify.Models;
 using Musify.Views;
-using System.Diagnostics;
 
 namespace Musify.ViewModels;
 
@@ -32,7 +31,6 @@ public partial class SpotifyViewModel : ObservableObject
         SearchSorting = Config.Spotify.SearchSorting;
 
         logger.LogInformation("[SpotifyViewModel-.ctor] SpotifyViewModel has been initialized");
-
     }
 
 
@@ -63,10 +61,10 @@ public partial class SpotifyViewModel : ObservableObject
 
     public IList<object>? SelectedTracks { get; set; }
 
-    public bool CanDownloadTracks => SelectedTracks is not null && SelectedTracks.Count > 0;
-
     public void OnTracksSelectionChanged(object _, SelectionChangedEventArgs _1) =>
         OnPropertyChanged(nameof(CanDownloadTracks));
+
+    public bool CanDownloadTracks => SelectedTracks is not null && SelectedTracks.Count > 0;
 
 
     [ObservableProperty]
@@ -114,7 +112,7 @@ public partial class SpotifyViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(query))
         {
-            await mainView.AlertAsync("Your query can not be empty. Please type in a title or artist to start searching for tracks.", "Something went wrong.");
+            await mainView.AlertAsync("Your query can not be empty. Please type in a track title or artist to start searching for tracks.", "Something went wrong.");
             return;
         }
 
