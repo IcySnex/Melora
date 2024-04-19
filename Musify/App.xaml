@@ -31,8 +31,8 @@
                 x:Key="CardBackgroundAcrylicBrush"
                 FallbackColor="{ThemeResource ControlSolidFillColorDefault}"
                 TintColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
-                TintLuminosityOpacity="0.7"
-                TintOpacity="0.0" />
+                TintLuminosityOpacity="0.6"
+                TintOpacity="0.6" />
 
 
             <!--  Styles  -->
