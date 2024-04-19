@@ -15,7 +15,7 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
 
                 <tmplts:TrackTemplate />
-                <tmplts:LyricsSearchResultTemplate />
+                <tmplts:LyricsHitTemplate />
             </ResourceDictionary.MergedDictionaries>
 
             <!--  Converters  -->
@@ -23,6 +23,7 @@
             <conv:BoolDoubleConverter x:Key="BoolDoubleConverter" />
             <conv:CanDownloadMarginConverter x:Key="CanDownloadMarginConverter" />
             <conv:TimeSpanStringConverter x:Key="TimeSpanStringConverter" />
+            <conv:IntOverZeroVisibilityConverter x:Key="IntOverZeroVisibilityConverter" />
 
 
             <!--  Colors  -->

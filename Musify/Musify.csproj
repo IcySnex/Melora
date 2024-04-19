@@ -23,7 +23,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="DataTemplates\LyricsSearchResultTemplate.xaml" />
+		<None Remove="DataTemplates\LyricsHitTemplate.xaml" />
 		<None Remove="DataTemplates\TrackTemplate.xaml" />
 		<None Remove="Views\HomeView.xaml" />
 		<None Remove="Views\LyricsView.xaml" />
@@ -62,7 +62,7 @@
 		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Page Update="DataTemplates\LyricsSearchResultTemplate.xaml">
+	  <Page Update="DataTemplates\LyricsHitTemplate.xaml">
 	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 	    <SubType>Designer</SubType>
 	  </Page>

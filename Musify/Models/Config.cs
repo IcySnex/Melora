@@ -67,4 +67,6 @@ public class ConfigAdvanced
     public string SpotifyYouTubeSearchAlgorithm = "{title} {artist}";
 
     public string SpotifySearchMarket = "US"; // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+
+    public string GeniusAccessToken = "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr";
 }

@@ -13,10 +13,18 @@
         <ScrollViewer>
             <ListView
                 Margin="48,116,48,24"
-                ItemTemplate="{StaticResource LyricsSearchResultTemplate}"
+                ItemTemplate="{StaticResource LyricsHitTemplate}"
                 ItemsSource="{x:Bind viewModel.SearchResults}"
                 SelectedItem="{x:Bind viewModel.SelectedSearchResult, Mode=TwoWay}" />
         </ScrollViewer>
+        <TextBlock
+            Margin="0,84,0,0"
+            VerticalAlignment="Center"
+            FontSize="16"
+            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+            HorizontalTextAlignment="Center"
+            Text="There are currently no search results.&#x0a;Type in a track title or artist name to search for lyrics..."
+            Visibility="{x:Bind viewModel.SearchResults.Count, Mode=OneWay, Converter={StaticResource IntOverZeroVisibilityConverter}}" />
 
         <!--  Search bar  -->
         <Grid

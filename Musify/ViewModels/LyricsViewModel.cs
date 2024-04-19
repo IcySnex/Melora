@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Musify.Helpers;
 using Musify.Models;
+using Musify.Services;
 using Musify.Views;
 using System.Diagnostics;
 using Windows.ApplicationModel.DataTransfer;
@@ -15,15 +16,16 @@ public partial class LyricsViewModel : ObservableObject
 {
     readonly ILogger<LyricsViewModel> logger;
     readonly MainView mainView;
+    readonly Lyrics lyrics;
 
     public LyricsViewModel(
         ILogger<LyricsViewModel> logger,
-        MainView mainView)
+        MainView mainView,
+        Lyrics lyrics)
     {
         this.logger = logger;
         this.mainView = mainView;
-
-        GenerateRandomSearchResults(10);
+        this.lyrics = lyrics;
 
         logger.LogInformation("[LyricsViewModel-.ctor] LyricsViewModel has been initialized");
     }
@@ -55,36 +57,13 @@ public partial class LyricsViewModel : ObservableObject
     }
 
 
-    readonly Random random = new();
-
-    void GenerateRandomSearchResults(
-        int count)
-    {
-        string GenerateRandomString(Random random, int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
-        for (int i = 0; i < count; i++)
-        {
-            string title = GenerateRandomString(random, 5 + random.Next(10));
-            string artist = GenerateRandomString(random, 5 + random.Next(10));
-
-            SearchResults.Add(new(title, artist, "song", "genius.com", $"https://cataas.com/cat"));
-        }
-    }
-
-
-    public ObservableRangeCollection<LyricsSearchResult> SearchResults { get; } = [];
-
+    public ObservableRangeCollection<LyricsHit> SearchResults { get; } = [];
 
     [ObservableProperty]
-    LyricsSearchResult? selectedSearchResult;
+    LyricsHit? selectedSearchResult;
 
     async partial void OnSelectedSearchResultChanged(
-        LyricsSearchResult? value)
+        LyricsHit? value)
     {
         if (value is null)
             return;
@@ -92,7 +71,7 @@ public partial class LyricsViewModel : ObservableObject
         await mainView.AlertAsync("lyrics");
         SelectedSearchResult = null;
 
-        logger.LogInformation("[LyricsViewModel-OpenLyrics] Opened lyrics: {title}-{artists}", value.Title, value.Artists);
+        logger.LogInformation("[LyricsViewModel-OpenLyrics] Opened lyrics: {title}-{artists}", value.Track.Title, value.Track.ArtistNames);
     }
 
 
@@ -100,7 +79,7 @@ public partial class LyricsViewModel : ObservableObject
     string query = string.Empty;
 
     [RelayCommand]
-    async Task Search()
+    async Task SearchAsync()
     {
         if (string.IsNullOrWhiteSpace(Query))
         {
@@ -114,12 +93,13 @@ public partial class LyricsViewModel : ObservableObject
 
         try
         {
-            progress.Report("Starting work...");
-            await Task.Delay(1000, cts.Token);
-            progress.Report("Doing work...");
-            await Task.Delay(3000, cts.Token);
-            progress.Report("Finishing work...");
-            await Task.Delay(3000, cts.Token);
+            LyricsHit[] hits = await lyrics.SearchAsync(Query, progress, cts.Token);
+
+            logger.LogInformation("[LyricsViewModel-SearchAsync] Updating search results...");
+            progress.Report("Updating search results...");
+
+            SearchResults.Clear();
+            SearchResults.AddRange(hits);
 
             mainView.HideLoadingPopup();
             logger.LogInformation("[LyricsViewModel-SearchAsync] Searched for query on Genius: {query}", Query);
@@ -130,6 +110,8 @@ public partial class LyricsViewModel : ObservableObject
         }
         catch (Exception ex)
         {
+            mainView.HideLoadingPopup();
+
             await mainView.AlertAsync($"Failed to search for query on Genius.\nException: {ex.Message}", "Something went wrong.");
             logger.LogError("[LyricsViewModel-SearchAsync] Failed to search for query on Genius: {exception}", ex.Message);
         }
