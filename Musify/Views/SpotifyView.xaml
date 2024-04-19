@@ -45,12 +45,11 @@
             </Grid.ColumnDefinitions>
 
             <!--  Search  -->
-            <TextBox Name="QueryTextBox" PlaceholderText="Search for tracks on Spotify..." />
+            <TextBox PlaceholderText="Search for tracks on Spotify..." Text="{x:Bind viewModel.Query, Mode=TwoWay}" />
 
             <Button
                 Grid.Column="2"
                 Command="{x:Bind viewModel.SearchCommand}"
-                CommandParameter="{Binding Text, ElementName=QueryTextBox}"
                 Style="{StaticResource AccentButtonStyle}">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <FontIcon FontSize="17" Glyph="&#xf78b;" />

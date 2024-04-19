@@ -29,7 +29,10 @@
                         HorizontalAlignment="Center"
                         Source="/icon.ico" />
 
-                    <TextBox Margin="108,0" PlaceholderText="Search for a track..." />
+                    <TextBox
+                        Margin="108,0"
+                        PlaceholderText="Search for a track..."
+                        Text="{x:Bind viewModel.Query, Mode=TwoWay}" />
 
                     <TextBlock HorizontalAlignment="Center" Text="Search for" />
                     <StackPanel
@@ -37,9 +40,21 @@
                         HorizontalAlignment="Center"
                         Orientation="Horizontal"
                         Spacing="4">
-                        <Button Content="Spotify" ToolTipService.ToolTip="Search for Spotify track" />
-                        <Button Content="YouTube" ToolTipService.ToolTip="Search for YouTube video" />
-                        <Button Content="Lyrics" ToolTipService.ToolTip="Search for lyrics" />
+                        <Button
+                            Command="{x:Bind viewModel.SearchCommand}"
+                            CommandParameter="Spotify"
+                            Content="Spotify"
+                            ToolTipService.ToolTip="Search for Spotify track" />
+                        <Button
+                            Command="{x:Bind viewModel.SearchCommand}"
+                            CommandParameter="YouTube"
+                            Content="YouTube"
+                            ToolTipService.ToolTip="Search for YouTube video" />
+                        <Button
+                            Command="{x:Bind viewModel.SearchCommand}"
+                            CommandParameter="Lyrics"
+                            Content="Lyrics"
+                            ToolTipService.ToolTip="Search for lyrics" />
                     </StackPanel>
                 </StackPanel>
             </Grid>

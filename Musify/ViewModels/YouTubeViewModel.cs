@@ -109,11 +109,13 @@ public partial class YouTubeViewModel : ObservableObject
     }
 
 
+    [ObservableProperty]
+    string query = string.Empty;
+
     [RelayCommand]
-    async Task SearchAsync(
-        string query)
+    async Task SearchAsync()
     {
-        if (string.IsNullOrWhiteSpace(query))
+        if (string.IsNullOrWhiteSpace(Query))
         {
             await mainView.AlertAsync("Your query can not be empty. Please type in a video title or channel to start searching for videos.", "Something went wrong.");
             return;
@@ -133,7 +135,7 @@ public partial class YouTubeViewModel : ObservableObject
             await Task.Delay(3000, cts.Token);
 
             mainView.HideLoadingPopup();
-            logger.LogInformation("[YouTubeViewModel-SearchAsync] Searched for query on YouTube: {query}", query);
+            logger.LogInformation("[YouTubeViewModel-SearchAsync] Searched for query on YouTube: {query}", Query);
         }
         catch (OperationCanceledException)
         {
@@ -147,6 +149,7 @@ public partial class YouTubeViewModel : ObservableObject
 
         await Task.Delay(1000);
     }
+
 
     [RelayCommand]
     async Task DownloadAsync()

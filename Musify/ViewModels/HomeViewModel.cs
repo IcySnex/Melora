@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
+using Musify.Services;
 using Musify.Views;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
@@ -12,13 +13,16 @@ public partial class HomeViewModel : ObservableObject
 {
     readonly ILogger<HomeViewModel> logger;
     readonly MainView mainView;
+    readonly Navigation navigation;
 
     public HomeViewModel(
         ILogger<HomeViewModel> logger,
-        MainView mainView)
+        MainView mainView,
+        Navigation navigation)
     {
         this.logger = logger;
         this.mainView = mainView;
+        this.navigation = navigation;
 
         logger.LogInformation("[HomeViewModel-.ctor] HomeViewModel has been initialized");
     }
@@ -47,5 +51,25 @@ public partial class HomeViewModel : ObservableObject
 
         Clipboard.SetContent(data);
         logger.LogInformation("[HomeViewModel-ShareAsync] Clipboard was set to text: {text}", text);
+    }
+
+
+    [ObservableProperty]
+    string query = string.Empty;
+
+    [RelayCommand]
+    void Search(
+        string source)
+    {
+        int pageIndex = source switch
+        {
+            "Spotify" => 3,
+            "YouTube" => 4,
+            "Lyrics" => 5,
+            _ => 0
+        };
+
+        navigation.Navigate(source, Query);
+        navigation.SetCurrentIndex(pageIndex);
     }
 }

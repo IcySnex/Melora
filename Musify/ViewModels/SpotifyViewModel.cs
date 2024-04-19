@@ -110,11 +110,13 @@ public partial class SpotifyViewModel : ObservableObject
     }
 
 
+    [ObservableProperty]
+    string query = string.Empty;
+
     [RelayCommand]
-    async Task SearchAsync(
-        string query)
+    async Task SearchAsync()
     {
-        if (string.IsNullOrWhiteSpace(query))
+        if (string.IsNullOrWhiteSpace(Query))
         {
             await mainView.AlertAsync("Your query can not be empty. Please type in a track title or artist to start searching for tracks.", "Something went wrong.");
             return;
@@ -134,7 +136,7 @@ public partial class SpotifyViewModel : ObservableObject
             await Task.Delay(3000, cts.Token);
 
             mainView.HideLoadingPopup();
-            logger.LogInformation("[SpotifyViewModel-SearchAsync] Searched for query on Spotify: {query}", query);
+            logger.LogInformation("[SpotifyViewModel-SearchAsync] Searched for query on Spotify: {query}", Query);
         }
         catch (OperationCanceledException)
         {
@@ -146,6 +148,7 @@ public partial class SpotifyViewModel : ObservableObject
             logger.LogError("[SpotifyViewModel-SearchAsync] Failed to search for query on Spotify: {exception}", ex.Message);
         }
     }
+
 
     [RelayCommand]
     async Task DownloadAsync()

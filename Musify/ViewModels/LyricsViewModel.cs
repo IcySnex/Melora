@@ -96,11 +96,13 @@ public partial class LyricsViewModel : ObservableObject
     }
 
 
+    [ObservableProperty]
+    string query = string.Empty;
+
     [RelayCommand]
-    async Task Search(
-        string query)
+    async Task Search()
     {
-        if (string.IsNullOrWhiteSpace(query))
+        if (string.IsNullOrWhiteSpace(Query))
         {
             await mainView.AlertAsync("Your query can not be empty. Please type in a track title or artist to start searching for lyrics.", "Something went wrong.");
             return;
@@ -120,7 +122,7 @@ public partial class LyricsViewModel : ObservableObject
             await Task.Delay(3000, cts.Token);
 
             mainView.HideLoadingPopup();
-            logger.LogInformation("[LyricsViewModel-SearchAsync] Searched for query on Genius: {query}", query);
+            logger.LogInformation("[LyricsViewModel-SearchAsync] Searched for query on Genius: {query}", Query);
         }
         catch (OperationCanceledException)
         {
