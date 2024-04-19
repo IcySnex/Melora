@@ -144,7 +144,7 @@ public partial class SpotifyViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            await mainView.AlertAsync($"Failed to search for query on Spotify.\nException: {ex.Message}", "Something went wrong.");
+            await mainView.AlertAsync($"Failed to search for query on Spotify.\n\nException: {ex.Message}", "Something went wrong.");
             logger.LogError("[SpotifyViewModel-SearchAsync] Failed to search for query on Spotify: {exception}", ex.Message);
         }
     }
@@ -181,7 +181,7 @@ public partial class SpotifyViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            await mainView.AlertAsync($"Failed to move selected tracks to download queue.\nException: {ex.Message}", "Something went wrong.");
+            await mainView.AlertAsync($"Failed to move selected tracks to download queue.\n\nException: {ex.Message}", "Something went wrong.");
             logger.LogError("[SpotifyViewModel-DownloadAsync] Failed to move of selected tracks to download queue: {exception}", ex.Message);
         }
     }

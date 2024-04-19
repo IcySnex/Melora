@@ -112,7 +112,7 @@ public partial class LyricsViewModel : ObservableObject
         {
             mainView.HideLoadingPopup();
 
-            await mainView.AlertAsync($"Failed to search for query on Genius.\nException: {ex.Message}", "Something went wrong.");
+            await mainView.AlertAsync($"Failed to search for query on Genius.\n\nException: {ex.Message}", "Something went wrong.");
             logger.LogError("[LyricsViewModel-SearchAsync] Failed to search for query on Genius: {exception}", ex.Message);
         }
     }

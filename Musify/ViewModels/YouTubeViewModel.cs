@@ -143,7 +143,7 @@ public partial class YouTubeViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            await mainView.AlertAsync($"Failed to search for query on YouTube.\nException: {ex.Message}", "Something went wrong.");
+            await mainView.AlertAsync($"Failed to search for query on YouTube.\n\nException: {ex.Message}", "Something went wrong.");
             logger.LogError("[YouTubeViewModel-SearchAsync] Failed to search for query on YouTube: {exception}", ex.Message);
         }
 
@@ -182,7 +182,7 @@ public partial class YouTubeViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            await mainView.AlertAsync($"Failed to move selected videos to download queue.\nException: {ex.Message}", "Something went wrong.");
+            await mainView.AlertAsync($"Failed to move selected videos to download queue.\n\nException: {ex.Message}", "Something went wrong.");
             logger.LogError("[YouTubeViewModel-DownloadAsync] Failed to move of selected videos to download queue: {exception}", ex.Message);
         }
     }
