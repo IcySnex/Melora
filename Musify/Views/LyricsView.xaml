@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hlp="using:Musify.Helpers"
     xmlns:local="using:Musify.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -18,7 +19,7 @@
                 SelectedItem="{x:Bind viewModel.SelectedSearchResult, Mode=TwoWay}" />
         </ScrollViewer>
         <TextBlock
-            Margin="0,84,0,0"
+            Margin="0,82,0,0"
             VerticalAlignment="Center"
             FontSize="16"
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
@@ -40,7 +41,10 @@
             </Grid.ColumnDefinitions>
 
             <!--  Search  -->
-            <TextBox PlaceholderText="Search for lyrics on Genius..." Text="{x:Bind viewModel.Query, Mode=TwoWay}" />
+            <TextBox
+                hlp:Attributes.EnterKeyCommand="{x:Bind viewModel.SearchCommand}"
+                PlaceholderText="Search for lyrics on Genius..."
+                Text="{x:Bind viewModel.Query, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
             <Button
                 Grid.Column="2"

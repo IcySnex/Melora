@@ -45,7 +45,10 @@
             </Grid.ColumnDefinitions>
 
             <!--  Search  -->
-            <TextBox PlaceholderText="Search for videos on YouTube..." Text="{x:Bind viewModel.Query, Mode=TwoWay}" />
+            <TextBox
+                hlp:Attributes.EnterKeyCommand="{x:Bind viewModel.SearchCommand}"
+                PlaceholderText="Search for videos on YouTube..."
+                Text="{x:Bind viewModel.Query, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
             <Button
                 Grid.Column="2"
