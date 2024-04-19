@@ -3,8 +3,10 @@
     x:Class="Musify.Views.YouTubeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cor="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hlp="using:Musify.Helpers"
+    xmlns:int="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Musify.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     NavigationCacheMode="Required"
@@ -18,8 +20,13 @@
                 Margin="{x:Bind viewModel.CanDownloadVideos, Mode=OneWay, Converter={StaticResource CanDownloadMarginConverter}}"
                 ItemTemplate="{StaticResource SearchResultTemplate}"
                 ItemsSource="{x:Bind viewModel.Videos}"
-                SelectionChanged="{x:Bind viewModel.OnVideosSelectionChanged}"
-                SelectionMode="Extended" />
+                SelectionMode="Extended">
+                <int:Interaction.Behaviors>
+                    <cor:EventTriggerBehavior EventName="SelectionChanged">
+                        <cor:InvokeCommandAction Command="{x:Bind viewModel.ForceUpdatePropertyCommand}" CommandParameter="CanDownloadVideos" />
+                    </cor:EventTriggerBehavior>
+                </int:Interaction.Behaviors>
+            </ListView>
         </ScrollViewer>
 
         <!--  Search bar  -->

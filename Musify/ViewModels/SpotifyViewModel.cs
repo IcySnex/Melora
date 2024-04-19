@@ -57,14 +57,18 @@ public partial class SpotifyViewModel : ObservableObject
     }
 
 
+    [RelayCommand]
+    void ForceUpdateProperty(
+        string propertyName) =>
+        OnPropertyChanged(propertyName);
+
+
     public ObservableSortableRangeCollection<Track> Tracks { get; } = [];
 
     public IList<object>? SelectedTracks { get; set; }
 
-    public void OnTracksSelectionChanged(object _, SelectionChangedEventArgs _1) =>
-        OnPropertyChanged(nameof(CanDownloadTracks));
-
     public bool CanDownloadTracks => SelectedTracks is not null && SelectedTracks.Count > 0;
+
 
 
     [ObservableProperty]

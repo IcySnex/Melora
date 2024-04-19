@@ -57,12 +57,15 @@ public partial class YouTubeViewModel : ObservableObject
     }
 
 
+    [RelayCommand]
+    void ForceUpdateProperty(
+        string propertyName) =>
+        OnPropertyChanged(propertyName);
+
+
     public ObservableSortableRangeCollection<Track> Videos { get; } = [];
 
     public IList<object>? SelectedVideos { get; set; }
-
-    public void OnVideosSelectionChanged(object _, SelectionChangedEventArgs _1) =>
-        OnPropertyChanged(nameof(CanDownloadVideos));
 
     public bool CanDownloadVideos => SelectedVideos is not null && SelectedVideos.Count > 0;
 
