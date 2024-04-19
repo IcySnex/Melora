@@ -32,7 +32,7 @@
                 FallbackColor="{ThemeResource ControlSolidFillColorDefault}"
                 TintColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
                 TintLuminosityOpacity="0.6"
-                TintOpacity="0.6" />
+                TintOpacity="0.4" />
 
 
             <!--  Styles  -->
