@@ -8,13 +8,13 @@ public class DateComponentsConverter : JsonConverter<DateTime>
     class ReleaseDateComponents
     {
         [JsonPropertyName("year")]
-        public int Year { get; set; }
+        public int? Year { get; set; }
 
         [JsonPropertyName("month")]
-        public int Month { get; set; }
+        public int? Month { get; set; }
 
         [JsonPropertyName("day")]
-        public int Day { get; set; }
+        public int? Day { get; set; }
     }
 
 
@@ -27,7 +27,7 @@ public class DateComponentsConverter : JsonConverter<DateTime>
         if (dateComponents is null)
             return DateTime.MinValue;
 
-        return new(dateComponents.Year, dateComponents.Month, dateComponents.Day);
+        return new(dateComponents.Year ?? DateTime.MinValue.Year, dateComponents.Month ?? DateTime.MinValue.Month, dateComponents.Day ?? DateTime.MinValue.Day);
     }
 
     public override void Write(
