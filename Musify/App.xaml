@@ -142,8 +142,7 @@
                     Padding="12"
                     HorizontalAlignment="Stretch"
                     Background="{ThemeResource ControlFillColorDefault}"
-                    CornerRadius="4"
-                    ToolTipService.ToolTip="{TemplateBinding hlp:Attributes.Title}">
+                    CornerRadius="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="12" />
@@ -151,7 +150,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock
-                        FontSize="16"
+                        FontSize="16" Margin="0,2,0,0"
                         Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
                         Text="{TemplateBinding hlp:Attributes.Title}"
                         TextTrimming="CharacterEllipsis" />
@@ -161,7 +160,10 @@
                         Text="{TemplateBinding hlp:Attributes.Description}"
                         TextTrimming="CharacterEllipsis" />
 
-                    <ContentPresenter Grid.Column="2" HorizontalAlignment="Right" />
+                    <ContentPresenter
+                        Grid.Column="2"
+                        HorizontalAlignment="Right"
+                        ToolTipService.ToolTip="{TemplateBinding hlp:Attributes.Title}" />
                 </Grid>
             </ControlTemplate>
 

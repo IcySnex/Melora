@@ -53,7 +53,7 @@
 
                     <!--  Save Lyrics  -->
                     <ContentControl
-                        hlp:Attributes.Description="Whether to search &amp; save lyrics from genius.com automatically"
+                        hlp:Attributes.Description="Whether to search &amp; save lyrics from Genius automatically"
                         hlp:Attributes.Title="Save Lyrics"
                         Template="{StaticResource SettingsCard}">
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.Spotify.SaveLyrics, Mode=TwoWay}" />

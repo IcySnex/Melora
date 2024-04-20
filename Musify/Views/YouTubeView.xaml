@@ -53,7 +53,8 @@
             <Button
                 Grid.Column="2"
                 Command="{x:Bind viewModel.SearchCommand}"
-                Style="{StaticResource AccentButtonStyle}">
+                Style="{StaticResource AccentButtonStyle}"
+                ToolTipService.ToolTip="Search on YouTube">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <FontIcon FontSize="17" Glyph="&#xf78b;" />
                     <TextBlock Text="Search" />
@@ -66,7 +67,8 @@
             <ComboBox
                 Grid.Column="4"
                 Width="120"
-                SelectedIndex="{x:Bind viewModel.SearchSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                SelectedIndex="{x:Bind viewModel.SearchSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
+                ToolTipService.ToolTip="Sort by">
                 <ComboBoxItem Content="🠋 Default" />
                 <ComboBoxItem Content="🠉 Default" />
                 <ComboBoxItem Content="🠋 Title" />
@@ -102,7 +104,10 @@
 
             <!--  Quality  -->
             <ContentControl hlp:Attributes.Title="Quality" Template="{StaticResource WithHeader}">
-                <ComboBox HorizontalAlignment="Stretch" SelectedIndex="{x:Bind viewModel.Config.YouTube.Quality, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                <ComboBox
+                    HorizontalAlignment="Stretch"
+                    SelectedIndex="{x:Bind viewModel.Config.YouTube.Quality, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
+                    ToolTipService.ToolTip="Download quality">
                     <ComboBoxItem Content="32 kbps" />
                     <ComboBoxItem Content="64 kbps" />
                     <ComboBoxItem Content="128 kbps" />
@@ -117,7 +122,10 @@
                 Grid.Column="2"
                 hlp:Attributes.Title="Format"
                 Template="{StaticResource WithHeader}">
-                <ComboBox HorizontalAlignment="Stretch" SelectedIndex="{x:Bind viewModel.Config.YouTube.Format, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                <ComboBox
+                    HorizontalAlignment="Stretch"
+                    SelectedIndex="{x:Bind viewModel.Config.YouTube.Format, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
+                    ToolTipService.ToolTip="Audio format">
                     <ComboBoxItem Content="mp3" />
                     <ComboBoxItem Content="wav" />
                     <ComboBoxItem Content="m4a" />
@@ -135,11 +143,15 @@
                 hlp:Attributes.Title="Meta data"
                 Template="{StaticResource WithHeader}">
                 <Grid>
-                    <CheckBox Content="Description" IsChecked="{x:Bind viewModel.Config.YouTube.SaveDescription, Mode=TwoWay}" />
+                    <CheckBox
+                        Content="Description"
+                        IsChecked="{x:Bind viewModel.Config.YouTube.SaveDescription, Mode=TwoWay}"
+                        ToolTipService.ToolTip="Save video description" />
                     <CheckBox
                         Margin="117,0,0,0"
                         Content="Thumbnail"
-                        IsChecked="{x:Bind viewModel.Config.YouTube.SaveThumbnail, Mode=TwoWay}" />
+                        IsChecked="{x:Bind viewModel.Config.YouTube.SaveThumbnail, Mode=TwoWay}"
+                        ToolTipService.ToolTip="Download &amp; save the thumbnail" />
                 </Grid>
             </ContentControl>
 
@@ -149,7 +161,8 @@
             <Button
                 Grid.Column="6"
                 Command="{x:Bind viewModel.DownloadCommand}"
-                Style="{StaticResource AccentButtonStyle}">
+                Style="{StaticResource AccentButtonStyle}"
+                ToolTipService.ToolTip="Move to download queue">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <FontIcon FontSize="17" Glyph="&#xe896;" />
                     <TextBlock Text="Download" />
