@@ -24,6 +24,8 @@
             <conv:CanDownloadMarginConverter x:Key="CanDownloadMarginConverter" />
             <conv:TimeSpanStringConverter x:Key="TimeSpanStringConverter" />
             <conv:IntOverZeroVisibilityConverter x:Key="IntOverZeroVisibilityConverter" />
+            <conv:DateTimeStringConverter x:Key="DateTimeStringConverter" />
+            <conv:IntStringConverter x:Key="IntStringConverter" />
 
 
             <!--  Colors  -->
@@ -63,6 +65,48 @@
                 <Setter Property="RadiusY" Value="2" />
                 <Setter Property="Margin" Value="0,-5" />
                 <Setter Property="Fill" Value="{ThemeResource ControlStrokeColorDefault}" />
+            </Style>
+
+            <Style x:Key="HoverButtonStyle" TargetType="Button">
+                <Setter Property="Height" Value="85" />
+                <Setter Property="Width" Value="85" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid
+                                x:Name="RootLayout"
+                                Background="#bb000000"
+                                CornerRadius="4"
+                                Opacity="0">
+                                <FontIcon Glyph="{TemplateBinding hlp:Attributes.Glyph}" />
+
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal">
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="RootLayout"
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    To="0"
+                                                    Duration="0:0:0.15" />
+                                            </Storyboard>
+                                        </VisualState>
+
+                                        <VisualState x:Name="PointerOver">
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="RootLayout"
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    To="1"
+                                                    Duration="0:0:0.15" />
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
 
 

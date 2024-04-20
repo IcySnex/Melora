@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Musify.Helpers;
@@ -16,15 +17,18 @@ public partial class LyricsViewModel : ObservableObject
 {
     readonly ILogger<LyricsViewModel> logger;
     readonly MainView mainView;
+    readonly Navigation navigation;
     readonly Lyrics lyrics;
 
     public LyricsViewModel(
         ILogger<LyricsViewModel> logger,
         MainView mainView,
+        Navigation navigation,
         Lyrics lyrics)
     {
         this.logger = logger;
         this.mainView = mainView;
+        this.navigation = navigation;
         this.lyrics = lyrics;
 
         logger.LogInformation("[LyricsViewModel-.ctor] LyricsViewModel has been initialized");
@@ -68,10 +72,40 @@ public partial class LyricsViewModel : ObservableObject
         if (value is null)
             return;
 
-        await mainView.AlertAsync("lyrics");
-        SelectedSearchResult = null;
+        CancellationTokenSource cts = new();
+        IProgress<string> progress = mainView.ShowLoadingPopup(cts.Cancel);
+        logger.LogInformation("[LyricsViewModel-OnSelectedSearchResultChanged] Staring getting lyrics from Genius...");
 
-        logger.LogInformation("[LyricsViewModel-OpenLyrics] Opened lyrics: {title}-{artists}", value.Track.Title, value.Track.ArtistNames);
+        try
+        {
+            string lyricsContent = await lyrics.GetAsync(value.Track.Url, progress, cts.Token);
+
+            logger.LogInformation("[LyricsViewModel-SearchAsync] Creating LyricsInfoView...");
+            progress.Report("Creating lyrics info view...");
+
+            LyricsInfoViewModel viewModel = App.Provider.GetRequiredService<LyricsInfoViewModel>();
+            viewModel.Track = value.Track;
+            viewModel.Lyrics = lyricsContent;
+
+            navigation.Navigate("LyricsInfo", viewModel);
+
+            SelectedSearchResult = null;
+            mainView.HideLoadingPopup();
+            logger.LogInformation("[LyricsViewModel-OnSelectedSearchResultChanged] Got lyrics from Genius: {title}-{artists}", value.Track.Title, value.Track.ArtistNames);
+
+        }
+        catch (OperationCanceledException)
+        {
+            logger.LogInformation("[LyricsViewModel-OnSelectedSearchResultChanged] Cancelled getting lyrics from Genius");
+        }
+        catch (Exception ex)
+        {
+            SelectedSearchResult = null;
+            mainView.HideLoadingPopup();
+
+            await mainView.AlertAsync($"Failed getting lyrics from Genius.\n\nException: {ex.Message}", "Something went wrong.");
+            logger.LogError("[LyricsViewModel-OnSelectedSearchResultChanged] Failed to get lyrics from Genius: {exception}", ex.Message);
+        }
     }
 
 

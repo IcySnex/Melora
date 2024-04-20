@@ -26,6 +26,8 @@
 		<None Remove="DataTemplates\LyricsHitTemplate.xaml" />
 		<None Remove="DataTemplates\TrackTemplate.xaml" />
 		<None Remove="Views\HomeView.xaml" />
+		<None Remove="Views\LoggerView.xaml" />
+		<None Remove="Views\LyricsInfoView.xaml" />
 		<None Remove="Views\LyricsView.xaml" />
 		<None Remove="Views\MainView.xaml" />
 		<None Remove="Views\SettingsView.xaml" />
@@ -43,6 +45,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="HtmlAgilityPack" Version="1.11.60" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240404000" />
@@ -61,6 +64,16 @@
 	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
 		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Page Update="Views\LoggerView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
+	<ItemGroup>
+	  <Page Update="Views\LyricsInfoView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	</ItemGroup>
 	<ItemGroup>
 	  <Page Update="DataTemplates\LyricsHitTemplate.xaml">
 	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>

@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Musify.Models;
+using System;
 using System.Net;
+using System.Text;
 
 namespace Musify.Services;
 
@@ -60,5 +63,63 @@ public class Lyrics
         }
 
         return result.Response.Hits;
+    }
+
+
+    static void ExtractText(
+        HtmlNode node,
+        StringBuilder builder)
+    {
+        foreach (HtmlNode childNode in node.ChildNodes)
+            switch (childNode.NodeType)
+            {
+                case HtmlNodeType.Text:
+                    builder.Append(childNode.InnerText);
+                    break;
+                case HtmlNodeType.Element:
+                    if (childNode.Name == "br")
+                        builder.AppendLine();
+                    else
+                        ExtractText(childNode, builder);
+                    break;
+            }
+    }
+
+    public async Task<string> GetAsync(
+        string url,
+        IProgress<string>? progress = null,
+        CancellationToken cancellationToken = default)
+    {
+        logger.LogInformation("[Lyrics-GetAsync] Downloading lyrics...");
+        progress?.Report("Downloading lyrics...");
+
+        HttpResponseMessage response = await client.GetAsync(url, cancellationToken);
+        response.EnsureSuccessStatusCode();
+
+        logger.LogInformation("[Lyrics-GetAsync] Loading lyrics...");
+        progress?.Report("Loading lyrics...");
+
+        Stream body = await response.Content.ReadAsStreamAsync(cancellationToken);
+        HtmlDocument html = new();
+        html.Load(body);
+
+        logger.LogInformation("[Lyrics-GetAsync] Parsing lyrics...");
+        progress?.Report("Parsing lyrics...");
+
+        HtmlNodeCollection nodes = html.DocumentNode.SelectNodes("//div[@data-lyrics-container]");
+        if (nodes is null || nodes.Count == 0)
+        {
+            logger.LogError("[Lyrics-GetAsync] Failed to get lyrics: Parsed HTML nodes is null or empty");
+            throw new NullReferenceException("Parsed HTML nodes is null or empty.");
+        }
+
+        StringBuilder builder = new();
+        foreach (HtmlNode node in nodes)
+        {
+            ExtractText(node, builder);
+            builder.AppendLine();
+        }
+
+        return WebUtility.HtmlDecode(builder.ToString().TrimEnd());
     }
 }
