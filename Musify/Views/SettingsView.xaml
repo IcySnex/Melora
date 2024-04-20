@@ -256,11 +256,19 @@
 
             <!--  Advanced  -->
             <ContentControl
-                hlp:Attributes.Description="Spotify-YouTube search algorithm, Spotify search market..."
+                hlp:Attributes.Description="Logger, Spotify-YouTube search algorithm, Spotify search market..."
                 hlp:Attributes.Glyph="&#xec7a;"
                 hlp:Attributes.Title="Advanced"
                 Template="{StaticResource SettingsExpander}">
                 <StackPanel Spacing="8">
+                    <!--  Logger  -->
+                    <ContentControl
+                        hlp:Attributes.Description="View incoming logger events"
+                        hlp:Attributes.Title="Logger"
+                        Template="{StaticResource SettingsCard}">
+                        <Button Command="{x:Bind viewModel.CreateLoggerViewCommand}" Content="Create Logger" />
+                    </ContentControl>
+
                     <!--  Spotify-YouTube search algorithm  -->
                     <ContentControl
                         hlp:Attributes.Description="Query which is used to get videos from YouTube to download - Replacements: {title}, {artist}"

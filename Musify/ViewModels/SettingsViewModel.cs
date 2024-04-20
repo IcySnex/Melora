@@ -109,4 +109,9 @@ public partial class SettingsViewModel : ObservableObject
             return;
         PathsFFMPEGLocation = file.Path;
     }
+
+
+    [RelayCommand]
+    void CreateLoggerView() =>
+        mainView.CreateLoggerView();
 }

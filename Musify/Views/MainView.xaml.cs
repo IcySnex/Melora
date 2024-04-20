@@ -93,6 +93,21 @@ public sealed partial class MainView : Window
         logger.LogInformation("[MainView-SetSize] Set window size: {width}x{height}", width, height);
     }
 
+    public void SetSize(
+        int width,
+        int height,
+        Window window)
+    {
+        IntPtr hWnd = WindowNative.GetWindowHandle(window);
+        WindowId id = Win32Interop.GetWindowIdFromWindow(hWnd);
+        AppWindow appWindow = AppWindow.GetFromWindowId(id);
+
+        appWindow.Resize(new(width + 16, height + 39));
+
+        logger.LogInformation("[MainView-SetSize] Set window size for external window: {width}x{height}", width, height);
+    }
+
+
     public void SetMinSize(
         int width,
         int height)
@@ -138,6 +153,35 @@ public sealed partial class MainView : Window
             PrimaryButtonText = primaryButton
         };
         return AlertAsync(dialog);
+    }
+
+
+    public LoggerView? LoggerView = null;
+
+    public void CreateLoggerView()
+    {
+        if (LoggerView is not null)
+        {
+            LoggerView.Activate();
+            return;
+        }
+
+        LoggerView = new();
+
+        void handler(object? s, string e) =>
+            LoggerView.ContentBlock.Text += e;
+
+        App.Sink.OnNewLog += handler;
+        LoggerView.Closed += (s, e) =>
+        {
+            App.Sink.OnNewLog -= handler;
+            LoggerView = null;
+        };
+
+        SetSize(700, 400, LoggerView);
+        LoggerView.Activate();
+
+        logger.LogInformation("[MainView-CreateLoggerView] Created new LoggerView and hooked handler");
     }
 
 
