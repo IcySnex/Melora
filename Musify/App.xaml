@@ -76,7 +76,7 @@
                                 TextTrimming="CharacterEllipsis" />
                             <TextBlock
                                 Margin="46,20,0,0"
-                                Opacity="0.8"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 Text="{TemplateBinding hlp:Attributes.Description}"
                                 TextTrimming="CharacterEllipsis" />
                         </Grid>
@@ -106,7 +106,7 @@
                         TextTrimming="CharacterEllipsis" />
                     <TextBlock
                         Margin="0,18,0,0"
-                        Opacity="0.8"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Text="{TemplateBinding hlp:Attributes.Description}"
                         TextTrimming="CharacterEllipsis" />
 

@@ -25,13 +25,13 @@
                 Text="{x:Bind Title}" />
             <TextBlock
                 Margin="62,26,0,0"
-                Opacity="0.8"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 Text="{x:Bind Artist}" />
 
             <TextBlock
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Opacity="0.8"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 Text="{x:Bind Duration, Converter={StaticResource TimeSpanStringConverter}}" />
         </Grid>
     </DataTemplate>

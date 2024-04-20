@@ -93,13 +93,13 @@
                 <NavigationViewItem Content="Home" Icon="Home" />
                 <NavigationViewItem Content="Settings" Icon="Setting" />
 
-                <NavigationViewItemHeader Content="Search" Opacity="0.7" />
+                <NavigationViewItemHeader Content="Search" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
 
                 <NavigationViewItem Content="Spotify" Icon="Audio" />
                 <NavigationViewItem Content="YouTube" Icon="Video" />
                 <NavigationViewItem Content="Lyrics" Icon="List" />
 
-                <NavigationViewItemHeader Content="Local" Opacity="0.7" />
+                <NavigationViewItemHeader Content="Local" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
 
                 <NavigationViewItem Content="Download" Icon="Download" />
                 <NavigationViewItem Content="Library" Icon="Library" />
