@@ -12,6 +12,8 @@
 
     <ScrollViewer>
         <StackPanel Margin="24" Spacing="8">
+            <TextBlock Style="{StaticResource PageTitleTextBlockStyle}" Text="Settings" />
+
             <!--  Spotify  -->
             <ContentControl
                 hlp:Attributes.Description="Quality, Format, Save Lyrics..."

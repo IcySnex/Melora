@@ -36,6 +36,13 @@
 
 
             <!--  Styles  -->
+            <Style x:Key="PageTitleTextBlockStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{ThemeResource TextFillColorTertiaryBrush}" />
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="Margin" Value="0,0,0,4" />
+                <Setter Property="FontWeight" Value="Medium" />
+            </Style>
+
             <Style BasedOn="{StaticResource DefaultToggleSwitchStyle}" TargetType="ToggleSwitch">
                 <Setter Property="MinWidth" Value="0" />
                 <Setter Property="Width" Value="76" />
