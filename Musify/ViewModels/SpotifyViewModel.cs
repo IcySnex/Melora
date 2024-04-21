@@ -26,34 +26,9 @@ public partial class SpotifyViewModel : ObservableObject
         this.mainView = mainView;
         this.Config = config.Value;
 
-        GenerateRandomTracks(50);
-
         SearchSorting = Config.Spotify.SearchSorting;
 
         logger.LogInformation("[SpotifyViewModel-.ctor] SpotifyViewModel has been initialized");
-    }
-
-
-    readonly Random random = new();
-
-    void GenerateRandomTracks(
-        int count)
-    {
-        string GenerateRandomString(Random random, int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
-        for (int i = 0; i < count; i++)
-        {
-            string title = GenerateRandomString(random, 5 + random.Next(10));
-            string artist = GenerateRandomString(random, 5 + random.Next(10));
-            TimeSpan duration = TimeSpan.FromSeconds(random.Next(60, 600));
-
-            Tracks.Add(new(title, artist, duration, $"https://cataas.com/cat"));
-        }
     }
 
 
@@ -63,11 +38,11 @@ public partial class SpotifyViewModel : ObservableObject
         OnPropertyChanged(propertyName);
 
 
-    public ObservableSortableRangeCollection<Track> Tracks { get; } = [];
+    public ObservableSortableRangeCollection<Track> SearchResults { get; } = [];
 
-    public IList<object>? SelectedTracks { get; set; }
+    public IList<object>? SelectedSearchResults { get; set; }
 
-    public bool CanDownloadTracks => SelectedTracks is not null && SelectedTracks.Count > 0;
+    public bool CanDownload => SelectedSearchResults is not null && SelectedSearchResults.Count > 0;
 
 
 
@@ -81,32 +56,32 @@ public partial class SpotifyViewModel : ObservableObject
         switch (value)
         {
             case Sorting.Default:
-                Tracks.OrderbyDefault();
+                SearchResults.OrderbyDefault();
                 break;
             case Sorting.DefaultInv:
-                Tracks.OrderbyDefault(true);
+                SearchResults.OrderbyDefault(true);
                 break;
             case Sorting.Title:
-                Tracks.OrderBy(track => track.Title);
+                SearchResults.OrderBy(track => track.Title);
                 break;
             case Sorting.TitleInv:
-                Tracks.OrderBy(track => track.Title, true);
+                SearchResults.OrderBy(track => track.Title, true);
                 break;
             case Sorting.Artist:
-                Tracks.OrderBy(track => track.Artist);
+                SearchResults.OrderBy(track => track.Artist);
                 break;
             case Sorting.ArtistInv:
-                Tracks.OrderBy(track => track.Artist, true);
+                SearchResults.OrderBy(track => track.Artist, true);
                 break;
             case Sorting.Duration:
-                Tracks.OrderBy(track => track.Duration);
+                SearchResults.OrderBy(track => track.Duration);
                 break;
             case Sorting.DurationInv:
-                Tracks.OrderBy(track => track.Duration, true);
+                SearchResults.OrderBy(track => track.Duration, true);
                 break;
         }
 
-        logger.LogInformation("[SpotifyViewModel-OnSearchSortingChanged] Resorted searched tracks: {sorting}", value);
+        logger.LogInformation("[SpotifyViewModel-OnSearchSortingChanged] Resorted search results: {sorting}", value);
     }
 
 
@@ -118,7 +93,7 @@ public partial class SpotifyViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(Query))
         {
-            await mainView.AlertAsync("Your query can not be empty. Please type in a track title or artist to start searching for tracks.", "Something went wrong.");
+            await mainView.AlertAsync("Your query can not be empty. Paste in a Spotify URL or type in a track title/artist name to search for tracks.", "Something went wrong.");
             return;
         }
 
@@ -128,13 +103,6 @@ public partial class SpotifyViewModel : ObservableObject
 
         try
         {
-            progress.Report("Starting work...");
-            await Task.Delay(1000, cts.Token);
-            progress.Report("Doing work...");
-            await Task.Delay(3000, cts.Token);
-            progress.Report("Finishing work...");
-            await Task.Delay(3000, cts.Token);
-
             mainView.HideLoadingPopup();
             logger.LogInformation("[SpotifyViewModel-SearchAsync] Searched for query on Spotify: {query}", Query);
         }
@@ -153,7 +121,7 @@ public partial class SpotifyViewModel : ObservableObject
     [RelayCommand]
     async Task DownloadAsync()
     {
-        if (!CanDownloadTracks)
+        if (!CanDownload)
         {
             await mainView.AlertAsync("Please select at least one track to start downloading.", "Something went wrong.");
             return;
@@ -165,13 +133,6 @@ public partial class SpotifyViewModel : ObservableObject
 
         try
         {
-            progress.Report("Starting work...");
-            await Task.Delay(1000, cts.Token);
-            progress.Report("Doing work...");
-            await Task.Delay(3000, cts.Token);
-            progress.Report("Finishing work...");
-            await Task.Delay(3000, cts.Token);
-
             mainView.HideLoadingPopup();
             logger.LogInformation("[SpotifyViewModel-DownloadAsync] Moved selected tracks to download queue");
         }

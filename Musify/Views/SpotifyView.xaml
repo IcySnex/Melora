@@ -16,18 +16,26 @@
         <!--  Track Container  -->
         <ScrollViewer>
             <ListView
-                Name="TrackContainer"
-                Margin="{x:Bind viewModel.CanDownloadTracks, Mode=OneWay, Converter={StaticResource CanDownloadMarginConverter}}"
+                Name="SearchResultsContainer"
+                Margin="{x:Bind viewModel.CanDownload, Mode=OneWay, Converter={StaticResource CanDownloadMarginConverter}}"
                 ItemTemplate="{StaticResource SearchResultTemplate}"
-                ItemsSource="{x:Bind viewModel.Tracks}"
+                ItemsSource="{x:Bind viewModel.SearchResults}"
                 SelectionMode="Extended">
                 <int:Interaction.Behaviors>
                     <cor:EventTriggerBehavior EventName="SelectionChanged">
-                        <cor:InvokeCommandAction Command="{x:Bind viewModel.ForceUpdatePropertyCommand}" CommandParameter="CanDownloadTracks" />
+                        <cor:InvokeCommandAction Command="{x:Bind viewModel.ForceUpdatePropertyCommand}" CommandParameter="CanDownload" />
                     </cor:EventTriggerBehavior>
                 </int:Interaction.Behaviors>
             </ListView>
         </ScrollViewer>
+        <TextBlock
+            Margin="0,82,0,0"
+            VerticalAlignment="Center"
+            FontSize="16"
+            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+            HorizontalTextAlignment="Center"
+            Text="There are currently no search results.&#x0a;Paste in a Spotify URL or type in a track title/artist name to search for tracks..."
+            Visibility="{x:Bind viewModel.SearchResults.Count, Mode=OneWay, Converter={StaticResource IntOverZeroVisibilityConverter}}" />
 
         <!--  Search bar  -->
         <Grid
@@ -87,8 +95,8 @@
             VerticalAlignment="Bottom"
             Background="{ThemeResource CardBackgroundAcrylicBrush}"
             CornerRadius="8"
-            IsHitTestVisible="{x:Bind viewModel.CanDownloadTracks, Mode=OneWay}"
-            Opacity="{x:Bind viewModel.CanDownloadTracks, Mode=OneWay, Converter={StaticResource BoolDoubleConverter}}">
+            IsHitTestVisible="{x:Bind viewModel.CanDownload, Mode=OneWay}"
+            Opacity="{x:Bind viewModel.CanDownload, Mode=OneWay, Converter={StaticResource BoolDoubleConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="4" />

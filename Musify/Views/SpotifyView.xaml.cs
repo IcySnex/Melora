@@ -13,7 +13,7 @@ public sealed partial class SpotifyView : Page
     {
         InitializeComponent();
 
-        viewModel.SelectedTracks = TrackContainer.SelectedItems;
+        viewModel.SelectedSearchResults = SearchResultsContainer.SelectedItems;
     }
 
 

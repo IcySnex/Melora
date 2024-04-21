@@ -13,7 +13,7 @@ public sealed partial class YouTubeView : Page
     {
         InitializeComponent();
 
-        viewModel.SelectedVideos = VideoContainer.SelectedItems;
+        viewModel.SelectedSearchResults = SearchResultsContainer.SelectedItems;
     }
 
 
