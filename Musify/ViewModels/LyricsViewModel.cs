@@ -119,7 +119,7 @@ public partial class LyricsViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(Query))
         {
-            await mainView.AlertAsync("Your query can not be empty. Please type in a track title or artist to start searching for lyrics.", "Something went wrong.");
+            await mainView.AlertAsync("Your query can not be empty. Type in a track title/artist name to search for lyrics.", "Something went wrong.");
             return;
         }
 

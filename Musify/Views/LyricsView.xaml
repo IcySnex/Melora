@@ -24,7 +24,7 @@
             FontSize="16"
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             HorizontalTextAlignment="Center"
-            Text="There are currently no search results.&#x0a;Type in a track title or artist name to search for lyrics..."
+            Text="There are currently no search results.&#x0a;Type in a track title/artist name to search for lyrics..."
             Visibility="{x:Bind viewModel.SearchResults.Count, Mode=OneWay, Converter={StaticResource IntOverZeroVisibilityConverter}}" />
 
         <!--  Search bar  -->
