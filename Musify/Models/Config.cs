@@ -68,5 +68,11 @@ public class ConfigAdvanced
 
     public string SpotifySearchMarket = "US"; // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 
+    public int SpotifyQuerySearchResultsLimit = 30; // Min: 30 - Max:50
+
+    public string SpotifyClientId = "75e1749b48dd4466858cf28ab32b1c8a";
+
+    public string SpotifyClientSecret = "b884202c63af4bcbbcac91cfcf16e6c8";
+
     public string GeniusAccessToken = "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr";
 }

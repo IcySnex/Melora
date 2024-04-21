@@ -15,6 +15,7 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
 
                 <tmplts:TrackTemplate />
+                <tmplts:SpotifyTrackTemplate />
                 <tmplts:LyricsHitTemplate />
             </ResourceDictionary.MergedDictionaries>
 
@@ -26,6 +27,10 @@
             <conv:IntOverZeroVisibilityConverter x:Key="IntOverZeroVisibilityConverter" />
             <conv:DateTimeStringConverter x:Key="DateTimeStringConverter" />
             <conv:IntStringConverter x:Key="IntStringConverter" />
+            <conv:SpotifyArtistsStringConverter x:Key="SpotifyArtistsStringConverter" />
+            <conv:DurationMsStringConverter x:Key="DurationMsStringConverter" />
+            <conv:SpotifyAlbumImageConverter x:Key="SpotifyAlbumImageConverter" />
+            <conv:StringNullEmptyNaConverter x:Key="StringNullEmptyNaConverter" />
 
 
             <!--  Colors  -->
@@ -150,7 +155,8 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock
-                        FontSize="16" Margin="0,2,0,0"
+                        Margin="0,2,0,0"
+                        FontSize="16"
                         Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
                         Text="{TemplateBinding hlp:Attributes.Title}"
                         TextTrimming="CharacterEllipsis" />

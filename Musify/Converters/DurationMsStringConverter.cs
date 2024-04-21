@@ -3,11 +3,11 @@ using System.Text;
 
 namespace Musify.Converters;
 
-public class TimeSpanStringConverter : IValueConverter
+public class DurationMsStringConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        TimeSpan timeSpan = (TimeSpan)value;
+        TimeSpan timeSpan = TimeSpan.FromMilliseconds((int)value);
         StringBuilder sb = new();
 
         if (timeSpan.Hours != 0)

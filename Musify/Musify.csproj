@@ -24,7 +24,9 @@
 
 	<ItemGroup>
 		<None Remove="DataTemplates\LyricsHitTemplate.xaml" />
+		<None Remove="DataTemplates\SpotifySimpleTrackTemplate.xaml" />
 		<None Remove="DataTemplates\TrackTemplate.xaml" />
+		<None Remove="na.png" />
 		<None Remove="Views\HomeView.xaml" />
 		<None Remove="Views\LoggerView.xaml" />
 		<None Remove="Views\LyricsInfoView.xaml" />
@@ -37,6 +39,7 @@
 
 	<ItemGroup>
 		<Content Include="icon.ico" />
+		<Content Include="na.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -55,6 +58,8 @@
 		<PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+		<PackageReference Include="SpotifyAPI.Web" Version="7.1.1" />
+		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
@@ -65,6 +70,10 @@
 		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Page Update="DataTemplates\SpotifySimpleTrackTemplate.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
 	  <Page Update="Views\LoggerView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>

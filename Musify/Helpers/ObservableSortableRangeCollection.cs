@@ -7,8 +7,14 @@ public class ObservableSortableRangeCollection<T> : ObservableCollection<T>
 {
     readonly IList<T> defaultOrderItems = [];
 
-    public void ForceRefresh() =>
-        OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
+
+    public bool SkipForceRefresh { get; set; }
+
+    public void ForceRefresh()
+    {
+        if (!SkipForceRefresh)
+            OnCollectionChanged(new(NotifyCollectionChangedAction.Reset));
+    }
 
 
     public void AddRange(
@@ -30,6 +36,29 @@ public class ObservableSortableRangeCollection<T> : ObservableCollection<T>
         }
     }
 
+    public async Task AddRangeAsync(
+        IAsyncEnumerable<T> items,
+        CancellationToken cancellationToken = default!)
+    {
+        try
+        {
+            CheckReentrancy();
+
+            await foreach (T item in items)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                Items.Add(item);
+                defaultOrderItems.Add(item);
+            }
+        }
+        finally
+        {
+            ForceRefresh();
+        }
+    }
+
+
     public new void Add(
         T item)
     {
@@ -50,7 +79,9 @@ public class ObservableSortableRangeCollection<T> : ObservableCollection<T>
     {
         try
         {
-            return Items.Remove(item) && defaultOrderItems.Remove(item);
+            bool items = Items.Remove(item);
+            bool defaultorder = defaultOrderItems.Remove(item);
+            return items && defaultorder;
         }
         finally
         {

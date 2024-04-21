@@ -287,6 +287,18 @@
                             MaxLength="2"
                             Text="{x:Bind viewModel.Config.Advanced.SpotifySearchMarket, Mode=TwoWay}" />
                     </ContentControl>
+
+                    <!--  Spotify Query Search Results Limit  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The limit of the search results for a query on Spotify"
+                        hlp:Attributes.Title="Spotify Query Search Results Limit"
+                        Template="{StaticResource SettingsCard}">
+                        <NumberBox
+                            Maximum="50"
+                            Minimum="30"
+                            SpinButtonPlacementMode="Compact"
+                            Text="{x:Bind viewModel.Config.Advanced.SpotifyQuerySearchResultsLimit, Mode=TwoWay}" />
+                    </ContentControl>
                 </StackPanel>
             </ContentControl>
         </StackPanel>
