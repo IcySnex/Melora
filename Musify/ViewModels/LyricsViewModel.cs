@@ -96,6 +96,8 @@ public partial class LyricsViewModel : ObservableObject
         }
         catch (OperationCanceledException)
         {
+            SelectedSearchResult = null;
+
             logger.LogInformation("[LyricsViewModel-OnSelectedSearchResultChanged] Cancelled getting lyrics from Genius");
         }
         catch (Exception ex)
