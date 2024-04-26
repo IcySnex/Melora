@@ -14,8 +14,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
 
-                <tmplts:TrackTemplate />
                 <tmplts:SpotifyTrackTemplate />
+                <tmplts:YouTubeVideoTemplate />
                 <tmplts:LyricsHitTemplate />
             </ResourceDictionary.MergedDictionaries>
 
@@ -31,6 +31,7 @@
             <conv:DurationMsStringConverter x:Key="DurationMsStringConverter" />
             <conv:SpotifyAlbumImageConverter x:Key="SpotifyAlbumImageConverter" />
             <conv:StringNullEmptyNaConverter x:Key="StringNullEmptyNaConverter" />
+            <conv:YouTubeThumbnailImageConverter x:Key="YouTubeThumbnailImageConverter" />
 
 
             <!--  Colors  -->
