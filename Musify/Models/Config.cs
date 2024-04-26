@@ -1,4 +1,5 @@
-﻿using Musify.Enums;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Musify.Enums;
 
 namespace Musify.Models;
 
@@ -16,63 +17,89 @@ public class Config
 }
 
 
-public class ConfigSpotify
+public partial class ConfigSpotify : ObservableObject
 {
-    public Quality Quality { get; set; } = Quality._160kbps;
+    [ObservableProperty]
+    Quality quality = Quality._160kbps;
 
-    public Format Format { get; set; } = Format.mp3;
+    [ObservableProperty]
+    Format format = Format.mp3;
 
-    public bool SaveLyrics { get; set; } = true;
+    [ObservableProperty]
+    bool saveLyrics = true;
 
-    public bool SaveArtwork { get; set; } = true;
+    [ObservableProperty]
+    bool saveArtwork = true;
 
-    public Sorting SearchSorting { get; set; } = Sorting.Default;
+    [ObservableProperty]
+    int searchResultsLimit = 1000;
+
+    [ObservableProperty]
+    Sorting searchSorting = Sorting.Default;
 }
 
-public class ConfigYouTube
+public partial class ConfigYouTube : ObservableObject
 {
-    public Quality Quality { get; set; } = Quality._160kbps;
+    [ObservableProperty]
+    Quality quality = Quality._160kbps;
 
-    public Format Format { get; set; } = Format.mp3;
+    [ObservableProperty]
+    Format format = Format.mp3;
 
-    public bool SaveDescription { get; set; } = false;
+    [ObservableProperty]
+    bool saveDescription = false;
 
-    public bool SaveThumbnail { get; set; } = true;
+    [ObservableProperty]
+    bool saveThumbnail = true;
 
-    public Sorting SearchSorting { get; set; } = Sorting.Default;
+    [ObservableProperty]
+    int searchResultsLimit = 1000;
+
+    [ObservableProperty]
+    Sorting searchSorting = Sorting.Default;
 }
 
-public class ConfigDownloads
+public partial class ConfigDownloads : ObservableObject
 {
-    public AlreadyExistsBehavior AlreadyExistsBehavior = AlreadyExistsBehavior.Ask;
+    [ObservableProperty]
+    AlreadyExistsBehavior alreadyExistsBehavior = AlreadyExistsBehavior.Ask;
 
-    public bool WriteCurrentDateTimeAsRelease = false;
+    [ObservableProperty]
+    bool writeCurrentDateTimeAsRelease = false;
 
-    public bool ShowSpotifyTracks = true;
+    [ObservableProperty]
+    bool showSpotifyTracks = true;
 
-    public bool ShowYouTubeTracks = true;
+    [ObservableProperty]
+    bool showYouTubeTracks = true;
 }
 
-public class ConfigPaths
+public partial class ConfigPaths : ObservableObject
 {
-    public string DownloadLocation { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+    [ObservableProperty]
+    string downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 
-    public string Filename { get; set; } = "{artist} - {title}";
+    [ObservableProperty]
+    string filename = "{artist} - {title}";
 
-    public string FFMPEGLocation { get; set; } = "FFMPEG.exe";
+    [ObservableProperty]
+    string fFMPEGLocation = "FFMPEG.exe";
 }
 
-public class ConfigAdvanced
+public partial class ConfigAdvanced : ObservableObject
 {
-    public string SpotifyYouTubeSearchAlgorithm = "{title} {artist}";
+    [ObservableProperty]
+    string spotifyYouTubeSearchAlgorithm = "{title} {artist}";
 
-    public string SpotifySearchMarket = "US"; // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+    [ObservableProperty]
+    string spotifySearchMarket = "US"; // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 
-    public int SpotifyQuerySearchResultsLimit = 30; // Min: 30 - Max:50
+    [ObservableProperty]
+    string spotifyClientId = "75e1749b48dd4466858cf28ab32b1c8a";
 
-    public string SpotifyClientId = "75e1749b48dd4466858cf28ab32b1c8a";
+    [ObservableProperty]
+    string spotifyClientSecret = "b884202c63af4bcbbcac91cfcf16e6c8";
 
-    public string SpotifyClientSecret = "b884202c63af4bcbbcac91cfcf16e6c8";
-
-    public string GeniusAccessToken = "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr";
+    [ObservableProperty]
+    string geniusAccessToken = "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr";
 }

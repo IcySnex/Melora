@@ -2,15 +2,12 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml.Controls;
 using Musify.Enums;
 using Musify.Helpers;
 using Musify.Models;
 using Musify.Services;
 using Musify.Views;
 using SpotifyAPI.Web;
-using System.Threading;
 
 namespace Musify.ViewModels;
 
@@ -127,7 +124,7 @@ public partial class SpotifyViewModel : ObservableObject
                     SearchResults.Add(track);
                     break;
                  case SpotifySearchType.Album:
-                    IAsyncEnumerable<FullTrack> albumTracks = await spotify.SearchAlbumAsync(id!, progress, cts.Token);
+                    IAsyncEnumerable<FullTrack> albumTracks = (await spotify.SearchAlbumAsync(id!, progress, cts.Token)).Take(Config.Spotify.SearchResultsLimit);
 
                     logger.LogInformation("[LyricsViewModel-SearchAsync] Updating search results...");
                     progress.Report("Updating search results...");
@@ -136,7 +133,7 @@ public partial class SpotifyViewModel : ObservableObject
                     await SearchResults.AddRangeAsync(albumTracks, cts.Token);
                     break;
                  case SpotifySearchType.Playlist:
-                    IAsyncEnumerable<FullTrack> playlistTracks = await spotify.SearchPlaylistAsync(id!, progress, cts.Token);
+                    IAsyncEnumerable<FullTrack> playlistTracks = (await spotify.SearchPlaylistAsync(id!, progress, cts.Token)).Take(Config.Spotify.SearchResultsLimit);
 
                     logger.LogInformation("[LyricsViewModel-SearchAsync] Updating search results...");
                     progress.Report("Updating search results...");
@@ -145,7 +142,7 @@ public partial class SpotifyViewModel : ObservableObject
                     await SearchResults.AddRangeAsync(playlistTracks, cts.Token);
                     break;
                 case SpotifySearchType.Query:
-                    List<FullTrack> searchedTracks = await spotify.SearchQueryAsync(Query, progress, cts.Token);
+                    IEnumerable<FullTrack> searchedTracks = (await spotify.SearchQueryAsync(Query, progress, cts.Token)).Take(Config.Spotify.SearchResultsLimit);
 
                     logger.LogInformation("[LyricsViewModel-SearchAsync] Updating search results...");
                     progress.Report("Updating search results...");

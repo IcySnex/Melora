@@ -46,7 +46,9 @@
             CornerRadius="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="4" />
+                <ColumnDefinition Width="2" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="8" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="26" />
                 <ColumnDefinition Width="Auto" />
@@ -55,11 +57,22 @@
             <!--  Search  -->
             <TextBox
                 hlp:Attributes.EnterKeyCommand="{x:Bind viewModel.SearchCommand}"
+                CornerRadius="4,0,0,4"
                 PlaceholderText="Search for tracks on Spotify..."
                 Text="{x:Bind viewModel.Query, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
-            <Button
+            <NumberBox
                 Grid.Column="2"
+                Width="110"
+                CornerRadius="0,4,4,0"
+                Maximum="9999"
+                Minimum="1"
+                PlaceholderText="Limit"
+                SpinButtonPlacementMode="Compact"
+                Value="{x:Bind viewModel.Config.Spotify.SearchResultsLimit, Mode=TwoWay}" />
+
+            <Button
+                Grid.Column="4"
                 Command="{x:Bind viewModel.SearchCommand}"
                 Style="{StaticResource AccentButtonStyle}"
                 ToolTipService.ToolTip="Search on Spotify">
@@ -69,11 +82,11 @@
                 </StackPanel>
             </Button>
 
-            <Rectangle Grid.Column="3" Style="{StaticResource VerticalDivider}" />
+            <Rectangle Grid.Column="5" Style="{StaticResource VerticalDivider}" />
 
             <!--  Pagination  -->
             <ComboBox
-                Grid.Column="4"
+                Grid.Column="6"
                 Width="120"
                 SelectedIndex="{x:Bind viewModel.SearchSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
                 ToolTipService.ToolTip="Sort by">

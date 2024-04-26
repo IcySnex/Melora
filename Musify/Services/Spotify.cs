@@ -161,7 +161,7 @@ public partial class Spotify
         SearchRequest request = new(SearchRequest.Types.Track, query)
         {
             Market = config.Advanced.SpotifySearchMarket,
-            Limit = config.Advanced.SpotifyQuerySearchResultsLimit
+            Limit = Math.Clamp(config.Spotify.SearchResultsLimit, 30, 50)
         };
         SearchResponse response = await client.Search.Item(request, cancellationToken);
 

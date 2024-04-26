@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
 namespace Musify.Helpers;
@@ -115,6 +116,20 @@ public class ObservableSortableRangeCollection<T> : ObservableCollection<T>
                 Items.Remove(item);
                 defaultOrderItems.Remove(item);
             }
+        }
+        finally
+        {
+            ForceRefresh();
+        }
+    }
+
+
+    public new void Clear()
+    {
+        try
+        {
+            Items.Clear();
+            defaultOrderItems.Clear();
         }
         finally
         {

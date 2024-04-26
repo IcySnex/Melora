@@ -67,6 +67,19 @@
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.Spotify.SaveArtwork, Mode=TwoWay}" />
                     </ContentControl>
 
+                    <!--  Search Results Limit  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The limit of the search results for a query"
+                        hlp:Attributes.Title="Search Results Limit"
+                        Template="{StaticResource SettingsCard}">
+                        <NumberBox
+                            Width="110"
+                            Maximum="9999"
+                            Minimum="1"
+                            SpinButtonPlacementMode="Compact"
+                            Value="{x:Bind viewModel.Config.Spotify.SearchResultsLimit, Mode=TwoWay}" />
+                    </ContentControl>
+
                     <!--  Search Sorting  -->
                     <ContentControl
                         hlp:Attributes.Description="The sorting of the search results"
@@ -137,6 +150,19 @@
                         hlp:Attributes.Title="Save Thumbnail"
                         Template="{StaticResource SettingsCard}">
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.YouTube.SaveThumbnail, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  Search Results Limit  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The limit of the search results for a query"
+                        hlp:Attributes.Title="Search Results Limit"
+                        Template="{StaticResource SettingsCard}">
+                        <NumberBox
+                            Width="110"
+                            Maximum="9999"
+                            Minimum="1"
+                            SpinButtonPlacementMode="Compact"
+                            Value="{x:Bind viewModel.Config.YouTube.SearchResultsLimit, Mode=TwoWay}" />
                     </ContentControl>
 
                     <!--  Search Sorting  -->
@@ -286,18 +312,6 @@
                             Width="80"
                             MaxLength="2"
                             Text="{x:Bind viewModel.Config.Advanced.SpotifySearchMarket, Mode=TwoWay}" />
-                    </ContentControl>
-
-                    <!--  Spotify Query Search Results Limit  -->
-                    <ContentControl
-                        hlp:Attributes.Description="The limit of the search results for a query on Spotify"
-                        hlp:Attributes.Title="Spotify Query Search Results Limit"
-                        Template="{StaticResource SettingsCard}">
-                        <NumberBox
-                            Maximum="50"
-                            Minimum="30"
-                            SpinButtonPlacementMode="Compact"
-                            Text="{x:Bind viewModel.Config.Advanced.SpotifyQuerySearchResultsLimit, Mode=TwoWay}" />
                     </ContentControl>
                 </StackPanel>
             </ContentControl>
