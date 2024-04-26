@@ -24,8 +24,8 @@
 
 	<ItemGroup>
 		<None Remove="DataTemplates\LyricsHitTemplate.xaml" />
-		<None Remove="DataTemplates\SpotifySimpleTrackTemplate.xaml" />
-		<None Remove="DataTemplates\TrackTemplate.xaml" />
+		<None Remove="DataTemplates\SpotifyTrackTemplate.xaml" />
+		<None Remove="DataTemplates\YouTubeVideoTemplate.xaml" />
 		<None Remove="na.png" />
 		<None Remove="Views\HomeView.xaml" />
 		<None Remove="Views\LoggerView.xaml" />
@@ -60,6 +60,7 @@
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 		<PackageReference Include="SpotifyAPI.Web" Version="7.1.1" />
 		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
+		<PackageReference Include="YoutubeExplode" Version="6.3.13" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
@@ -70,7 +71,11 @@
 		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Page Update="DataTemplates\SpotifySimpleTrackTemplate.xaml">
+	  <Page Update="DataTemplates\YouTubeVideoTemplate.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
+	  <Page Update="DataTemplates\SpotifyTrackTemplate.xaml">
 	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 	    <SubType>Designer</SubType>
 	  </Page>
@@ -115,10 +120,5 @@
 		<Page Update="Views\MainView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="DataTemplates\TrackTemplate.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
 	</ItemGroup>
 </Project>

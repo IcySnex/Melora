@@ -7,6 +7,9 @@ public class TimeSpanStringConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
+        if (value is null)
+            return "N/A";
+
         TimeSpan timeSpan = (TimeSpan)value;
         StringBuilder sb = new();
 

@@ -42,6 +42,7 @@ public partial class App : Application
                 services.AddSingleton<Navigation>();
                 services.AddSingleton<JsonConverter>();
                 services.AddSingleton<Spotify>();
+                services.AddSingleton<YouTube>();
                 services.AddSingleton<Lyrics>();
 
                 // Add ViewModels and MainView

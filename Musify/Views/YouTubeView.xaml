@@ -18,7 +18,7 @@
             <ListView
                 Name="SearchResultsContainer"
                 Margin="{x:Bind viewModel.CanDownload, Mode=OneWay, Converter={StaticResource CanDownloadMarginConverter}}"
-                ItemTemplate="{StaticResource SearchResultTemplate}"
+                ItemTemplate="{StaticResource YouTubeVideoTemplate}"
                 ItemsSource="{x:Bind viewModel.SearchResults}"
                 SelectionMode="Extended">
                 <int:Interaction.Behaviors>
