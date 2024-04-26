@@ -20,13 +20,15 @@
             </Rectangle>
 
             <TextBlock
-                Margin="62,5,0,0"
+                Margin="62,5,61,0"
                 Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
-                Text="{x:Bind Name, Converter={StaticResource StringNullEmptyNaConverter}}" />
+                Text="{x:Bind Name, Converter={StaticResource StringNullEmptyNaConverter}}"
+                TextTrimming="CharacterEllipsis" />
             <TextBlock
-                Margin="62,26,0,0"
+                Margin="62,26,61,0"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                Text="{x:Bind Artists, Converter={StaticResource SpotifyArtistsStringConverter}}" />
+                Text="{x:Bind Artists, Converter={StaticResource SpotifyArtistsStringConverter}}"
+                TextTrimming="CharacterEllipsis" />
 
             <TextBlock
                 HorizontalAlignment="Right"
