@@ -106,7 +106,7 @@ public partial class SpotifyViewModel : ObservableObject
 
         try
         {
-            logger.LogInformation("[Spotify-SearchAsync] Preparing search...");
+            logger.LogInformation("[SpotifyViewModel-SearchAsync] Preparing search...");
             progress.Report("Preparing search...");
 
             SearchResults.SkipForceRefresh = true;
@@ -117,7 +117,7 @@ public partial class SpotifyViewModel : ObservableObject
                 case SpotifySearchType.Track:
                     FullTrack track = await spotify.SearchTrackAsync(id!, progress, cts.Token);
 
-                    logger.LogInformation("[LyricsViewModel-SearchAsync] Updating search results...");
+                    logger.LogInformation("[SpotifyViewModel-SearchAsync] Updating search results...");
                     progress.Report("Updating search results...");
 
                     SearchResults.Clear();
@@ -126,7 +126,7 @@ public partial class SpotifyViewModel : ObservableObject
                  case SpotifySearchType.Album:
                     IAsyncEnumerable<FullTrack> albumTracks = (await spotify.SearchAlbumAsync(id!, progress, cts.Token)).Take(Config.Spotify.SearchResultsLimit);
 
-                    logger.LogInformation("[LyricsViewModel-SearchAsync] Updating search results...");
+                    logger.LogInformation("[SpotifyViewModel-SearchAsync] Updating search results...");
                     progress.Report("Updating search results...");
 
                     SearchResults.Clear();
@@ -135,7 +135,7 @@ public partial class SpotifyViewModel : ObservableObject
                  case SpotifySearchType.Playlist:
                     IAsyncEnumerable<FullTrack> playlistTracks = (await spotify.SearchPlaylistAsync(id!, progress, cts.Token)).Take(Config.Spotify.SearchResultsLimit);
 
-                    logger.LogInformation("[LyricsViewModel-SearchAsync] Updating search results...");
+                    logger.LogInformation("[SpotifyViewModel-SearchAsync] Updating search results...");
                     progress.Report("Updating search results...");
 
                     SearchResults.Clear();
@@ -144,7 +144,7 @@ public partial class SpotifyViewModel : ObservableObject
                 case SpotifySearchType.Query:
                     IEnumerable<FullTrack> searchedTracks = (await spotify.SearchQueryAsync(Query, progress, cts.Token)).Take(Config.Spotify.SearchResultsLimit);
 
-                    logger.LogInformation("[LyricsViewModel-SearchAsync] Updating search results...");
+                    logger.LogInformation("[SpotifyViewModel-SearchAsync] Updating search results...");
                     progress.Report("Updating search results...");
 
                     SearchResults.Clear();
@@ -152,7 +152,7 @@ public partial class SpotifyViewModel : ObservableObject
                     break;
             }
 
-            logger.LogInformation("[LyricsViewModel-SearchAsync] Resorting search results...");
+            logger.LogInformation("[SpotifyViewModel-SearchAsync] Resorting search results...");
             progress.Report("Resorting search results...");
 
             SearchResults.SkipForceRefresh = false;
