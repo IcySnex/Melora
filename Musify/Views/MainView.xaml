@@ -124,7 +124,7 @@
             </ContentPresenter.OpacityTransition>
 
             <Grid
-                MinWidth="200"
+                MinWidth="300"
                 MaxWidth="{StaticResource ContentDialogMaxWidth}"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"

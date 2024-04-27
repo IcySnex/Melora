@@ -59,16 +59,13 @@ public partial class YouTube
 
 
     readonly ILogger<YouTube> logger;
-    readonly Config config;
 
     readonly YoutubeClient client;
 
     public YouTube(
-        ILogger<YouTube> logger,
-        IOptions<Config> config)
+        ILogger<YouTube> logger)
     {
         this.logger = logger;
-        this.config = config.Value;
 
         client = new();
 
@@ -78,45 +75,33 @@ public partial class YouTube
 
     public async Task<IVideo> SearchVideoAsync(
         string id,
-        IProgress<string>? progress = null,
         CancellationToken cancellationToken = default!)
     {
         logger.LogInformation("[YouTube-SearchTrackAsync] Searching for video...");
-        progress?.Report("Searching for video...");
-
         return await client.Videos.GetAsync(id, cancellationToken);
     }
 
     public IAsyncEnumerable<IVideo> SearchPlaylistAsync(
         string id,
-        IProgress<string>? progress = null,
         CancellationToken cancellationToken = default!)
     {
         logger.LogInformation("[YouTube-SearchTrackAsync] Searching for playlist...");
-        progress?.Report("Searching for playlist...");
-
         return client.Playlists.GetVideosAsync(id, cancellationToken);
     }
 
     public IAsyncEnumerable<IVideo> SearchChannelAsync(
         string id,
-        IProgress<string>? progress = null,
         CancellationToken cancellationToken = default!)
     {
         logger.LogInformation("[YouTube-SearchTrackAsync] Searching for channel...");
-        progress?.Report("Searching for channel...");
-
         return client.Channels.GetUploadsAsync(id, cancellationToken);
     }
 
     public IAsyncEnumerable<IVideo> SearchQueryAsync(
         string query,
-        IProgress<string>? progress = null,
         CancellationToken cancellationToken = default!)
     {
         logger.LogInformation("[YouTube-SearchTrackAsync] Searching for channel...");
-        progress?.Report("Searching for channel...");
-
         return client.Search.GetVideosAsync(query, cancellationToken);
     }
 }

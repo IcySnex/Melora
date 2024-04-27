@@ -4,7 +4,6 @@ using Musify.Enums;
 using Musify.Models;
 using SpotifyAPI.Web;
 using System.Text.RegularExpressions;
-using Windows.Media.Playlists;
 
 namespace Musify.Services;
 
@@ -75,27 +74,21 @@ public partial class Spotify
 
     public Task<FullTrack> SearchTrackAsync(
         string id,
-        IProgress<string>? progress = null,
         CancellationToken cancellationToken = default!)
     {
         logger.LogInformation("[Spotify-SearchTrackAsync] Searching for track...");
-        progress?.Report("Searching for track...");
-
         return client.Tracks.Get(id!, cancellationToken);
     }
 
-    public async Task<IAsyncEnumerable<FullTrack>> SearchAlbumAsync(
+    public async Task<(IAsyncEnumerable<FullTrack>, int)> SearchAlbumAsync(
         string id,
-        IProgress<string>? progress = null,
         CancellationToken cancellationToken = default!)
     {
         logger.LogInformation("[Spotify-SearchAlbumAsync] Searching for album...");
-        progress?.Report("Searching for album...");
-
         FullAlbum album = await client.Albums.Get(id!, cancellationToken);
 
         IAsyncEnumerable<SimpleTrack> tracks = client.Paginate(album.Tracks, null, cancellationToken);
-        return tracks
+        return (tracks
             .Select(track => new FullTrack()
         {
             Album = new SimpleAlbum()
@@ -129,37 +122,32 @@ public partial class Spotify
             TrackNumber = track.TrackNumber,
             Type = track.Type,
             Uri = track.Uri,
-        });
+        }), album.TotalTracks);
     }
 
-    public async Task<IAsyncEnumerable<FullTrack>> SearchPlaylistAsync(
+    public async Task<(IAsyncEnumerable<FullTrack>, int)> SearchPlaylistAsync(
         string id,
-        IProgress<string>? progress = null,
         CancellationToken cancellationToken = default!)
     {
         logger.LogInformation("[Spotify-SearchPlaylistAsync] Searching for playlist...");
-        progress?.Report("Searching for playlist...");
-
         FullPlaylist playlist = await client.Playlists.Get(id!, cancellationToken);
+
         if (playlist.Tracks is null)
         {
             logger.LogError("[Spotify-SearchPlaylistAsync] Playlist tracks is null");
             throw new NullReferenceException("Playlist tracks is null.");
         }
 
-        return client.Paginate(playlist.Tracks, null, cancellationToken)
+        return (client.Paginate(playlist.Tracks, null, cancellationToken)
             .Where(track => track.Track is not null && track.Track.Type == ItemType.Track)
-            .Select(track => (FullTrack)track.Track);
+            .Select(track => (FullTrack)track.Track), playlist.Tracks.Total.GetValueOrDefault(0));
     }
 
     public async Task<List<FullTrack>> SearchQueryAsync(
         string query,
-        IProgress<string>? progress = null,
         CancellationToken cancellationToken = default!)
     {
         logger.LogInformation("[Spotify-SearchAsync] Searching for query...");
-        progress?.Report("Searching for query...");
-
         SearchRequest request = new(SearchRequest.Types.Track, query)
         {
             Market = config.Advanced.SpotifySearchMarket,

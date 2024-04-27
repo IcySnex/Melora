@@ -7,6 +7,7 @@ using Musify.Helpers;
 using Musify.Models;
 using Musify.Services;
 using Musify.Views;
+using SpotifyAPI.Web;
 using YoutubeExplode.Videos;
 
 namespace Musify.ViewModels;
@@ -102,11 +103,10 @@ public partial class YouTubeViewModel : ObservableObject
 
         CancellationTokenSource cts = new();
         IProgress<string> progress = mainView.ShowLoadingPopup(cts.Cancel);
-        logger.LogInformation("[YouTubeViewModel-SearchAsync] Staring search for query on YouTube...");
+        logger.LogInformation("[YouTubeViewModel-SearchAsync] Staring search on YouTube...");
 
         try
         {
-            logger.LogInformation("[YouTubeViewModel-SearchAsync] Preparing search...");
             progress.Report("Preparing search...");
 
             SearchResults.SkipForceRefresh = true;
@@ -115,51 +115,52 @@ public partial class YouTubeViewModel : ObservableObject
             switch (type)
             {
                 case YouTubeSearchType.Video:
-                    IVideo video = await youTube.SearchVideoAsync(id!, progress, cts.Token);
-
-                    logger.LogInformation("[YouTubeViewModel-SearchAsync] Updating search results...");
-                    progress.Report("Updating search results...");
+                    progress.Report("Searching for video...");
+                    IVideo video = await youTube.SearchVideoAsync(id!, cts.Token);
 
                     SearchResults.Clear();
                     SearchResults.Add(video);
                     break;
                 case YouTubeSearchType.Playlist:
-                    IAsyncEnumerable<IVideo> playlistVideos = youTube.SearchPlaylistAsync(id!, progress, cts.Token).Take(Config.YouTube.SearchResultsLimit);
+                    progress.Report("Searching for playlist...");
+                    IAsyncEnumerable<IVideo> playlistVideos = youTube.SearchPlaylistAsync(id!, cts.Token).Take(Config.YouTube.SearchResultsLimit);
 
-                    logger.LogInformation("[YouTubeViewModel-SearchAsync] Updating search results...");
-                    progress.Report("Updating search results...");
+                    Action<int, IVideo> playlistCallback = (int index, IVideo video) =>
+                        progress.Report($"Getting playlist videos... [{index}]");
 
                     SearchResults.Clear();
-                    await SearchResults.AddRangeAsync(playlistVideos);
+                    await SearchResults.AddRangeAsync(playlistVideos, playlistCallback, cts.Token);
                     break;
                 case YouTubeSearchType.Channel:
-                    IAsyncEnumerable<IVideo> channelVideos = youTube.SearchChannelAsync(id!, progress, cts.Token).Take(Config.YouTube.SearchResultsLimit);
+                    progress.Report("Searching for channel...");
+                    IAsyncEnumerable<IVideo> channelVideos = youTube.SearchChannelAsync(id!, cts.Token).Take(Config.YouTube.SearchResultsLimit);
 
-                    logger.LogInformation("[YouTubeViewModel-SearchAsync] Updating search results...");
-                    progress.Report("Updating search results...");
+                    Action<int, IVideo> channelCallback = (int index, IVideo video) =>
+                        progress.Report($"Getting channel videos... [{index}]");
 
                     SearchResults.Clear();
-                    await SearchResults.AddRangeAsync(channelVideos);
+                    await SearchResults.AddRangeAsync(channelVideos, channelCallback, cts.Token);
                     break;
                 case YouTubeSearchType.Query:
-                    IAsyncEnumerable<IVideo> searchedVideos = youTube.SearchQueryAsync(Query, progress, cts.Token).Take(Config.YouTube.SearchResultsLimit);
+                    progress.Report("Searching for query...");
+                    IAsyncEnumerable<IVideo> searchedVideos = youTube.SearchQueryAsync(Query, cts.Token).Take(Config.YouTube.SearchResultsLimit);
 
-                    logger.LogInformation("[YouTubeViewModel-SearchAsync] Updating search results...");
-                    progress.Report("Updating search results...");
+                    Action<int, IVideo> searchedCallback = (int index, IVideo video) =>
+                        progress.Report($"Getting searched videos... [{index}]");
 
                     SearchResults.Clear();
-                    await SearchResults.AddRangeAsync(searchedVideos);
+                    await SearchResults.AddRangeAsync(searchedVideos, searchedCallback, cts.Token);
                     break;
             }
 
-            logger.LogInformation("[YouTubeViewModel-SearchAsync] Resorting search results...");
             progress.Report("Resorting search results...");
+            await Task.Delay(100);
 
             SearchResults.SkipForceRefresh = false;
             OnSearchSortingChanged(SearchSorting);
 
             mainView.HideLoadingPopup();
-            logger.LogInformation("[YouTubeViewModel-SearchAsync] Searched for query on YouTube: {query}", Query);
+            logger.LogInformation("[YouTubeViewModel-SearchAsync] Searched on YouTube: {query}", Query);
         }
         catch (OperationCanceledException)
         {

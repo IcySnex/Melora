@@ -8,6 +8,7 @@ using Musify.Models;
 using Musify.Services;
 using Musify.Views;
 using SpotifyAPI.Web;
+using System.Diagnostics;
 
 namespace Musify.ViewModels;
 
@@ -102,64 +103,66 @@ public partial class SpotifyViewModel : ObservableObject
 
         CancellationTokenSource cts = new();
         IProgress<string> progress = mainView.ShowLoadingPopup(cts.Cancel);
-        logger.LogInformation("[SpotifyViewModel-SearchAsync] Staring search for query on Spotify...");
+        logger.LogInformation("[SpotifyViewModel-SearchAsync] Staring search on Spotify...");
 
         try
         {
-            logger.LogInformation("[SpotifyViewModel-SearchAsync] Preparing search...");
             progress.Report("Preparing search...");
-
             SearchResults.SkipForceRefresh = true;
 
             SpotifySearchType type = Spotify.GetSearchType(Query, out string? id);
             switch (type)
             {
                 case SpotifySearchType.Track:
-                    FullTrack track = await spotify.SearchTrackAsync(id!, progress, cts.Token);
-
-                    logger.LogInformation("[SpotifyViewModel-SearchAsync] Updating search results...");
-                    progress.Report("Updating search results...");
+                    progress.Report("Searching for track...");
+                    FullTrack track = await spotify.SearchTrackAsync(id!, cts.Token);
 
                     SearchResults.Clear();
                     SearchResults.Add(track);
                     break;
                  case SpotifySearchType.Album:
-                    IAsyncEnumerable<FullTrack> albumTracks = (await spotify.SearchAlbumAsync(id!, progress, cts.Token)).Take(Config.Spotify.SearchResultsLimit);
+                    progress.Report("Searching for album...");
+                    (IAsyncEnumerable<FullTrack> albumTracks, int albumTracksCount) = await spotify.SearchAlbumAsync(id!, cts.Token);
 
-                    logger.LogInformation("[SpotifyViewModel-SearchAsync] Updating search results...");
-                    progress.Report("Updating search results...");
+                    albumTracks = albumTracks.Take(Config.Spotify.SearchResultsLimit);
+                    albumTracksCount = Math.Min(albumTracksCount, Config.Spotify.SearchResultsLimit);
+
+                    Action<int, FullTrack> albumCallback = (int index, FullTrack track) =>
+                        progress.Report($"Getting album tracks... [{index}/{albumTracksCount}]");
 
                     SearchResults.Clear();
                     await SearchResults.AddRangeAsync(albumTracks, cts.Token);
                     break;
                  case SpotifySearchType.Playlist:
-                    IAsyncEnumerable<FullTrack> playlistTracks = (await spotify.SearchPlaylistAsync(id!, progress, cts.Token)).Take(Config.Spotify.SearchResultsLimit);
+                    progress.Report("Searching for playlist...");
+                    (IAsyncEnumerable<FullTrack> playlistTracks, int playlistTracksCount) = await spotify.SearchPlaylistAsync(id!, cts.Token);
 
-                    logger.LogInformation("[SpotifyViewModel-SearchAsync] Updating search results...");
-                    progress.Report("Updating search results...");
+                    playlistTracks = playlistTracks.Take(Config.Spotify.SearchResultsLimit);
+                    playlistTracksCount = Math.Min(playlistTracksCount, Config.Spotify.SearchResultsLimit);
+
+                    Action<int, FullTrack> playlistCallback = (int index, FullTrack track) =>
+                        progress.Report($"Getting playlist tracks... [{index}/{playlistTracksCount}]");
 
                     SearchResults.Clear();
-                    await SearchResults.AddRangeAsync(playlistTracks, cts.Token);
+                    await SearchResults.AddRangeAsync(playlistTracks, playlistCallback, cts.Token);
                     break;
                 case SpotifySearchType.Query:
-                    IEnumerable<FullTrack> searchedTracks = (await spotify.SearchQueryAsync(Query, progress, cts.Token)).Take(Config.Spotify.SearchResultsLimit);
-
-                    logger.LogInformation("[SpotifyViewModel-SearchAsync] Updating search results...");
-                    progress.Report("Updating search results...");
+                    progress.Report("Searching for query...");
+                    IEnumerable<FullTrack> searchedTracks = (await spotify.SearchQueryAsync(Query, cts.Token)).Take(Config.Spotify.SearchResultsLimit);
 
                     SearchResults.Clear();
                     SearchResults.AddRange(searchedTracks);
                     break;
             }
 
-            logger.LogInformation("[SpotifyViewModel-SearchAsync] Resorting search results...");
             progress.Report("Resorting search results...");
+            await Task.Delay(100);
 
             SearchResults.SkipForceRefresh = false;
             OnSearchSortingChanged(SearchSorting);
 
             mainView.HideLoadingPopup();
-            logger.LogInformation("[SpotifyViewModel-SearchAsync] Searched for query on Spotify: {query}", Query);
+            logger.LogInformation("[SpotifyViewModel-SearchAsync] Searched on Spotify: {query}", Query);
         }
         catch (OperationCanceledException)
         {

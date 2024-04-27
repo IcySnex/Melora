@@ -34,19 +34,52 @@ public class ObservableRangeCollection<T> : ObservableCollection<T>
         IAsyncEnumerable<T> items,
         CancellationToken cancellationToken = default!)
     {
+        IAsyncEnumerator<T> enumerator = items.GetAsyncEnumerator(cancellationToken);
         try
         {
             CheckReentrancy();
 
-            await foreach (T item in items)
+            while (await enumerator.MoveNextAsync(cancellationToken))
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                T item = enumerator.Current;
 
                 Items.Add(item);
             }
         }
         finally
         {
+            if (enumerator is not null)
+                await enumerator.DisposeAsync();
+
+            ForceRefresh();
+        }
+    }
+    public async Task AddRangeAsync(
+        IAsyncEnumerable<T> items,
+        Action<int, T> callback,
+        CancellationToken cancellationToken = default!)
+    {
+        IAsyncEnumerator<T> enumerator = items.GetAsyncEnumerator(cancellationToken);
+        try
+        {
+            CheckReentrancy();
+
+            int index = -1;
+            while (await enumerator.MoveNextAsync(cancellationToken))
+            {
+                index++;
+                T item = enumerator.Current;
+
+                callback.Invoke(index, item);
+
+                Items.Add(item);
+            }
+        }
+        finally
+        {
+            if (enumerator is not null)
+                await enumerator.DisposeAsync();
+
             ForceRefresh();
         }
     }
