@@ -13,12 +13,14 @@ public partial class Spotify
     [GeneratedRegex(@"^(?:http(s)?:\/\/open\.spotify\.com\/(?:user\/[a-zA-Z0-9]+\/)?(?:track|album|playlist)\/|spotify:(?:user:[a-zA-Z0-9]+:)?(?:track|album|playlist):)([a-zA-Z0-9]+)")]
     private static partial Regex SpotifyUrlRegex();
 
+
     public static string? GetId(
         string url)
     {
         Match match = SpotifyUrlRegex().Match(url);
         return match.Success ? match.Groups[2].Value : null;
     }
+
 
     public static SpotifySearchType GetSearchType(
         string query,
