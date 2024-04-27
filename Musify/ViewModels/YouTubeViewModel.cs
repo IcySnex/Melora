@@ -2,13 +2,11 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.UI.Xaml.Controls;
 using Musify.Enums;
 using Musify.Helpers;
 using Musify.Models;
 using Musify.Services;
 using Musify.Views;
-using SpotifyAPI.Web;
 using YoutubeExplode.Videos;
 
 namespace Musify.ViewModels;
@@ -144,7 +142,7 @@ public partial class YouTubeViewModel : ObservableObject
                     await SearchResults.AddRangeAsync(channelVideos);
                     break;
                 case YouTubeSearchType.Query:
-                    IAsyncEnumerable<IVideo> searchedVideos = youTube.SearchQueryAsync(id!, progress, cts.Token).Take(Config.YouTube.SearchResultsLimit);
+                    IAsyncEnumerable<IVideo> searchedVideos = youTube.SearchQueryAsync(Query, progress, cts.Token).Take(Config.YouTube.SearchResultsLimit);
 
                     logger.LogInformation("[YouTubeViewModel-SearchAsync] Updating search results...");
                     progress.Report("Updating search results...");
