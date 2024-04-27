@@ -2,36 +2,56 @@
 using Microsoft.Extensions.Options;
 using Musify.Enums;
 using Musify.Models;
-using System.Collections.Generic;
+using System.Net;
+using System.Text.RegularExpressions;
 using YoutubeExplode;
-using YoutubeExplode.Channels;
-using YoutubeExplode.Playlists;
-using YoutubeExplode.Search;
 using YoutubeExplode.Videos;
 
 namespace Musify.Services;
 
-public class YouTube
+public partial class YouTube
 {
+    [GeneratedRegex(@"(?:youtube\..+?/watch.*?v=|youtu\.be/|youtube\..+?/embed/|youtube\..+?/shorts/|youtube\..+?/live/)([^&/?]+)(?:&|/|\?si=[^&/]*)?")]
+    private static partial Regex YouTubeVideoIdRegex();
+
+    [GeneratedRegex(@"(?:youtube\..+?/playlist.*?list=|youtu\.be/.*?/.*?list=|youtube\..+?/watch.*?list=|youtube\..+?/embed/.*?/.*?list=)(.*?)(?:&|/|$)")]
+    private static partial Regex YouTubePlaylistIdRegex();
+
+    [GeneratedRegex(@"youtube\..+?/channel/(.*?)(?:\?|&|/|$)")]
+    private static partial Regex YouTubeChannelIdRegex();
+
+
+    public static bool IsValidVideoId(
+        string videoId) =>
+        videoId.Length == 11 && videoId.All(c => char.IsLetterOrDigit(c) || c is '_' or '-');
+
+    public static bool IsValidPlaylistId(
+        string playlistId) =>
+        playlistId.Length >= 2 && playlistId.All(c => char.IsLetterOrDigit(c) || c is '_' or '-');
+
+    public static bool IsValidChannelId(
+        string channelId) =>
+        channelId.StartsWith("UC", StringComparison.Ordinal) && channelId.Length == 24 && channelId.All(c => char.IsLetterOrDigit(c) || c is '_' or '-');
+
+
     public static YouTubeSearchType GetSearchType(
         string query,
         out string? id)
     {
-        if (VideoId.TryParse(query) is VideoId videoId)
-        {
-            id = videoId.Value;
+        Match videoIdMatch = YouTubeVideoIdRegex().Match(query);
+        id = videoIdMatch.Success ? WebUtility.UrlDecode(videoIdMatch.Groups[1].Value) : null;
+        if (!string.IsNullOrWhiteSpace(id) && IsValidVideoId(id))
             return YouTubeSearchType.Video;
-        }
-        if (PlaylistId.TryParse(query) is PlaylistId playlistId)
-        {
-            id = playlistId.Value;
+
+        Match playlistIdMatch = YouTubePlaylistIdRegex().Match(query);
+        id = playlistIdMatch.Success ? WebUtility.UrlDecode(playlistIdMatch.Groups[1].Value) : null;
+        if (!string.IsNullOrWhiteSpace(id) && IsValidPlaylistId(id))
             return YouTubeSearchType.Playlist;
-        }
-        if (ChannelId.TryParse(query) is ChannelId channelId)
-        {
-            id = channelId.Value;
+
+        Match channelIdMatch = YouTubeChannelIdRegex().Match(query);
+        id = channelIdMatch.Success ? WebUtility.UrlDecode(channelIdMatch.Groups[1].Value) : null;
+        if (!string.IsNullOrWhiteSpace(id) && IsValidChannelId(id))
             return YouTubeSearchType.Channel;
-        }
 
         id = null;
         return YouTubeSearchType.Query;
