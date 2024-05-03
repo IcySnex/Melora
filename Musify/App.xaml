@@ -32,6 +32,7 @@
             <conv:SpotifyAlbumImageConverter x:Key="SpotifyAlbumImageConverter" />
             <conv:StringNullEmptyNaConverter x:Key="StringNullEmptyNaConverter" />
             <conv:YouTubeThumbnailImageConverter x:Key="YouTubeThumbnailImageConverter" />
+            <conv:BooleanFontIconChevronConverter x:Key="BooleanFontIconChevronConverter" />
 
 
             <!--  Colors  -->

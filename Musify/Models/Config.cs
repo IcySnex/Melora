@@ -31,11 +31,7 @@ public partial class ConfigSpotify : ObservableObject
     [ObservableProperty]
     bool saveArtwork = true;
 
-    [ObservableProperty]
-    int searchResultsLimit = 1000;
-
-    [ObservableProperty]
-    Sorting searchSorting = Sorting.Default;
+    public ViewOptions ViewOptions { get; set; } = new(Sorting.Default, false, 1000);
 }
 
 public partial class ConfigYouTube : ObservableObject
@@ -52,11 +48,7 @@ public partial class ConfigYouTube : ObservableObject
     [ObservableProperty]
     bool saveThumbnail = true;
 
-    [ObservableProperty]
-    int searchResultsLimit = 1000;
-
-    [ObservableProperty]
-    Sorting searchSorting = Sorting.Default;
+    public ViewOptions ViewOptions { get; set; } = new(Sorting.Default, false, 1000);
 }
 
 public partial class ConfigDownloads : ObservableObject

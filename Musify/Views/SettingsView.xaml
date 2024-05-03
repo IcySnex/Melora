@@ -67,34 +67,39 @@
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.Spotify.SaveArtwork, Mode=TwoWay}" />
                     </ContentControl>
 
-                    <!--  Search Results Limit  -->
+                    <!--  View Options > Sorting  -->
                     <ContentControl
-                        hlp:Attributes.Description="The limit of the search results for a query"
-                        hlp:Attributes.Title="Search Results Limit"
+                        hlp:Attributes.Description="The sorting of the search results"
+                        hlp:Attributes.Title="View Options &gt; Sorting"
+                        Template="{StaticResource SettingsCard}">
+                        <ComboBox Width="105" SelectedIndex="{x:Bind viewModel.Config.Spotify.ViewOptions.Sorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                            <ComboBoxItem Content="Default" />
+                            <ComboBoxItem Content="Title" />
+                            <ComboBoxItem Content="Artist" />
+                            <ComboBoxItem Content="Duration" />
+                        </ComboBox>
+                    </ContentControl>
+
+                    <!--  View Options > Descending  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Whether to sort the search results descending or ascending"
+                        hlp:Attributes.Title="View Options &gt; Descending"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.Spotify.ViewOptions.Descending, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  View Options > Limit  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The limit of the viewable search results (due to performance)"
+                        hlp:Attributes.Title="View Options &gt; Limit"
                         Template="{StaticResource SettingsCard}">
                         <NumberBox
-                            Width="110"
+                            Width="108"
+                            Height="32"
                             Maximum="9999"
                             Minimum="1"
                             SpinButtonPlacementMode="Compact"
-                            Value="{x:Bind viewModel.Config.Spotify.SearchResultsLimit, Mode=TwoWay}" />
-                    </ContentControl>
-
-                    <!--  Search Sorting  -->
-                    <ContentControl
-                        hlp:Attributes.Description="The sorting of the search results"
-                        hlp:Attributes.Title="Search Sorting"
-                        Template="{StaticResource SettingsCard}">
-                        <ComboBox Width="120" SelectedIndex="{x:Bind viewModel.Config.Spotify.SearchSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
-                            <ComboBoxItem Content="🠋 Default" />
-                            <ComboBoxItem Content="🠉 Default" />
-                            <ComboBoxItem Content="🠋 Title" />
-                            <ComboBoxItem Content="🠉 Title" />
-                            <ComboBoxItem Content="🠋 Artist" />
-                            <ComboBoxItem Content="🠉 Artist" />
-                            <ComboBoxItem Content="🠋 Duration" />
-                            <ComboBoxItem Content="🠉 Duration" />
-                        </ComboBox>
+                            Value="{x:Bind viewModel.Config.Spotify.ViewOptions.Limit, Mode=TwoWay}" />
                     </ContentControl>
                 </StackPanel>
             </ContentControl>
@@ -152,34 +157,39 @@
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.YouTube.SaveThumbnail, Mode=TwoWay}" />
                     </ContentControl>
 
-                    <!--  Search Results Limit  -->
+                    <!--  View Options > Sorting  -->
                     <ContentControl
-                        hlp:Attributes.Description="The limit of the search results for a query"
-                        hlp:Attributes.Title="Search Results Limit"
+                        hlp:Attributes.Description="The sorting of the search results"
+                        hlp:Attributes.Title="View Options &gt; Sorting"
+                        Template="{StaticResource SettingsCard}">
+                        <ComboBox Width="105" SelectedIndex="{x:Bind viewModel.Config.YouTube.ViewOptions.Sorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                            <ComboBoxItem Content="Default" />
+                            <ComboBoxItem Content="Title" />
+                            <ComboBoxItem Content="Channel" />
+                            <ComboBoxItem Content="Duration" />
+                        </ComboBox>
+                    </ContentControl>
+
+                    <!--  View Options > Descending  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Whether to sort the search results descending or ascending"
+                        hlp:Attributes.Title="View Options &gt; Descending"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.YouTube.ViewOptions.Descending, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  View Options > Limit  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The limit of the viewable search results (due to performance)"
+                        hlp:Attributes.Title="View Options &gt; Limit"
                         Template="{StaticResource SettingsCard}">
                         <NumberBox
-                            Width="110"
+                            Width="108"
+                            Height="32"
                             Maximum="9999"
                             Minimum="1"
                             SpinButtonPlacementMode="Compact"
-                            Value="{x:Bind viewModel.Config.YouTube.SearchResultsLimit, Mode=TwoWay}" />
-                    </ContentControl>
-
-                    <!--  Search Sorting  -->
-                    <ContentControl
-                        hlp:Attributes.Description="The sorting of the search results"
-                        hlp:Attributes.Title="Search Sorting"
-                        Template="{StaticResource SettingsCard}">
-                        <ComboBox Width="120" SelectedIndex="{x:Bind viewModel.Config.YouTube.SearchSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
-                            <ComboBoxItem Content="🠋 Default" />
-                            <ComboBoxItem Content="🠉 Default" />
-                            <ComboBoxItem Content="🠋 Title" />
-                            <ComboBoxItem Content="🠉 Title" />
-                            <ComboBoxItem Content="🠋 Channel" />
-                            <ComboBoxItem Content="🠉 Channel" />
-                            <ComboBoxItem Content="🠋 Duration" />
-                            <ComboBoxItem Content="🠉 Duration" />
-                        </ComboBox>
+                            Value="{x:Bind viewModel.Config.YouTube.ViewOptions.Limit, Mode=TwoWay}" />
                     </ContentControl>
                 </StackPanel>
             </ContentControl>

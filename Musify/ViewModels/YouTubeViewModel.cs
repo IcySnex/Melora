@@ -7,7 +7,7 @@ using Musify.Helpers;
 using Musify.Models;
 using Musify.Services;
 using Musify.Views;
-using SpotifyAPI.Web;
+using System.ComponentModel;
 using YoutubeExplode.Videos;
 
 namespace Musify.ViewModels;
@@ -31,7 +31,20 @@ public partial class YouTubeViewModel : ObservableObject
         this.Config = config.Value;
         this.youTube = youTube;
 
-        SearchSorting = Config.YouTube.SearchSorting;
+        SearchResults = new()
+        {
+            KeySelector = Config.YouTube.ViewOptions.Sorting switch
+            {
+                Sorting.Default => null,
+                Sorting.Title => track => track.Title,
+                Sorting.Artist => track => track.Author.ChannelTitle,
+                Sorting.Duration => track => track.Duration ?? TimeSpan.FromMilliseconds(-1),
+                _ => null
+            },
+            Descending = Config.YouTube.ViewOptions.Descending,
+            Limit = Config.YouTube.ViewOptions.Limit
+        };
+        Config.YouTube.ViewOptions.PropertyChanged += OnViewOptionsPropertyChanged;
 
         logger.LogInformation("[YouTubeViewModel-.ctor] YouTubeViewModel has been initialized");
     }
@@ -43,49 +56,49 @@ public partial class YouTubeViewModel : ObservableObject
         OnPropertyChanged(propertyName);
 
 
-    public ObservableSortableRangeCollection<IVideo> SearchResults { get; } = [];
+    public ObservableRangeCollection<IVideo> SearchResults { get; }
 
     public IList<object>? SelectedSearchResults { get; set; }
 
     public bool CanDownload => SelectedSearchResults is not null && SelectedSearchResults.Count > 0;
 
 
-    [ObservableProperty]
-    Sorting searchSorting;
-
-    partial void OnSearchSortingChanged(
-        Sorting value)
+    private async void OnViewOptionsPropertyChanged(
+        object? _,
+        PropertyChangedEventArgs e)
     {
-        Config.YouTube.SearchSorting = value;
-        switch (value)
-        {
-            case Sorting.Default:
-                SearchResults.OrderbyDefault();
-                break;
-            case Sorting.DefaultInv:
-                SearchResults.OrderbyDefault(true);
-                break;
-            case Sorting.Title:
-                SearchResults.OrderBy(track => track.Title);
-                break;
-            case Sorting.TitleInv:
-                SearchResults.OrderBy(track => track.Title, true);
-                break;
-            case Sorting.Artist:
-                SearchResults.OrderBy(track => track.Author.ChannelTitle);
-                break;
-            case Sorting.ArtistInv:
-                SearchResults.OrderBy(track => track.Author.ChannelTitle, true);
-                break;
-            case Sorting.Duration:
-                SearchResults.OrderBy(track => track.Duration);
-                break;
-            case Sorting.DurationInv:
-                SearchResults.OrderBy(track => track.Duration, true);
-                break;
-        }
+        IProgress<string> progress = mainView.ShowLoadingPopup();
+        progress.Report("Reordering search results");
+        await Task.Delay(100);
 
-        logger.LogInformation("[YouTubeViewModel-OnSearchSortingChanged] Resorted search results: {sorting}", value);
+        try
+        {
+            switch (e.PropertyName)
+            {
+                case "Sorting":
+                    SearchResults.KeySelector = Config.YouTube.ViewOptions.Sorting switch
+                    {
+                        Sorting.Default => null,
+                        Sorting.Title => video => video.Title,
+                        Sorting.Artist => video => video.Author.ChannelTitle,
+                        Sorting.Duration => video => video.Duration ?? TimeSpan.FromMilliseconds(-1),
+                        _ => null
+                    };
+                    break;
+                case "Descending":
+                    SearchResults.Descending = Config.YouTube.ViewOptions.Descending;
+                    break;
+                case "Limit":
+                    SearchResults.Limit = Config.YouTube.ViewOptions.Limit;
+                    break;
+            }
+        }
+        finally
+        {
+            mainView.HideLoadingPopup();
+
+            logger.LogInformation("[YouTubeViewModel-OnViewOptionsPropertyChanged] Reordered search results");
+        }
     }
 
 
@@ -109,8 +122,6 @@ public partial class YouTubeViewModel : ObservableObject
         {
             progress.Report("Preparing search...");
 
-            SearchResults.SkipForceRefresh = true;
-
             YouTubeSearchType type = YouTube.GetSearchType(Query, out string? id);
             switch (type)
             {
@@ -123,56 +134,45 @@ public partial class YouTubeViewModel : ObservableObject
                     break;
                 case YouTubeSearchType.Playlist:
                     progress.Report("Searching for playlist...");
-                    IAsyncEnumerable<IVideo> playlistVideos = youTube.SearchPlaylistAsync(id!, cts.Token).Take(Config.YouTube.SearchResultsLimit);
+                    IAsyncEnumerable<IVideo> playlistVideos = youTube.SearchPlaylistAsync(id!, cts.Token);
 
                     Action<int, IVideo> playlistCallback = (int index, IVideo video) =>
-                        progress.Report($"Getting playlist videos... [{index}]");
+                        progress.Report($"Buffering videos... [{index}]");
 
                     SearchResults.Clear();
                     await SearchResults.AddRangeAsync(playlistVideos, playlistCallback, cts.Token);
                     break;
                 case YouTubeSearchType.Channel:
                     progress.Report("Searching for channel...");
-                    IAsyncEnumerable<IVideo> channelVideos = youTube.SearchChannelAsync(id!, cts.Token).Take(Config.YouTube.SearchResultsLimit);
+                    IAsyncEnumerable<IVideo> channelVideos = youTube.SearchChannelAsync(id!, cts.Token);
 
                     Action<int, IVideo> channelCallback = (int index, IVideo video) =>
-                        progress.Report($"Getting channel videos... [{index}]");
+                        progress.Report($"Buffering videos... [{index}]");
 
                     SearchResults.Clear();
                     await SearchResults.AddRangeAsync(channelVideos, channelCallback, cts.Token);
                     break;
                 case YouTubeSearchType.Query:
                     progress.Report("Searching for query...");
-                    IAsyncEnumerable<IVideo> searchedVideos = youTube.SearchQueryAsync(Query, cts.Token).Take(Config.YouTube.SearchResultsLimit);
+                    IAsyncEnumerable<IVideo> searchedVideos = youTube.SearchQueryAsync(Query, cts.Token).Take(100);
 
                     Action<int, IVideo> searchedCallback = (int index, IVideo video) =>
-                        progress.Report($"Getting searched videos... [{index}]");
+                        progress.Report($"Buffering videos... [{index}/100]");
 
                     SearchResults.Clear();
                     await SearchResults.AddRangeAsync(searchedVideos, searchedCallback, cts.Token);
                     break;
             }
 
-            progress.Report("Resorting search results...");
-            await Task.Delay(100);
-
-            SearchResults.SkipForceRefresh = false;
-            OnSearchSortingChanged(SearchSorting);
-
             mainView.HideLoadingPopup();
             logger.LogInformation("[YouTubeViewModel-SearchAsync] Searched on YouTube: {query}", Query);
         }
         catch (OperationCanceledException)
         {
-            SearchResults.SkipForceRefresh = false;
-
             logger.LogInformation("[YouTubeViewModel-SearchAsync] Cancelled search for query on YouTube");
         }
         catch (Exception ex)
         {
-            SearchResults.SkipForceRefresh = false;
-            mainView.HideLoadingPopup();
-
             await mainView.AlertAsync($"Failed to search for query on YouTube.\n\nException: {ex.Message}", "Something went wrong.");
             logger.LogError("[YouTubeViewModel-SearchAsync] Failed to search for query on YouTube: {exception}", ex.Message);
         }

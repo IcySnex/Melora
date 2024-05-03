@@ -46,33 +46,24 @@
             CornerRadius="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="2" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="8" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="26" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="2" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="2" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <!--  Search  -->
             <TextBox
                 hlp:Attributes.EnterKeyCommand="{x:Bind viewModel.SearchCommand}"
-                CornerRadius="4,0,0,4"
                 PlaceholderText="Search for videos on YouTube..."
                 Text="{x:Bind viewModel.Query, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
-            <NumberBox
-                Grid.Column="2"
-                Width="110"
-                CornerRadius="0,4,4,0"
-                Maximum="9999"
-                Minimum="1"
-                PlaceholderText="Limit"
-                SpinButtonPlacementMode="Compact"
-                Value="{x:Bind viewModel.Config.YouTube.SearchResultsLimit, Mode=TwoWay}" />
-
             <Button
-                Grid.Column="4"
+                Grid.Column="2"
                 Command="{x:Bind viewModel.SearchCommand}"
                 Style="{StaticResource AccentButtonStyle}"
                 ToolTipService.ToolTip="Search on YouTube">
@@ -82,23 +73,41 @@
                 </StackPanel>
             </Button>
 
-            <Rectangle Grid.Column="5" Style="{StaticResource VerticalDivider}" />
+            <Rectangle Grid.Column="3" Style="{StaticResource VerticalDivider}" />
 
-            <!--  Pagination  -->
+            <!--  View Options  -->
+            <NumberBox
+                Grid.Column="4"
+                Width="108"
+                BorderThickness="0"
+                CornerRadius="4,0,0,4"
+                Maximum="9999"
+                Minimum="1"
+                PlaceholderText="Limit"
+                SpinButtonPlacementMode="Compact"
+                ToolTipService.ToolTip="Viewable search results limit"
+                Value="{x:Bind viewModel.Config.YouTube.ViewOptions.Limit, Mode=TwoWay}" />
             <ComboBox
                 Grid.Column="6"
-                Width="120"
-                SelectedIndex="{x:Bind viewModel.SearchSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
-                ToolTipService.ToolTip="Sort by">
-                <ComboBoxItem Content="🠋 Default" />
-                <ComboBoxItem Content="🠉 Default" />
-                <ComboBoxItem Content="🠋 Title" />
-                <ComboBoxItem Content="🠉 Title" />
-                <ComboBoxItem Content="🠋 Channel" />
-                <ComboBoxItem Content="🠉 Channel" />
-                <ComboBoxItem Content="🠋 Duration" />
-                <ComboBoxItem Content="🠉 Duration" />
+                Width="105"
+                CornerRadius="0"
+                SelectedIndex="{x:Bind viewModel.Config.YouTube.ViewOptions.Sorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
+                ToolTipService.ToolTip="Sort search results by">
+                <ComboBoxItem Content="Default" />
+                <ComboBoxItem Content="Title" />
+                <ComboBoxItem Content="Channel" />
+                <ComboBoxItem Content="Duration" />
             </ComboBox>
+            <ToggleButton
+                Grid.Column="8"
+                Width="32"
+                Height="32"
+                Padding="4"
+                CornerRadius="0,4,4,0"
+                IsChecked="{x:Bind viewModel.Config.YouTube.ViewOptions.Descending, Mode=TwoWay}"
+                ToolTipService.ToolTip="Sort search results descending">
+                <FontIcon FontSize="17" Glyph="{x:Bind viewModel.Config.YouTube.ViewOptions.Descending, Mode=OneWay, Converter={StaticResource BooleanFontIconChevronConverter}}" />
+            </ToggleButton>
         </Grid>
 
         <!--  Download bar  -->

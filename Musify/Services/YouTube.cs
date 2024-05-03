@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Musify.Enums;
-using Musify.Models;
 using System.Net;
 using System.Text.RegularExpressions;
 using YoutubeExplode;

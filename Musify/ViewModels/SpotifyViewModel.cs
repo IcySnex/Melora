@@ -8,7 +8,7 @@ using Musify.Models;
 using Musify.Services;
 using Musify.Views;
 using SpotifyAPI.Web;
-using System.Diagnostics;
+using System.ComponentModel;
 
 namespace Musify.ViewModels;
 
@@ -31,11 +31,23 @@ public partial class SpotifyViewModel : ObservableObject
         this.mainView = mainView;
         this.spotify = spotify;
 
-        SearchSorting = Config.Spotify.SearchSorting;
+        SearchResults = new()
+        {
+            KeySelector = Config.Spotify.ViewOptions.Sorting switch
+            {
+                Sorting.Default => null,
+                Sorting.Title => track => track.Name,
+                Sorting.Artist => track => track.Artists[0].Name,
+                Sorting.Duration => track => track.DurationMs,
+                _ => null
+            },
+            Descending = Config.Spotify.ViewOptions.Descending,
+            Limit = Config.Spotify.ViewOptions.Limit
+        };
+        Config.Spotify.ViewOptions.PropertyChanged += OnViewOptionsPropertyChanged;
 
         logger.LogInformation("[SpotifyViewModel-.ctor] SpotifyViewModel has been initialized");
     }
-
 
     [RelayCommand]
     void ForceUpdateProperty(
@@ -43,49 +55,49 @@ public partial class SpotifyViewModel : ObservableObject
         OnPropertyChanged(propertyName);
 
 
-    public ObservableSortableRangeCollection<FullTrack> SearchResults { get; } = [];
+    public ObservableRangeCollection<FullTrack> SearchResults { get; }
 
     public IList<object>? SelectedSearchResults { get; set; }
 
     public bool CanDownload => SelectedSearchResults is not null && SelectedSearchResults.Count > 0;
 
 
-    [ObservableProperty]
-    Sorting searchSorting;
-
-    partial void OnSearchSortingChanged(
-        Sorting value)
+    private async void OnViewOptionsPropertyChanged(
+        object? _,
+        PropertyChangedEventArgs e)
     {
-        Config.Spotify.SearchSorting = value;
-        switch (value)
-        {
-            case Sorting.Default:
-                SearchResults.OrderbyDefault();
-                break;
-            case Sorting.DefaultInv:
-                SearchResults.OrderbyDefault(true);
-                break;
-            case Sorting.Title:
-                SearchResults.OrderBy(track => track.Name);
-                break;
-            case Sorting.TitleInv:
-                SearchResults.OrderBy(track => track.Name, true);
-                break;
-            case Sorting.Artist:
-                SearchResults.OrderBy(track => track.Artists[0].Name);
-                break;
-            case Sorting.ArtistInv:
-                SearchResults.OrderBy(track => track.Artists[0].Name, true);
-                break;
-            case Sorting.Duration:
-                SearchResults.OrderBy(track => track.DurationMs);
-                break;
-            case Sorting.DurationInv:
-                SearchResults.OrderBy(track => track.DurationMs, true);
-                break;
-        }
+        IProgress<string> progress = mainView.ShowLoadingPopup();
+        progress.Report("Reordering search results");
+        await Task.Delay(100);
 
-        logger.LogInformation("[SpotifyViewModel-OnSearchSortingChanged] Resorted search results: {sorting}", value);
+        try
+        {
+            switch (e.PropertyName)
+            {
+                case "Sorting":
+                    SearchResults.KeySelector = Config.Spotify.ViewOptions.Sorting switch
+                    {
+                        Sorting.Default => null,
+                        Sorting.Title => track => track.Name,
+                        Sorting.Artist => track => track.Artists[0].Name,
+                        Sorting.Duration => track => track.DurationMs,
+                        _ => null
+                    };
+                    break;
+                case "Descending":
+                    SearchResults.Descending = Config.Spotify.ViewOptions.Descending;
+                    break;
+                case "Limit":
+                    SearchResults.Limit = Config.Spotify.ViewOptions.Limit;
+                    break;
+            }
+        }
+        finally
+        {
+            mainView.HideLoadingPopup();
+
+            logger.LogInformation("[SpotifyViewModel-OnViewOptionsPropertyChanged] Reordered search results");
+        }
     }
 
 
@@ -108,7 +120,6 @@ public partial class SpotifyViewModel : ObservableObject
         try
         {
             progress.Report("Preparing search...");
-            SearchResults.SkipForceRefresh = true;
 
             SpotifySearchType type = Spotify.GetSearchType(Query, out string? id);
             switch (type)
@@ -124,55 +135,40 @@ public partial class SpotifyViewModel : ObservableObject
                     progress.Report("Searching for album...");
                     (IAsyncEnumerable<FullTrack> albumTracks, int albumTracksCount) = await spotify.SearchAlbumAsync(id!, cts.Token);
 
-                    albumTracks = albumTracks.Take(Config.Spotify.SearchResultsLimit);
-                    albumTracksCount = Math.Min(albumTracksCount, Config.Spotify.SearchResultsLimit);
-
-                    Action<int, FullTrack> albumCallback = (int index, FullTrack track) =>
-                        progress.Report($"Getting album tracks... [{index}/{albumTracksCount}]");
+                    Action<int, FullTrack> albumCallback = (int count, FullTrack track) =>
+                        progress.Report($"Buffering tracks... [{count}/{albumTracksCount}]");
 
                     SearchResults.Clear();
-                    await SearchResults.AddRangeAsync(albumTracks, cts.Token);
+                    await SearchResults.AddRangeAsync(albumTracks, albumCallback, cts.Token);
                     break;
                  case SpotifySearchType.Playlist:
                     progress.Report("Searching for playlist...");
                     (IAsyncEnumerable<FullTrack> playlistTracks, int playlistTracksCount) = await spotify.SearchPlaylistAsync(id!, cts.Token);
 
-                    playlistTracks = playlistTracks.Take(Config.Spotify.SearchResultsLimit);
-                    playlistTracksCount = Math.Min(playlistTracksCount, Config.Spotify.SearchResultsLimit);
-
-                    Action<int, FullTrack> playlistCallback = (int index, FullTrack track) =>
-                        progress.Report($"Getting playlist tracks... [{index}/{playlistTracksCount}]");
+                    Action<int, FullTrack> playlistCallback = (int count, FullTrack track) =>
+                        progress.Report($"Buffering tracks... [{count}/{playlistTracksCount}]");
 
                     SearchResults.Clear();
                     await SearchResults.AddRangeAsync(playlistTracks, playlistCallback, cts.Token);
                     break;
                 case SpotifySearchType.Query:
                     progress.Report("Searching for query...");
-                    IEnumerable<FullTrack> searchedTracks = (await spotify.SearchQueryAsync(Query, cts.Token)).Take(Config.Spotify.SearchResultsLimit);
+                    IEnumerable<FullTrack> searchedTracks = await spotify.SearchQueryAsync(Query, cts.Token);
 
                     SearchResults.Clear();
                     SearchResults.AddRange(searchedTracks);
                     break;
             }
 
-            progress.Report("Resorting search results...");
-            await Task.Delay(100);
-
-            SearchResults.SkipForceRefresh = false;
-            OnSearchSortingChanged(SearchSorting);
-
             mainView.HideLoadingPopup();
             logger.LogInformation("[SpotifyViewModel-SearchAsync] Searched on Spotify: {query}", Query);
         }
         catch (OperationCanceledException)
         {
-            SearchResults.SkipForceRefresh = false;
-
             logger.LogInformation("[SpotifyViewModel-SearchAsync] Cancelled search for query on Spotify");
         }
         catch (Exception ex)
         {
-            SearchResults.SkipForceRefresh = false;
             mainView.HideLoadingPopup();
 
             await mainView.AlertAsync($"Failed to search for query on Spotify.\n\nException: {ex.Message}", "Something went wrong.");
