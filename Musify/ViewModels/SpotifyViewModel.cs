@@ -94,6 +94,7 @@ public partial class SpotifyViewModel : ObservableObject
         }
         finally
         {
+            await Task.Delay(100);
             mainView.HideLoadingPopup();
 
             logger.LogInformation("[SpotifyViewModel-OnViewOptionsPropertyChanged] Reordered search results");

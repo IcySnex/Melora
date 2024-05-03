@@ -95,6 +95,7 @@ public partial class YouTubeViewModel : ObservableObject
         }
         finally
         {
+            await Task.Delay(100);
             mainView.HideLoadingPopup();
 
             logger.LogInformation("[YouTubeViewModel-OnViewOptionsPropertyChanged] Reordered search results");
