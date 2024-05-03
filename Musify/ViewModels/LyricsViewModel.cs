@@ -7,7 +7,6 @@ using Musify.Helpers;
 using Musify.Models;
 using Musify.Services;
 using Musify.Views;
-using System.Diagnostics;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 
