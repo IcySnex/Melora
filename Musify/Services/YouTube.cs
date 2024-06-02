@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Musify.Enums;
 using Musify.Models;
-using SpotifyAPI.Web;
 using System.Net;
 using System.Text.RegularExpressions;
 using YoutubeExplode;
 using YoutubeExplode.Channels;
-using YoutubeExplode.Common;
 using YoutubeExplode.Playlists;
 using YoutubeExplode.Videos;
 
@@ -122,4 +120,22 @@ public partial class YouTube
         return client.Search.GetVideosAsync(query, cancellationToken);
     }
 
+
+    public async IAsyncEnumerable<Track> ConvertAsync(
+        IEnumerable<IVideo> videos,
+        string? album = null)
+    {
+        foreach (IVideo video in videos)
+        {
+            await Task.Delay(100);
+            yield return new Track(
+                video.Title,
+                video.Author.ChannelTitle,
+                video.Duration ?? TimeSpan.Zero,
+                video.Thumbnails.OrderBy(thumbnail => thumbnail.Resolution.Area).LastOrDefault()?.Url,
+                album,
+                Source.YouTube,
+                video.Url);
+        }
+    }
 }

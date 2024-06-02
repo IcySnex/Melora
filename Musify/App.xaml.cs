@@ -53,6 +53,8 @@ public partial class App : Application
                 services.AddSingleton<YouTubeViewModel>();
                 services.AddSingleton<LyricsViewModel>();
 
+                services.AddSingleton<DownloadsViewModel>();
+
                 services.AddTransient<LyricsInfoViewModel>();
 
                 services.AddSingleton<MainView>();

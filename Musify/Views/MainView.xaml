@@ -101,7 +101,7 @@
 
                 <NavigationViewItemHeader Content="Local" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
 
-                <NavigationViewItem Content="Download" Icon="Download" />
+                <NavigationViewItem Content="Downloads" Icon="Download" />
                 <NavigationViewItem Content="Library" Icon="Library" />
 
                 <!--<NavigationViewItemHeader Content="Syncing" />

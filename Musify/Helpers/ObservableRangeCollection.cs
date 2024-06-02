@@ -216,7 +216,7 @@ public class ObservableRangeCollection<T> : Collection<T>, INotifyCollectionChan
         if (startingIndex >= Limit)
             return;
 
-        ReOrder();
+        Refresh();
     }
 
     public async Task AddRangeAsync(
@@ -242,9 +242,47 @@ public class ObservableRangeCollection<T> : Collection<T>, INotifyCollectionChan
         if (startingIndex >= Limit)
             return;
 
-        ReOrder();
+        Refresh();
     }
 
+
+    //
+    public void Refresh()
+    {
+        if (originalList.Count <= 0)
+            return;
+
+        void Add(T item)
+        {
+            if (Filter is not null && !Filter.Invoke(item))
+                return;
+
+            Items.Add(item);
+        }
+
+        CheckReentrancy();
+
+        Items.Clear();
+        if (KeySelector is null)
+        {
+            if (Descending)
+                for (int i = originalList.Count - 1; i >= 0 && i >= originalList.Count - Limit; i--)
+                    Add(originalList[i]);
+            else
+                for (int i = 0; i < Math.Min(originalList.Count, Limit); i++)
+                    Add(originalList[i]);
+        }
+        else
+        {
+            List<T> sortedList = new(Descending ? originalList.OrderByDescending(KeySelector) : originalList.OrderBy(KeySelector));
+            for (int i = 0; i < Math.Min(originalList.Count, Limit); i++)
+                Add(sortedList[i]);
+        }
+
+        OnPropertyChanged(EventArgsCache.CountPropertyChanged);
+        OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
+        OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
+    }
 
     // Sorting
     private readonly IList<T> originalList = [];
@@ -259,7 +297,7 @@ public class ObservableRangeCollection<T> : Collection<T>, INotifyCollectionChan
         {
             keySelector = value;
 
-            ReOrder();
+            Refresh();
         }
     }
     
@@ -273,38 +311,8 @@ public class ObservableRangeCollection<T> : Collection<T>, INotifyCollectionChan
         {
             descending = value;
 
-            ReOrder();
+            Refresh();
         }
-    }
-
-
-    public void ReOrder()
-    {
-        if (originalList.Count <= 0)
-            return;
-
-        CheckReentrancy();
-
-        Items.Clear();
-        if (KeySelector is null)
-        {
-            if (Descending)
-                for (int i = originalList.Count - 1; i >= 0 && i >= originalList.Count - Limit; i--)
-                    Items.Add(originalList[i]);
-            else
-                for (int i = 0; i < Math.Min(originalList.Count, Limit); i++)
-                    Items.Add(originalList[i]);
-        }
-        else
-        {
-            List<T> sortedList = new(Descending ? originalList.OrderByDescending(KeySelector) : originalList.OrderBy(KeySelector));
-            for (int i = 0; i < Math.Min(originalList.Count, Limit); i++)
-                Items.Add(sortedList[i]);
-        }
-
-        OnPropertyChanged(EventArgsCache.CountPropertyChanged);
-        OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
-        OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
     }
 
 
@@ -323,7 +331,7 @@ public class ObservableRangeCollection<T> : Collection<T>, INotifyCollectionChan
 
             if (Items.Count < value)
             {
-                ReOrder();
+                Refresh();
                 return;
             }
 
@@ -333,6 +341,21 @@ public class ObservableRangeCollection<T> : Collection<T>, INotifyCollectionChan
             OnPropertyChanged(EventArgsCache.CountPropertyChanged);
             OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
             OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
+        }
+    }
+
+
+    // Filter
+    private Func<T, bool>? filter;
+
+    public Func<T, bool>? Filter
+    {
+        get => filter;
+        set
+        {
+            filter = value;
+
+            Refresh();
         }
     }
 }

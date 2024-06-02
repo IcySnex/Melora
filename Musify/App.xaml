@@ -14,6 +14,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
 
+                <tmplts:DownloadTemplate />
                 <tmplts:SpotifyTrackTemplate />
                 <tmplts:YouTubeVideoTemplate />
                 <tmplts:LyricsHitTemplate />
@@ -33,6 +34,7 @@
             <conv:StringNullEmptyNaConverter x:Key="StringNullEmptyNaConverter" />
             <conv:YouTubeThumbnailImageConverter x:Key="YouTubeThumbnailImageConverter" />
             <conv:BooleanFontIconChevronConverter x:Key="BooleanFontIconChevronConverter" />
+            <conv:StringImageConverter x:Key="StringImageConverter" />
 
 
             <!--  Colors  -->

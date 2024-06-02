@@ -157,4 +157,22 @@ public partial class Spotify
 
         return response.Tracks.Items ?? [];
     }
+
+
+    public async IAsyncEnumerable<Track> ConvertAsync(
+        IEnumerable<FullTrack> tracks)
+    {
+        foreach(FullTrack track in tracks)
+        {
+            await Task.Delay(100);
+            yield return new Track(
+                track.Name,
+                string.Join(", ", track.Artists.Select(artist => artist.Name)),
+                TimeSpan.FromMilliseconds(track.DurationMs),
+                track.Album.Images.FirstOrDefault()?.Url,
+                track.Album.Name,
+                Source.Spotify,
+                track.Uri);
+        }
+    }
 }

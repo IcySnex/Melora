@@ -16,7 +16,9 @@ public partial class SpotifyViewModel : ObservableObject
 {
     readonly ILogger<SpotifyViewModel> logger;
     readonly MainView mainView;
+    readonly Navigation navigation;
     readonly Spotify spotify;
+    readonly DownloadsViewModel downloadsViewModel;
 
     public Config Config { get; }
 
@@ -24,12 +26,16 @@ public partial class SpotifyViewModel : ObservableObject
         ILogger<SpotifyViewModel> logger,
         IOptions<Config> config,
         MainView mainView,
-        Spotify spotify)
+        Navigation navigation,
+        Spotify spotify,
+        DownloadsViewModel downloadsViewModel)
     {
         this.logger = logger;
         this.Config = config.Value;
         this.mainView = mainView;
+        this.navigation = navigation;
         this.spotify = spotify;
+        this.downloadsViewModel = downloadsViewModel;
 
         SearchResults = new()
         {
@@ -62,42 +68,31 @@ public partial class SpotifyViewModel : ObservableObject
     public bool CanDownload => SelectedSearchResults is not null && SelectedSearchResults.Count > 0;
 
 
-    private async void OnViewOptionsPropertyChanged(
+    private void OnViewOptionsPropertyChanged(
         object? _,
         PropertyChangedEventArgs e)
     {
-        IProgress<string> progress = mainView.ShowLoadingPopup();
-        progress.Report("Reordering search results");
-        await Task.Delay(100);
-
-        try
+        switch (e.PropertyName)
         {
-            switch (e.PropertyName)
-            {
-                case "Sorting":
-                    SearchResults.KeySelector = Config.Spotify.ViewOptions.Sorting switch
-                    {
-                        Sorting.Default => null,
-                        Sorting.Title => track => track.Name,
-                        Sorting.Artist => track => track.Artists[0].Name,
-                        Sorting.Duration => track => track.DurationMs,
-                        _ => null
-                    };
-                    break;
-                case "Descending":
-                    SearchResults.Descending = Config.Spotify.ViewOptions.Descending;
-                    break;
-                case "Limit":
-                    SearchResults.Limit = Config.Spotify.ViewOptions.Limit;
-                    break;
-            }
-        }
-        finally
-        {
-            await Task.Delay(100);
-            mainView.HideLoadingPopup();
-
-            logger.LogInformation("[SpotifyViewModel-OnViewOptionsPropertyChanged] Reordered search results");
+            case "Sorting":
+                SearchResults.KeySelector = Config.Spotify.ViewOptions.Sorting switch
+                {
+                    Sorting.Default => null,
+                    Sorting.Title => track => track.Name,
+                    Sorting.Artist => track => track.Artists[0].Name,
+                    Sorting.Duration => track => track.DurationMs,
+                    _ => null
+                };
+                logger.LogInformation("[SpotifyViewModel-OnViewOptionsPropertyChanged] Reordered search results");
+                break;
+            case "Descending":
+                SearchResults.Descending = Config.Spotify.ViewOptions.Descending;
+                logger.LogInformation("[SpotifyViewModel-OnViewOptionsPropertyChanged] Reordered search results");
+                break;
+            case "Limit":
+                SearchResults.Limit = Config.Spotify.ViewOptions.Limit;
+                logger.LogInformation("[SpotifyViewModel-OnViewOptionsPropertyChanged] Reordered search results");
+                break;
         }
     }
 
@@ -193,7 +188,19 @@ public partial class SpotifyViewModel : ObservableObject
 
         try
         {
+            IAsyncEnumerable<Track> tracks = spotify.ConvertAsync(SelectedSearchResults!.Cast<FullTrack>());
+
+            navigation.Navigate("Downloads");
+            navigation.SetCurrentIndex(7);
+
+            Action<int, Track> callback = (int count, Track track) =>
+                progress.Report($"Preparing downloads... [{count}/{SelectedSearchResults?.Count}]");
+
+            await downloadsViewModel.AddAsync(tracks, callback, cts.Token);
+
+            await Task.Delay(100);
             mainView.HideLoadingPopup();
+
             logger.LogInformation("[SpotifyViewModel-DownloadAsync] Moved selected tracks to download queue");
         }
         catch (OperationCanceledException)

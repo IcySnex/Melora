@@ -236,6 +236,27 @@
                         Template="{StaticResource SettingsCard}">
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.Downloads.ShowYouTubeTracks, Mode=TwoWay}" />
                     </ContentControl>
+
+                    <!--  View Options > Sorting  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The sorting of the downloads"
+                        hlp:Attributes.Title="View Options &gt; Sorting"
+                        Template="{StaticResource SettingsCard}">
+                        <ComboBox Width="105" SelectedIndex="{x:Bind viewModel.Config.Downloads.ViewOptions.Sorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                            <ComboBoxItem Content="Default" />
+                            <ComboBoxItem Content="Title" />
+                            <ComboBoxItem Content="Artist" />
+                            <ComboBoxItem Content="Duration" />
+                        </ComboBox>
+                    </ContentControl>
+
+                    <!--  View Options > Descending  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Whether to sort the downloads descending or ascending"
+                        hlp:Attributes.Title="View Options &gt; Descending"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.Downloads.ViewOptions.Descending, Mode=TwoWay}" />
+                    </ContentControl>
                 </StackPanel>
             </ContentControl>
 

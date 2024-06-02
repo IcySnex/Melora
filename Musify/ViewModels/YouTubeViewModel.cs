@@ -16,7 +16,9 @@ public partial class YouTubeViewModel : ObservableObject
 {
     readonly ILogger<YouTubeViewModel> logger;
     readonly MainView mainView;
+    readonly Navigation navigation;
     readonly YouTube youTube;
+    readonly DownloadsViewModel downloadsViewModel;
 
     public Config Config { get; }
 
@@ -24,12 +26,16 @@ public partial class YouTubeViewModel : ObservableObject
         ILogger<YouTubeViewModel> logger,
         IOptions<Config> config,
         MainView mainView,
-        YouTube youTube)
+        Navigation navigation,
+        YouTube youTube,
+        DownloadsViewModel downloadsViewModel)
     {
         this.logger = logger;
         this.mainView = mainView;
         this.Config = config.Value;
+        this.navigation = navigation;
         this.youTube = youTube;
+        this.downloadsViewModel = downloadsViewModel;
 
         SearchResults = new()
         {
@@ -63,45 +69,36 @@ public partial class YouTubeViewModel : ObservableObject
     public bool CanDownload => SelectedSearchResults is not null && SelectedSearchResults.Count > 0;
 
 
-    private async void OnViewOptionsPropertyChanged(
+    private void OnViewOptionsPropertyChanged(
         object? _,
         PropertyChangedEventArgs e)
     {
-        IProgress<string> progress = mainView.ShowLoadingPopup();
-        progress.Report("Reordering search results");
-        await Task.Delay(100);
-
-        try
+        switch (e.PropertyName)
         {
-            switch (e.PropertyName)
-            {
-                case "Sorting":
-                    SearchResults.KeySelector = Config.YouTube.ViewOptions.Sorting switch
-                    {
-                        Sorting.Default => null,
-                        Sorting.Title => video => video.Title,
-                        Sorting.Artist => video => video.Author.ChannelTitle,
-                        Sorting.Duration => video => video.Duration ?? TimeSpan.FromMilliseconds(-1),
-                        _ => null
-                    };
-                    break;
-                case "Descending":
-                    SearchResults.Descending = Config.YouTube.ViewOptions.Descending;
-                    break;
-                case "Limit":
-                    SearchResults.Limit = Config.YouTube.ViewOptions.Limit;
-                    break;
-            }
-        }
-        finally
-        {
-            await Task.Delay(100);
-            mainView.HideLoadingPopup();
-
-            logger.LogInformation("[YouTubeViewModel-OnViewOptionsPropertyChanged] Reordered search results");
+            case "Sorting":
+                SearchResults.KeySelector = Config.YouTube.ViewOptions.Sorting switch
+                {
+                    Sorting.Default => null,
+                    Sorting.Title => video => video.Title,
+                    Sorting.Artist => video => video.Author.ChannelTitle,
+                    Sorting.Duration => video => video.Duration ?? TimeSpan.FromMilliseconds(-1),
+                    _ => null
+                };
+                logger.LogInformation("[YouTubeViewModel-OnViewOptionsPropertyChanged] Reordered search results");
+                break;
+            case "Descending":
+                SearchResults.Descending = Config.YouTube.ViewOptions.Descending;
+                logger.LogInformation("[YouTubeViewModel-OnViewOptionsPropertyChanged] Reordered search results");
+                break;
+            case "Limit":
+                SearchResults.Limit = Config.YouTube.ViewOptions.Limit;
+                logger.LogInformation("[YouTubeViewModel-OnViewOptionsPropertyChanged] Reordered search results");
+                break;
         }
     }
 
+
+    string? album = null;
 
     [ObservableProperty]
     string query = string.Empty;
@@ -135,7 +132,9 @@ public partial class YouTubeViewModel : ObservableObject
                     break;
                 case YouTubeSearchType.Playlist:
                     progress.Report("Searching for playlist...");
-                    IAsyncEnumerable<IVideo> playlistVideos = youTube.SearchPlaylistAsync(id!, cts.Token);
+                    (IAsyncEnumerable<IVideo> playlistVideos, string playlistTitle) = await youTube.SearchPlaylistAsync(id!, cts.Token);
+
+                    album = playlistTitle;
 
                     Action<int, IVideo> playlistCallback = (int index, IVideo video) =>
                         progress.Report($"Buffering videos... [{index}]");
@@ -145,7 +144,9 @@ public partial class YouTubeViewModel : ObservableObject
                     break;
                 case YouTubeSearchType.Channel:
                     progress.Report("Searching for channel...");
-                    IAsyncEnumerable<IVideo> channelVideos = youTube.SearchChannelAsync(id!, cts.Token);
+                    (IAsyncEnumerable<IVideo> channelVideos, string channelTitle) = await youTube.SearchChannelAsync(id!, cts.Token);
+
+                    album = $"{channelTitle}`s Uploads";
 
                     Action<int, IVideo> channelCallback = (int index, IVideo video) =>
                         progress.Report($"Buffering videos... [{index}]");
@@ -155,10 +156,10 @@ public partial class YouTubeViewModel : ObservableObject
                     break;
                 case YouTubeSearchType.Query:
                     progress.Report("Searching for query...");
-                    IAsyncEnumerable<IVideo> searchedVideos = youTube.SearchQueryAsync(Query, cts.Token).Take(100);
+                    IAsyncEnumerable<IVideo> searchedVideos = youTube.SearchQueryAsync(Query, cts.Token).Take(50);
 
                     Action<int, IVideo> searchedCallback = (int index, IVideo video) =>
-                        progress.Report($"Buffering videos... [{index}/100]");
+                        progress.Report($"Buffering videos... [{index}/50]");
 
                     SearchResults.Clear();
                     await SearchResults.AddRangeAsync(searchedVideos, searchedCallback, cts.Token);
@@ -195,7 +196,20 @@ public partial class YouTubeViewModel : ObservableObject
 
         try
         {
+            IAsyncEnumerable<Track> tracks = youTube.ConvertAsync(SelectedSearchResults!.Cast<IVideo>(), album);
+
+
+            navigation.Navigate("Downloads");
+            navigation.SetCurrentIndex(7);
+
+            Action<int, Track> callback = (int count, Track track) =>
+                progress.Report($"Preparing downloads... [{count}/{SelectedSearchResults?.Count}]");
+
+            await downloadsViewModel.AddAsync(tracks, callback, cts.Token);
+
+            await Task.Delay(100);
             mainView.HideLoadingPopup();
+
             logger.LogInformation("[YouTubeViewModel-DownloadAsync] Moved selected videos to download queue");
         }
         catch (OperationCanceledException)

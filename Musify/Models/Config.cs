@@ -64,6 +64,8 @@ public partial class ConfigDownloads : ObservableObject
 
     [ObservableProperty]
     bool showYouTubeTracks = true;
+
+    public ViewOptions ViewOptions { get; set; } = new(Sorting.Default, false, default);
 }
 
 public partial class ConfigPaths : ObservableObject
