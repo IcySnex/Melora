@@ -1,8 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
 using Musify.Enums;
+using Musify.Models;
+using SpotifyAPI.Web;
 using System.Net;
 using System.Text.RegularExpressions;
 using YoutubeExplode;
+using YoutubeExplode.Channels;
+using YoutubeExplode.Common;
+using YoutubeExplode.Playlists;
 using YoutubeExplode.Videos;
 
 namespace Musify.Services;
@@ -17,6 +22,8 @@ public partial class YouTube
 
     [GeneratedRegex(@"youtube\..+?/channel/(.*?)(?:\?|&|/|$)")]
     private static partial Regex YouTubeChannelIdRegex();
+    [GeneratedRegex(@"youtube\..+?/(@[a-zA-Z0-9_]+)(?:\?|&|/|$)")]
+    private static partial Regex YouTubeChannelHandleRegex();
 
 
     public static bool IsValidVideoId(
@@ -30,6 +37,9 @@ public partial class YouTube
     public static bool IsValidChannelId(
         string channelId) =>
         channelId.StartsWith("UC", StringComparison.Ordinal) && channelId.Length == 24 && channelId.All(c => char.IsLetterOrDigit(c) || c is '_' or '-');
+    public static bool IsValidChannelHandle(
+        string channelHandle) =>
+        channelHandle.StartsWith('@') && channelHandle.Length > 3 && channelHandle.Length < 31 && channelHandle[1..].All(c => char.IsLetterOrDigit(c) || c is '_' or '-' or '.');
 
 
     public static YouTubeSearchType GetSearchType(
@@ -49,6 +59,11 @@ public partial class YouTube
         Match channelIdMatch = YouTubeChannelIdRegex().Match(query);
         id = channelIdMatch.Success ? WebUtility.UrlDecode(channelIdMatch.Groups[1].Value) : null;
         if (!string.IsNullOrWhiteSpace(id) && IsValidChannelId(id))
+            return YouTubeSearchType.Channel;
+
+        Match channelHandleMatch = YouTubeChannelHandleRegex().Match(query);
+        id = channelHandleMatch.Success ? WebUtility.UrlDecode(channelHandleMatch.Groups[1].Value) : null;
+        if (!string.IsNullOrWhiteSpace(id) && IsValidChannelHandle(id))
             return YouTubeSearchType.Channel;
 
         id = null;
@@ -79,20 +94,24 @@ public partial class YouTube
         return await client.Videos.GetAsync(id, cancellationToken);
     }
 
-    public IAsyncEnumerable<IVideo> SearchPlaylistAsync(
+    public async Task<(IAsyncEnumerable<IVideo>, string)> SearchPlaylistAsync(
         string id,
         CancellationToken cancellationToken = default!)
     {
         logger.LogInformation("[YouTube-SearchTrackAsync] Searching for playlist...");
-        return client.Playlists.GetVideosAsync(id, cancellationToken);
+        Playlist playlist = await client.Playlists.GetAsync(id, cancellationToken);
+
+        return (client.Playlists.GetVideosAsync(id, cancellationToken), playlist.Title);
     }
 
-    public IAsyncEnumerable<IVideo> SearchChannelAsync(
+    public async Task<(IAsyncEnumerable<IVideo>, string)> SearchChannelAsync(
         string id,
         CancellationToken cancellationToken = default!)
     {
         logger.LogInformation("[YouTube-SearchTrackAsync] Searching for channel...");
-        return client.Channels.GetUploadsAsync(id, cancellationToken);
+        Channel channel = id.StartsWith('@') ? await client.Channels.GetByHandleAsync(id[1..], cancellationToken) : await client.Channels.GetAsync(id, cancellationToken);
+
+        return (client.Channels.GetUploadsAsync(channel.Id, cancellationToken), channel.Title);
     }
 
     public IAsyncEnumerable<IVideo> SearchQueryAsync(
@@ -102,4 +121,5 @@ public partial class YouTube
         logger.LogInformation("[YouTube-SearchTrackAsync] Searching for channel...");
         return client.Search.GetVideosAsync(query, cancellationToken);
     }
+
 }
