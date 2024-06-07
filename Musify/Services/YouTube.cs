@@ -58,7 +58,6 @@ public partial class YouTube
         id = channelIdMatch.Success ? WebUtility.UrlDecode(channelIdMatch.Groups[1].Value) : null;
         if (!string.IsNullOrWhiteSpace(id) && IsValidChannelId(id))
             return YouTubeSearchType.Channel;
-
         Match channelHandleMatch = YouTubeChannelHandleRegex().Match(query);
         id = channelHandleMatch.Success ? WebUtility.UrlDecode(channelHandleMatch.Groups[1].Value) : null;
         if (!string.IsNullOrWhiteSpace(id) && IsValidChannelHandle(id))
@@ -125,6 +124,8 @@ public partial class YouTube
         IEnumerable<IVideo> videos,
         string? album = null)
     {
+        logger.LogInformation("[YouTube-ConvertAsync] Converting YouTube videos...");
+
         foreach (IVideo video in videos)
         {
             await Task.Delay(100);

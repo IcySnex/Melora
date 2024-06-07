@@ -162,7 +162,9 @@ public partial class Spotify
     public async IAsyncEnumerable<Track> ConvertAsync(
         IEnumerable<FullTrack> tracks)
     {
-        foreach(FullTrack track in tracks)
+        logger.LogInformation("[Spotify-ConvertAsync] Converting Spotify tracks...");
+
+        foreach (FullTrack track in tracks)
         {
             await Task.Delay(100);
             yield return new Track(
