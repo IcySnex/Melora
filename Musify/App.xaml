@@ -17,6 +17,7 @@
                 <tmplts:DownloadTemplate />
                 <tmplts:SpotifyTrackTemplate />
                 <tmplts:YouTubeVideoTemplate />
+                <tmplts:YouTubeMusicSongTemplate />
                 <tmplts:LyricsHitTemplate />
             </ResourceDictionary.MergedDictionaries>
 
@@ -35,6 +36,8 @@
             <conv:YouTubeThumbnailImageConverter x:Key="YouTubeThumbnailImageConverter" />
             <conv:BooleanFontIconChevronConverter x:Key="BooleanFontIconChevronConverter" />
             <conv:StringImageConverter x:Key="StringImageConverter" />
+            <conv:YouTubeMusicArtistsStringConverter x:Key="YouTubeMusicArtistsStringConverter" />
+            <conv:YouTubeMusicThumbnailImageConverter x:Key="YouTubeMusicThumbnailImageConverter" />
 
 
             <!--  Colors  -->

@@ -9,6 +9,8 @@ public class Config
 
     public ConfigYouTube YouTube { get; set; } = new();
 
+    public ConfigYouTubeMusic YouTubeMusic { get; set; } = new();
+
     public ConfigDownloads Downloads { get; set; } = new();
 
     public ConfigPaths Paths { get; set; } = new();
@@ -51,6 +53,23 @@ public partial class ConfigYouTube : ObservableObject
     public ViewOptions ViewOptions { get; set; } = new(Sorting.Default, false, 1000);
 }
 
+public partial class ConfigYouTubeMusic : ObservableObject
+{
+    [ObservableProperty]
+    Quality quality = Quality._160kbps;
+
+    [ObservableProperty]
+    Format format = Format.mp3;
+
+    [ObservableProperty]
+    bool saveLyrics = false;
+
+    [ObservableProperty]
+    bool saveArtwork = true;
+
+    public ViewOptions ViewOptions { get; set; } = new(Sorting.Default, false, 1000);
+}
+
 public partial class ConfigDownloads : ObservableObject
 {
     [ObservableProperty]
@@ -64,6 +83,9 @@ public partial class ConfigDownloads : ObservableObject
 
     [ObservableProperty]
     bool showYouTubeTracks = true;
+    
+    [ObservableProperty]
+    bool showYouTubeMusicTracks = true;
 
     public ViewOptions ViewOptions { get; set; } = new(Sorting.Default, false, default);
 }
@@ -86,7 +108,14 @@ public partial class ConfigAdvanced : ObservableObject
     string spotifyYouTubeSearchAlgorithm = "{title} {artist}";
 
     [ObservableProperty]
-    string spotifySearchMarket = "US"; // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+    string spotifySearchMarket = "US";
+
+    [ObservableProperty]
+    string youTubeMusicHL = "en";
+
+    [ObservableProperty]
+    string youTubeMusicGL = "US";
+
 
     [ObservableProperty]
     string spotifyClientId = "75e1749b48dd4466858cf28ab32b1c8a";
@@ -96,4 +125,5 @@ public partial class ConfigAdvanced : ObservableObject
 
     [ObservableProperty]
     string geniusAccessToken = "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr";
+
 }

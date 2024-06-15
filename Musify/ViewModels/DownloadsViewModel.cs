@@ -1,5 +1,4 @@
-﻿using AngleSharp.Dom;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -8,8 +7,6 @@ using Musify.Enums;
 using Musify.Helpers;
 using Musify.Models;
 using Musify.Views;
-using Newtonsoft.Json.Linq;
-using SpotifyAPI.Web;
 using System.ComponentModel;
 
 namespace Musify.ViewModels;
@@ -48,7 +45,8 @@ public partial class DownloadsViewModel : ObservableObject
         Downloads.Filter = track =>
             (track.Title.Contains(Query, StringComparison.InvariantCultureIgnoreCase) || track.Artist.Contains(Query, StringComparison.InvariantCultureIgnoreCase)) &&
             (Config.Downloads.ShowSpotifyTracks || track.Source != Source.Spotify) &&
-            (Config.Downloads.ShowYouTubeTracks || track.Source != Source.YouTube);
+            (Config.Downloads.ShowYouTubeTracks || track.Source != Source.YouTube) &&
+            (Config.Downloads.ShowYouTubeMusicTracks || track.Source != Source.YouTubeMusic);
 
         logger.LogInformation("[DownloadsViewModel-.ctor] DownloadsViewModel has been initialized");
     }
@@ -70,6 +68,7 @@ public partial class DownloadsViewModel : ObservableObject
         {
             case "ShowSpotifyTracks":
             case "ShowYouTubeTracks":
+            case "ShowYouTubeMusicTracks":
                 Downloads.Refresh();
                 logger.LogInformation("[DownloadsViewModel-OnPropertyChanged] Refreshed downloads");
                 break;

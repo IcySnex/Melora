@@ -43,6 +43,7 @@ public partial class App : Application
                 services.AddSingleton<JsonConverter>();
                 services.AddSingleton<Spotify>();
                 services.AddSingleton<YouTube>();
+                services.AddSingleton<YouTubeMusic>();
                 services.AddSingleton<Lyrics>();
 
                 // Add ViewModels and MainView
@@ -51,6 +52,7 @@ public partial class App : Application
 
                 services.AddSingleton<SpotifyViewModel>();
                 services.AddSingleton<YouTubeViewModel>();
+                services.AddSingleton<YouTubeMusicViewModel>();
                 services.AddSingleton<LyricsViewModel>();
 
                 services.AddSingleton<DownloadsViewModel>();

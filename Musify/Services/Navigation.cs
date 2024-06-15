@@ -36,7 +36,7 @@ public class Navigation
         string page,
         object? parameter = null)
     {
-        Type? pageType = Type.GetType($"Musify.Views.{page}View, Musify");
+        Type? pageType = Type.GetType($"Musify.Views.{page.Replace(" ", string.Empty)}View, Musify");
         if (pageType is null)
         {
             logger.LogError("[Navigation-Navigate] Failed to navigate: Could not find page: {page}", page);
@@ -85,7 +85,7 @@ public class Navigation
         mainView.ContentFrame.GoBack();
         CanGoBackChanged();
 
-        object? selectedItem = mainView.NavigationView.MenuItems.Where(item => item is NavigationViewItem navItem && Type.GetType($"Musify.Views.{navItem.Content}View, Musify") == mainView.ContentFrame.CurrentSourcePageType).FirstOrDefault();
+        object? selectedItem = mainView.NavigationView.MenuItems.Where(item => item is NavigationViewItem navItem && Type.GetType($"Musify.Views.{navItem.Content.ToString()?.Replace(" ", string.Empty)}View, Musify") == mainView.ContentFrame.CurrentSourcePageType).FirstOrDefault();
         if (selectedItem is null)
         {
             logger.LogError("[Navigation-GoBack] Failed to set current navigation item: selectedItem is null");

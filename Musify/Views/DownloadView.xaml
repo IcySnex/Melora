@@ -68,6 +68,11 @@
                     Content="YouTube"
                     IsChecked="{x:Bind viewModel.Config.Downloads.ShowYouTubeTracks, Mode=TwoWay}"
                     ToolTipService.ToolTip="Show downloads from YouTube" />
+                <CheckBox
+                    Margin="180,0,0,0"
+                    Content="YouTube Music"
+                    IsChecked="{x:Bind viewModel.Config.Downloads.ShowYouTubeMusicTracks, Mode=TwoWay}"
+                    ToolTipService.ToolTip="Show downloads from YouTube Music" />
             </Grid>
 
             <Rectangle Grid.Column="3" Style="{StaticResource VerticalDivider}" />

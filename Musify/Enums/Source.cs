@@ -3,5 +3,6 @@
 public enum Source
 {
     Spotify,
-    YouTube
+    YouTube,
+    YouTubeMusic
 }

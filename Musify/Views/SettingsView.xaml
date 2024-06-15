@@ -237,6 +237,14 @@
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.Downloads.ShowYouTubeTracks, Mode=TwoWay}" />
                     </ContentControl>
 
+                    <!--  Show YouTube Music tracks  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Whether to show YouTube Music tracks in the download queue"
+                        hlp:Attributes.Title="Show YouTube Music tracks"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.Downloads.ShowYouTubeMusicTracks, Mode=TwoWay}" />
+                    </ContentControl>
+
                     <!--  View Options > Sorting  -->
                     <ContentControl
                         hlp:Attributes.Description="The sorting of the downloads"
@@ -336,13 +344,35 @@
 
                     <!--  Spotify search market  -->
                     <ContentControl
-                        hlp:Attributes.Description="Region code for the Spotify search market - wikipedia.org/wiki/ISO_3166-1_alpha-2"
+                        hlp:Attributes.Description="Region code for the Spotify search market"
                         hlp:Attributes.Title="Spotify search market"
                         Template="{StaticResource SettingsCard}">
                         <TextBox
                             Width="80"
                             MaxLength="2"
                             Text="{x:Bind viewModel.Config.Advanced.SpotifySearchMarket, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  YouTube Music host language  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Language code for YouTube Music queries"
+                        hlp:Attributes.Title="YouTube Music host language"
+                        Template="{StaticResource SettingsCard}">
+                        <TextBox
+                            Width="80"
+                            MaxLength="2"
+                            Text="{x:Bind viewModel.Config.Advanced.YouTubeMusicHL, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  YouTube Music geographical location  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Geographical location code for YouTube Music queries"
+                        hlp:Attributes.Title="YouTube Music geographical location"
+                        Template="{StaticResource SettingsCard}">
+                        <TextBox
+                            Width="80"
+                            MaxLength="2"
+                            Text="{x:Bind viewModel.Config.Advanced.YouTubeMusicGL, Mode=TwoWay}" />
                     </ContentControl>
                 </StackPanel>
             </ContentControl>
