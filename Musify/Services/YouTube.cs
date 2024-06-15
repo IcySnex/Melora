@@ -95,7 +95,7 @@ public partial class YouTube
         string id,
         CancellationToken cancellationToken = default!)
     {
-        logger.LogInformation("[YouTube-SearchTrackAsync] Searching for playlist...");
+        logger.LogInformation("[YouTube-SearchPlaylistAsync] Searching for playlist...");
         Playlist playlist = await client.Playlists.GetAsync(id, cancellationToken);
 
         return (client.Playlists.GetVideosAsync(id, cancellationToken), playlist.Title);
@@ -105,7 +105,7 @@ public partial class YouTube
         string id,
         CancellationToken cancellationToken = default!)
     {
-        logger.LogInformation("[YouTube-SearchTrackAsync] Searching for channel...");
+        logger.LogInformation("[YouTube-SearchChannelAsync] Searching for channel...");
         Channel channel = id.StartsWith('@') ? await client.Channels.GetByHandleAsync(id[1..], cancellationToken) : await client.Channels.GetAsync(id, cancellationToken);
 
         return (client.Channels.GetUploadsAsync(channel.Id, cancellationToken), channel.Title);
@@ -115,7 +115,7 @@ public partial class YouTube
         string query,
         CancellationToken cancellationToken = default!)
     {
-        logger.LogInformation("[YouTube-SearchTrackAsync] Searching for channel...");
+        logger.LogInformation("[YouTube-SearchQueryAsync] Searching for query...");
         return client.Search.GetVideosAsync(query, cancellationToken);
     }
 
