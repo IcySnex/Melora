@@ -86,10 +86,10 @@ public partial class LyricsViewModel : ObservableObject
             viewModel.Track = value.Track;
             viewModel.Lyrics = lyricsContent;
 
-            navigation.Navigate("LyricsInfo", viewModel);
-
             SelectedSearchResult = null;
             mainView.HideLoadingPopup();
+
+            await mainView.AlertAsync(new LyricsInfoView(viewModel));
             logger.LogInformation("[LyricsViewModel-OnSelectedSearchResultChanged] Got lyrics from Genius: {title}-{artists}", value.Track.Title, value.Track.ArtistNames);
 
         }

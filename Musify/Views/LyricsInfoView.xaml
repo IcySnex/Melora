@@ -12,7 +12,7 @@
     xmlns:mdl="using:Musify.Models"
     mc:Ignorable="d">
 
-    <Grid Margin="24">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="8" />
@@ -47,13 +47,16 @@
             <!--  Title/Artists  -->
             <Grid Margin="97,0,0,0" VerticalAlignment="Center">
                 <TextBlock
+                    MaxWidth="270"
                     Margin="0,0,120,0"
+                    HorizontalAlignment="Left"
                     FontSize="24"
                     Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
                     Text="{x:Bind viewModel.Track.Title}"
                     TextTrimming="CharacterEllipsis" />
                 <TextBlock
                     Name="ArtistsBlock"
+                    MaxWidth="270"
                     Margin="0,27,120,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
@@ -114,27 +117,6 @@
 
         <!--  LYrics Container  -->
         <ScrollViewer Grid.Row="4" Margin="-24,0,-24,-24">
-            <ScrollViewer.ContextFlyout>
-                <MenuFlyout>
-                    <MenuFlyoutItem
-                        Command="{x:Bind viewModel.ShowOnGeniusCommand}"
-                        Text="Show on Genius"
-                        ToolTipService.ToolTip="Open on Genius">
-                        <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="&#xe8a7;" />
-                        </MenuFlyoutItem.Icon>
-                    </MenuFlyoutItem>
-                    <MenuFlyoutItem
-                        Command="{x:Bind viewModel.CopyLyricsToClipboardCommand}"
-                        Text="Copy"
-                        ToolTipService.ToolTip="Copy lyrics to clipboard">
-                        <MenuFlyoutItem.Icon>
-                            <FontIcon Glyph="&#xf0e3;" />
-                        </MenuFlyoutItem.Icon>
-                    </MenuFlyoutItem>
-                </MenuFlyout>
-            </ScrollViewer.ContextFlyout>
-
             <TextBlock
                 Margin="48,12,48,24"
                 FontSize="20"

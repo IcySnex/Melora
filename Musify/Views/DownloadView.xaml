@@ -42,7 +42,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="26" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="26" />
+                <ColumnDefinition Width="4" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="2" />
                 <ColumnDefinition Width="Auto" />
@@ -57,25 +57,23 @@
 
             <Rectangle Grid.Column="1" Style="{StaticResource VerticalDivider}" />
 
-            <!--  Meta data  -->
-            <Grid Grid.Column="2">
-                <CheckBox
-                    Content="Spotify"
-                    IsChecked="{x:Bind viewModel.Config.Downloads.ShowSpotifyTracks, Mode=TwoWay}"
-                    ToolTipService.ToolTip="Show downloads from Spotify" />
-                <CheckBox
-                    Margin="90,0,0,0"
-                    Content="YouTube"
-                    IsChecked="{x:Bind viewModel.Config.Downloads.ShowYouTubeTracks, Mode=TwoWay}"
-                    ToolTipService.ToolTip="Show downloads from YouTube" />
-                <CheckBox
-                    Margin="180,0,0,0"
-                    Content="YouTube Music"
-                    IsChecked="{x:Bind viewModel.Config.Downloads.ShowYouTubeMusicTracks, Mode=TwoWay}"
-                    ToolTipService.ToolTip="Show downloads from YouTube Music" />
-            </Grid>
+            <!--  Sources  -->
+            <Button
+                Grid.Column="2"
+                Width="32"
+                Height="32"
+                Padding="4"
+                ToolTipService.ToolTip="Show tracks from">
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <ToggleMenuFlyoutItem IsChecked="{x:Bind viewModel.Config.Downloads.ShowSpotifyTracks, Mode=TwoWay}" Text="Spotify" />
+                        <ToggleMenuFlyoutItem IsChecked="{x:Bind viewModel.Config.Downloads.ShowYouTubeTracks, Mode=TwoWay}" Text="YouTube" />
+                        <ToggleMenuFlyoutItem IsChecked="{x:Bind viewModel.Config.Downloads.ShowYouTubeMusicTracks, Mode=TwoWay}" Text="YouTube Music" />
+                    </MenuFlyout>
+                </Button.Flyout>
 
-            <Rectangle Grid.Column="3" Style="{StaticResource VerticalDivider}" />
+                <FontIcon FontSize="17" Glyph="&#xe71c;" />
+            </Button>
 
             <!--  View Options  -->
             <ComboBox

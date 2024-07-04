@@ -1,14 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Documents;
 using Musify.Models;
 using Musify.Views;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.System;
 
 namespace Musify.ViewModels;
 
@@ -73,22 +70,12 @@ public partial class LyricsInfoViewModel : ObservableObject
 
 
     [RelayCommand]
-    async Task ShowOnGeniusAsync()
+    void CopyLyricsToClipboard()
     {
-        await Launcher.LaunchUriAsync(new(Track.Url));
-        logger.LogInformation("[LyricsInfoViewModel-OpenBrowserAsync] Lyrics was shown on Genius");
-    }
-
-    [RelayCommand]
-    async Task CopyLyricsToClipboardAsync()
-    {
-        if (await mainView.AlertAsync($"Do you want to copy the lyrics to your clipboard?", "Are you sure?", "No", "Yes") != ContentDialogResult.Primary)
-            return;
-
         DataPackage data = new();
         data.SetText(Lyrics);
 
         Clipboard.SetContent(data);
-        logger.LogInformation("[LyricsInfoViewModel-CopyLyricsToClipboardAsync] Clipboard was set to lyrics");
+        logger.LogInformation("[LyricsInfoViewModel-CopyLyricsToClipboard] Clipboard was set to lyrics");
     }
 }

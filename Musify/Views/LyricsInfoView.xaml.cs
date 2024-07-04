@@ -10,21 +10,12 @@ public sealed partial class LyricsInfoView : Page
 {
     LyricsInfoViewModel viewModel = default!;
 
-    public LyricsInfoView()
+    public LyricsInfoView(
+        LyricsInfoViewModel viewModel)
     {
         InitializeComponent();
-    }
 
-
-    protected override void OnNavigatedTo(
-        NavigationEventArgs e)
-    {
-        base.OnNavigatedTo(e);
-
-        if (e.Parameter is not LyricsInfoViewModel parameter)
-            return;
-
-        viewModel = parameter;
+        this.viewModel = viewModel;
         SetArtistsInlines();
     }
 

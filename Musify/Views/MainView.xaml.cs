@@ -142,7 +142,7 @@ public sealed partial class MainView : Window
     public IAsyncOperation<ContentDialogResult> AlertAsync(
         object content,
         string? title = null,
-        string? closeButton = "Ok",
+        string? closeButton = "Okay",
         string? primaryButton = null)
     {
         ContentDialog dialog = new()

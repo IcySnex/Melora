@@ -195,7 +195,7 @@ public partial class YouTubeMusicViewModel : ObservableObject
             IAsyncEnumerable<Track> tracks = youTubeMusic.ConvertAsync(SelectedSearchResults!.Cast<CommunityPlaylistSongInfo>());
 
             navigation.Navigate("Downloads");
-            navigation.SetCurrentIndex(7);
+            navigation.SetCurrentIndex(8);
 
             Action<int, Track> callback = (int count, Track track) =>
                 progress.Report($"Preparing downloads... [{count}/{SelectedSearchResults?.Count}]");

@@ -191,7 +191,7 @@ public partial class SpotifyViewModel : ObservableObject
             IAsyncEnumerable<Track> tracks = spotify.ConvertAsync(SelectedSearchResults!.Cast<FullTrack>());
 
             navigation.Navigate("Downloads");
-            navigation.SetCurrentIndex(7);
+            navigation.SetCurrentIndex(8);
 
             Action<int, Track> callback = (int count, Track track) =>
                 progress.Report($"Preparing downloads... [{count}/{SelectedSearchResults?.Count}]");
