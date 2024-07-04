@@ -65,7 +65,8 @@ public partial class HomeViewModel : ObservableObject
         {
             "Spotify" => 3,
             "YouTube" => 4,
-            "Lyrics" => 5,
+            "YouTube Music" => 5,
+            "Lyrics" => 6,
             _ => 0
         };
 

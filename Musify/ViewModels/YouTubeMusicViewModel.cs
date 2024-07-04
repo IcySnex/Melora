@@ -10,6 +10,7 @@ using Musify.Views;
 using System.ComponentModel;
 using YoutubeExplode.Videos;
 using YouTubeMusicAPI.Models;
+using YouTubeMusicAPI.Models.Info;
 
 namespace Musify.ViewModels;
 
@@ -63,7 +64,7 @@ public partial class YouTubeMusicViewModel : ObservableObject
         OnPropertyChanged(propertyName);
 
 
-    public ObservableRangeCollection<Song> SearchResults { get; }
+    public ObservableRangeCollection<CommunityPlaylistSongInfo> SearchResults { get; }
 
     public IList<object>? SelectedSearchResults { get; set; }
 
@@ -99,8 +100,6 @@ public partial class YouTubeMusicViewModel : ObservableObject
     }
 
 
-    string? album = null;
-
     [ObservableProperty]
     string query = string.Empty;
 
@@ -124,29 +123,37 @@ public partial class YouTubeMusicViewModel : ObservableObject
             YouTubeMusicSearchType type = YouTubeMusic.GetSearchType(Query, out string? id);
             switch (type)
             {
-                case YouTubeMusicSearchType.Song:
-                    progress.Report("Searching for song...");
+                case YouTubeMusicSearchType.SongVideo:
+                    progress.Report("Searching for song/video...");
+                    CommunityPlaylistSongInfo songVideo = await youTubeMusic.SearchSongVideoAsync(id!, cts.Token);
 
                     SearchResults.Clear();
+                    SearchResults.Add(songVideo);
                     break;
                 case YouTubeMusicSearchType.Album:
                     progress.Report("Searching for album...");
+                    IEnumerable<CommunityPlaylistSongInfo> albumSongs = await youTubeMusic.SearchAlbumAsync(id!, cts.Token);
 
                     SearchResults.Clear();
+                    SearchResults.AddRange(albumSongs);
                     break;
                 case YouTubeMusicSearchType.CommunityPlaylist:
                     progress.Report("Searching for community playlist...");
+                    IEnumerable<CommunityPlaylistSongInfo> playlistSongs = await youTubeMusic.SearchCommunityPlaylistAsync(id!, cts.Token);
 
                     SearchResults.Clear();
+                    SearchResults.AddRange(playlistSongs);
                     break;
-                case YouTubeMusicSearchType.Channel:
-                    progress.Report("Searching for channel...");
+                case YouTubeMusicSearchType.Artist:
+                    progress.Report("Searching for artist...");
+                    IEnumerable<CommunityPlaylistSongInfo> artistSongs = await youTubeMusic.SearchArtistAsync(id!, cts.Token);
 
                     SearchResults.Clear();
+                    SearchResults.AddRange(artistSongs);
                     break;
                 case YouTubeMusicSearchType.Query:
                     progress.Report("Searching for query...");
-                    IEnumerable<Song> searchedSongs = await youTubeMusic.SearchQueryAsync(Query, cts.Token);
+                    IEnumerable<CommunityPlaylistSongInfo> searchedSongs = await youTubeMusic.SearchQueryAsync(Query, cts.Token);
 
                     SearchResults.Clear();
                     SearchResults.AddRange(searchedSongs);
@@ -162,6 +169,8 @@ public partial class YouTubeMusicViewModel : ObservableObject
         }
         catch (Exception ex)
         {
+            mainView.HideLoadingPopup();
+
             await mainView.AlertAsync($"Failed to search for query on YouTube Music.\n\nException: {ex.Message}", "Something went wrong.");
             logger.LogError("[YouTubeMusicViewModel-SearchAsync] Failed to search for query on YouTube Music: {exception}", ex.Message);
         }
@@ -183,8 +192,7 @@ public partial class YouTubeMusicViewModel : ObservableObject
 
         try
         {
-            IAsyncEnumerable<Track> tracks = youTubeMusic.ConvertAsync(SelectedSearchResults!.Cast<Song>(), album);
-
+            IAsyncEnumerable<Track> tracks = youTubeMusic.ConvertAsync(SelectedSearchResults!.Cast<CommunityPlaylistSongInfo>());
 
             navigation.Navigate("Downloads");
             navigation.SetCurrentIndex(7);

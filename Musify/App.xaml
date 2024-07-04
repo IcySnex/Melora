@@ -121,6 +121,26 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="IconButton" TargetType="Button">
+                <Style.Setters>
+                    <Setter Property="Padding" Value="8" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Button
+                                    Padding="{TemplateBinding Padding}"
+                                    Command="{TemplateBinding Command}"
+                                    CommandParameter="{TemplateBinding CommandParameter}">
+                                    <Viewbox Width="20" Height="20">
+                                        <ContentPresenter />
+                                    </Viewbox>
+                                </Button>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style.Setters>
+            </Style>
+
 
             <!--  Controls  -->
             <ControlTemplate x:Key="SettingsExpander" TargetType="ContentControl">

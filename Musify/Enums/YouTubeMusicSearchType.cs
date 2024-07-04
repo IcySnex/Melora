@@ -2,9 +2,9 @@
 
 public enum YouTubeMusicSearchType
 {
-    Song,
+    SongVideo,
     Album,
     CommunityPlaylist,
-    Channel,
+    Artist,
     Query
 }

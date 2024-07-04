@@ -175,6 +175,8 @@ public partial class YouTubeViewModel : ObservableObject
         }
         catch (Exception ex)
         {
+            mainView.HideLoadingPopup();
+
             await mainView.AlertAsync($"Failed to search for query on YouTube.\n\nException: {ex.Message}", "Something went wrong.");
             logger.LogError("[YouTubeViewModel-SearchAsync] Failed to search for query on YouTube: {exception}", ex.Message);
         }
