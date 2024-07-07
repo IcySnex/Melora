@@ -8,3 +8,9 @@ _ReSharper.*
 
 Musify/bin/
 Musify/obj/
+
+Musify.Plugins/bin/
+Musify.Plugins/obj/
+
+Musify.Plugins.Spotify/bin/
+Musify.Plugins.Spotify/obj/

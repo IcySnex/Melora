@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 using Musify.Helpers;
 using Musify.Models;
+using Musify.Plugins.Abstract;
 using Musify.Services;
 using Musify.ViewModels;
 using Musify.Views;
@@ -24,12 +25,12 @@ public partial class App : Application
             .UseSerilog((context, configuration) =>
             {
                 configuration.WriteTo.Debug();
-                configuration.WriteTo.File(@"logs\log-.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 10);
+                configuration.WriteTo.File(@"Logs\Log-.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 10);
                 configuration.WriteTo.Sink(Sink);
             })
             .ConfigureAppConfiguration((context, builder) =>
             {
-                builder.AddJsonFile("config.json", true);
+                builder.AddJsonFile("Config.json", true);
             })
             .ConfigureServices((context, services) =>
             {
@@ -39,6 +40,7 @@ public partial class App : Application
 
                 // Add services
                 services.AddSingleton<AppStartupHandler>();
+                services.AddSingleton<PluginManager<IPlugin>>();
                 services.AddSingleton<Navigation>();
                 services.AddSingleton<JsonConverter>();
                 services.AddSingleton<Spotify>();
@@ -69,7 +71,7 @@ public partial class App : Application
     }
 
 
-    protected override void OnLaunched(LaunchActivatedEventArgs args) =>
-        Provider.GetRequiredService<AppStartupHandler>();
+    protected override async void OnLaunched(LaunchActivatedEventArgs args) =>
+        await Provider.GetRequiredService<AppStartupHandler>().PrepareStartupAsync();
 
 }

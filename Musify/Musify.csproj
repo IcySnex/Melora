@@ -74,6 +74,9 @@
 		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
 	</PropertyGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\Musify.Plugins\Musify.Plugins.csproj" />
+	</ItemGroup>
+	<ItemGroup>
 	  <Page Update="DataTemplates\DownloadTemplate.xaml">
 	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 	    <SubType>Designer</SubType>
