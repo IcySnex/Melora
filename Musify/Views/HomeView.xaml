@@ -46,11 +46,7 @@
                             CommandParameter="Spotify"
                             Style="{StaticResource IconButton}"
                             ToolTipService.ToolTip="Search on Spotify">
-                            <PathIcon Data="{x:Bind hlp:Icons.Spotify}" Translation="0,6500,0">
-                                <PathIcon.RenderTransform>
-                                    <ScaleTransform ScaleY="-1" />
-                                </PathIcon.RenderTransform>
-                            </PathIcon>
+                            <PathIcon Data="{x:Bind hlp:Icons.Spotify}" />
                         </Button>
                         <Button
                             Command="{x:Bind viewModel.SearchCommand}"
@@ -71,11 +67,7 @@
                             CommandParameter="Lyrics"
                             Style="{StaticResource IconButton}"
                             ToolTipService.ToolTip="Search for lyrics">
-                            <PathIcon Data="{x:Bind hlp:Icons.Lyrics}" Translation="0,6500,0">
-                                <PathIcon.RenderTransform>
-                                    <ScaleTransform ScaleY="-1" />
-                                </PathIcon.RenderTransform>
-                            </PathIcon>
+                            <PathIcon Data="{x:Bind hlp:Icons.Lyrics}" />
                         </Button>
                     </StackPanel>
                 </StackPanel>
