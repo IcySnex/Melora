@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:conv="using:Musify.Converters"
+    xmlns:ctr="using:Musify.Controls"
     xmlns:hlp="using:Musify.Helpers"
     xmlns:local="using:Musify"
     xmlns:md="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -538,6 +539,130 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+            </Style>
+
+            <Style TargetType="ctr:Notification">
+                <Style.Setters>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ctr:Notification">
+                                <Grid
+                                    Name="RootLayout"
+                                    Width="544"
+                                    Padding="12"
+                                    BorderBrush="{ThemeResource SystemFillColorSolidAttentionBackground}"
+                                    BorderThickness="2"
+                                    CornerRadius="4"
+                                    Translation="0,0,64">
+                                    <Grid.OpacityTransition>
+                                        <ScalarTransition Duration="0:0:0.2" />
+                                    </Grid.OpacityTransition>
+                                    <Grid.Background>
+                                        <md:AcrylicBrush
+                                            x:Name="RootBackground"
+                                            FallbackColor="{ThemeResource SystemFillColorSolidAttentionBackground}"
+                                            TintColor="{ThemeResource SystemFillColorSolidAttentionBackground}"
+                                            TintLuminosityOpacity="0.7"
+                                            TintOpacity="0.5" />
+                                    </Grid.Background>
+                                    <Grid.Shadow>
+                                        <ThemeShadow />
+                                    </Grid.Shadow>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="12" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="12" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="12" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="4" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Ellipse
+                                        x:Name="IconBackground"
+                                        Width="17"
+                                        Height="17"
+                                        Margin="1,8,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Fill="{ThemeResource SystemFillColorAttentionBrush}" />
+                                    <FontIcon
+                                        x:Name="Icon"
+                                        Foreground="{ThemeResource TextFillColorInverseBrush}"
+                                        Glyph="{StaticResource InfoBarInformationalIconGlyph}" />
+
+                                    <TextBlock
+                                        Grid.Column="2"
+                                        VerticalAlignment="Center"
+                                        Style="{ThemeResource BodyStrongTextBlockStyle}"
+                                        Text="{TemplateBinding Title}" />
+                                    <TextBlock
+                                        Grid.Column="4"
+                                        VerticalAlignment="Center"
+                                        Text="{TemplateBinding Message}"
+                                        TextTrimming="CharacterEllipsis" />
+
+                                    <Button
+                                        Grid.Column="6"
+                                        Width="32"
+                                        Height="32"
+                                        Padding="0"
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        ToolTipService.ToolTip="More info"
+                                        Visibility="{TemplateBinding MoreButtonVisibility}">
+                                        <FontIcon FontSize="12" Glyph="&#xe712;" />
+                                    </Button>
+                                    <Button
+                                        Grid.Column="8"
+                                        Width="32"
+                                        Height="32"
+                                        Padding="0"
+                                        Background="Transparent"
+                                        BorderBrush="Transparent"
+                                        ToolTipService.ToolTip="Close notification">
+                                        <FontIcon FontSize="12" Glyph="&#xe8bb;" />
+                                    </Button>
+
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="NotificationLevels">
+                                            <VisualState x:Name="Information" />
+                                            <VisualState x:Name="Warning">
+                                                <VisualState.Setters>
+                                                    <Setter Target="RootLayout.BorderBrush" Value="{ThemeResource SystemFillColorCautionBackgroundBrush}" />
+                                                    <Setter Target="RootBackground.FallbackColor" Value="{ThemeResource SystemFillColorCautionBackground}" />
+                                                    <Setter Target="RootBackground.TintColor" Value="{ThemeResource SystemFillColorCautionBackground}" />
+                                                    <Setter Target="IconBackground.Fill" Value="{ThemeResource SystemFillColorCautionBrush}" />
+                                                    <Setter Target="Icon.Glyph" Value="&#xF13C;" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Error">
+                                                <VisualState.Setters>
+                                                    <Setter Target="RootLayout.BorderBrush" Value="{ThemeResource SystemFillColorCriticalBackgroundBrush}" />
+                                                    <Setter Target="RootBackground.FallbackColor" Value="{ThemeResource SystemFillColorCriticalBackground}" />
+                                                    <Setter Target="RootBackground.TintColor" Value="{ThemeResource SystemFillColorCriticalBackground}" />
+                                                    <Setter Target="IconBackground.Fill" Value="{ThemeResource SystemFillColorCriticalBrush}" />
+                                                    <Setter Target="Icon.Glyph" Value="&#xF13D;" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Success">
+                                                <VisualState.Setters>
+                                                    <Setter Target="RootLayout.BorderBrush" Value="{ThemeResource SystemFillColorSuccessBackgroundBrush}" />
+                                                    <Setter Target="RootBackground.FallbackColor" Value="{ThemeResource SystemFillColorSuccessBackground}" />
+                                                    <Setter Target="RootBackground.TintColor" Value="{ThemeResource SystemFillColorSuccessBackground}" />
+                                                    <Setter Target="IconBackground.Fill" Value="{ThemeResource SystemFillColorSuccessBrush}" />
+                                                    <Setter Target="Icon.Glyph" Value="&#xF13E;" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style.Setters>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

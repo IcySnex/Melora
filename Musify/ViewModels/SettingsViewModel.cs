@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Musify.Enums;
 using Musify.Models;
 using Musify.Views;
 using Windows.Storage;
@@ -35,13 +36,13 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     string pathsDownloadLocation;
 
-    async partial void OnPathsDownloadLocationChanged(
+    partial void OnPathsDownloadLocationChanged(
         string? oldValue,
         string newValue)
     {
         if (!Directory.Exists(newValue))
         {
-            await mainView.AlertAsync("It looks like this directory doesnt exist. Please make sure you have created the folder.", "Something went wrong!");
+            mainView.ShowNotification("Something went wrong!", "Could not set download location.", NotificationLevel.Error, "It looks like this directory doesnt exist. Please make sure you have created the folder.");
 
             PathsDownloadLocation = oldValue ?? Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
             return;
@@ -74,13 +75,13 @@ public partial class SettingsViewModel : ObservableObject
     [ObservableProperty]
     string pathsFFMPEGLocation;
 
-    async partial void OnPathsFFMPEGLocationChanged(
+    partial void OnPathsFFMPEGLocationChanged(
         string? oldValue,
         string newValue)
     {
         if (!File.Exists(newValue))
         {
-            await mainView.AlertAsync("It looks like this file doesnt exist. Please make sure you have downloaded FFMPEG to this location.", "Something went wrong!");
+            mainView.ShowNotification("Something went wrong!", "Could not set FFMPEG path.", NotificationLevel.Error, "It looks like this file does not exist. Please make sure you have downloaded the FFMEPG binary to this path.");
 
             PathsFFMPEGLocation = oldValue ?? "FFMPEG.exe";
             return;

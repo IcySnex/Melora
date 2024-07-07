@@ -6,6 +6,7 @@ using Musify.Views;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using Windows.ApplicationModel.DataTransfer;
+using Musify.Enums;
 
 namespace Musify.ViewModels;
 
@@ -58,12 +59,14 @@ public partial class LyricsInfoViewModel : ObservableObject
 
             using Stream fileStream = await file.OpenStreamForWriteAsync();
             await artwork.CopyToAsync(fileStream);
-            logger.LogInformation("[LyricsInfoViewModel-DownloadArtworkAsync] Saved artwork to file");
+
+            mainView.ShowNotification("Success!", "Downloaded artwork to file.", NotificationLevel.Success);
+            logger.LogInformation("[LyricsInfoViewModel-DownloadArtworkAsync] Downloaded artwork to file");
 
         }
         catch (Exception ex)
         {
-            await mainView.AlertAsync($"Failed to download artwork.\n\nException: {ex.Message}", "Something went wrong.");
+            mainView.ShowNotification("Something went wrong!", "Failed to download artwork.", NotificationLevel.Error, ex.Message);
             logger.LogError("[LyricsInfoViewModel-DownloadArtworkAsync] Failed to download artwork: {exception}", ex.Message);
         }
     }
@@ -76,6 +79,8 @@ public partial class LyricsInfoViewModel : ObservableObject
         data.SetText(Lyrics);
 
         Clipboard.SetContent(data);
-        logger.LogInformation("[LyricsInfoViewModel-CopyLyricsToClipboard] Clipboard was set to lyrics");
+
+        mainView.ShowNotification("Success!", "Copied lyrics to clipboard.", NotificationLevel.Success);
+        logger.LogInformation("[LyricsInfoViewModel-CopyLyricsToClipboard] Copied lyrics to clipboard");
     }
 }

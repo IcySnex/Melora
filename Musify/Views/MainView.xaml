@@ -4,10 +4,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ani="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:ctr="using:Musify.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hlp="using:Musify.Helpers"
     xmlns:local="using:Musify.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mdl="using:Musify.Models"
     Title="Musify"
     Closed="OnClosed"
     mc:Ignorable="d">
@@ -98,11 +100,7 @@
 
                 <NavigationViewItem Content="Spotify">
                     <NavigationViewItem.Icon>
-                        <PathIcon Data="{x:Bind hlp:Icons.Spotify}" Translation="0,6500,0">
-                            <PathIcon.RenderTransform>
-                                <ScaleTransform ScaleY="-1" />
-                            </PathIcon.RenderTransform>
-                        </PathIcon>
+                        <PathIcon Data="{x:Bind hlp:Icons.Spotify}" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
                 <NavigationViewItem Content="YouTube">
@@ -117,11 +115,7 @@
                 </NavigationViewItem>
                 <NavigationViewItem Content="Lyrics">
                     <NavigationViewItem.Icon>
-                        <PathIcon Data="{x:Bind hlp:Icons.Lyrics}" Translation="0,6500,0">
-                            <PathIcon.RenderTransform>
-                                <ScaleTransform ScaleY="-1" />
-                            </PathIcon.RenderTransform>
-                        </PathIcon>
+                        <PathIcon Data="{x:Bind hlp:Icons.Lyrics}" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
@@ -138,6 +132,22 @@
 
             <Frame Name="ContentFrame" x:FieldModifier="public" />
         </NavigationView>
+
+        <StackPanel
+            x:Name="NotificationsContainer"
+            Grid.Row="1"
+            Margin="12"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            x:FieldModifier="public"
+            ScrollViewer.VerticalScrollBarVisibility="Disabled"
+            Spacing="8">
+            <StackPanel.ChildrenTransitions>
+                <TransitionCollection>
+                    <AddDeleteThemeTransition />
+                </TransitionCollection>
+            </StackPanel.ChildrenTransitions>
+        </StackPanel>
 
         <ContentPresenter
             Name="LoadingPopupRootLayout"

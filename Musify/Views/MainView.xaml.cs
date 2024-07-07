@@ -14,7 +14,8 @@ using Microsoft.Extensions.Options;
 using Musify.Models;
 using Musify.Services;
 using Microsoft.UI.Xaml.Input;
-using System;
+using Musify.Enums;
+using Musify.Controls;
 
 namespace Musify.Views;
 
@@ -153,6 +154,47 @@ public sealed partial class MainView : Window
             PrimaryButtonText = primaryButton
         };
         return AlertAsync(dialog);
+    }
+
+
+    public void ShowNotification(
+        string title,
+        string message,
+        NotificationLevel level = NotificationLevel.Information,
+        string? innerMessage = null)
+    {
+        if (NotificationsContainer.Children.Count > 5)
+            NotificationsContainer.Children.RemoveAt(0);
+
+        Notification notification = new()
+        {
+            Title = title,
+            Message = message,
+            Level = level,
+            CloseAfter = level switch
+            {
+                NotificationLevel.Information => TimeSpan.FromSeconds(3),
+                NotificationLevel.Warning => TimeSpan.FromSeconds(5),
+                NotificationLevel.Error => null,
+                NotificationLevel.Success => TimeSpan.FromSeconds(3),
+                _ => null
+            }
+        };
+        notification.ClosingRequested += (s, e) =>
+            NotificationsContainer.Children.Remove(notification);
+
+        if (innerMessage is not null)
+        {
+            notification.MoreButtonVisibility = Visibility.Visible;
+            notification.MoreButtonClicked += async (s, e) =>
+            {
+                NotificationsContainer.Children.Remove(notification);
+                await AlertAsync($"{message}\n\n{innerMessage}", title);
+            };
+        }
+
+        logger.LogInformation("[MainView-ShowNotification] Notification was requested");
+        NotificationsContainer.Children.Add(notification);
     }
 
 

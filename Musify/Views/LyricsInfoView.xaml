@@ -116,9 +116,9 @@
         </Grid>
 
         <!--  LYrics Container  -->
-        <ScrollViewer Grid.Row="4" Margin="-24,0,-24,-24">
+        <ScrollViewer Grid.Row="4" Margin="-24, 0,-24,-24">
             <TextBlock
-                Margin="48,12,48,24"
+                Margin="48,12,48,32"
                 FontSize="20"
                 FontWeight="Medium"
                 Text="{x:Bind viewModel.Lyrics}"

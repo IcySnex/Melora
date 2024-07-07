@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
+using Musify.Enums;
 using Musify.Services;
 using Musify.Views;
 using Windows.ApplicationModel.DataTransfer;
@@ -50,7 +51,9 @@ public partial class HomeViewModel : ObservableObject
         data.SetText(text);
 
         Clipboard.SetContent(data);
-        logger.LogInformation("[HomeViewModel-ShareAsync] Clipboard was set to text: {text}", text);
+
+        mainView.ShowNotification("Success!", "Copied text to clipboard.", NotificationLevel.Success);
+        logger.LogInformation("[HomeViewModel-ShareAsync] Copied text to clipboard: {text}", text);
     }
 
 
