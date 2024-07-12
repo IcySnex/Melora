@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
+using Musify.Enums;
 using Musify.Plugins;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Exceptions;
+using Musify.Views;
 
 namespace Musify.Services;
 
@@ -11,11 +13,14 @@ public class PluginManager<T> where T : IPlugin
 
 
     readonly ILogger<PluginManager<IPlugin>> logger;
+    readonly MainView mainView;
 
     public PluginManager(
-        ILogger<PluginManager<IPlugin>> logger)
+        ILogger<PluginManager<IPlugin>> logger,
+        MainView mainView)
     {
         this.logger = logger;
+        this.mainView = mainView;
 
         if (!Directory.Exists(PluginsDirectory))
             Directory.CreateDirectory(PluginsDirectory);
@@ -57,8 +62,21 @@ public class PluginManager<T> where T : IPlugin
     {
         logger.LogInformation("[PluginManager-LoadAllPluginsAsync] Starting loading all plugins...");
 
-        foreach (string path in Directory.GetFiles(PluginsDirectory, "*.mfy"))
-            await LoadPluginAsync(path, cancellationToken);
-    }
+        string pluginFileName = "";
+        try
+        {
+            foreach (string path in Directory.GetFiles(PluginsDirectory, "*.mfy"))
+            {
+                pluginFileName = Path.GetFileNameWithoutExtension(path);
+                await LoadPluginAsync(path, cancellationToken);
 
+                mainView.ShowNotification("Success!", $"Loaded plugin: {pluginFileName}.", NotificationLevel.Success);
+            }
+        }
+        catch (Exception ex)
+        {
+            mainView.ShowNotification("Something went wrong!", $"Failed to load plugin: {pluginFileName}.", NotificationLevel.Error, $"{ex.Message}\n{ex.InnerException?.Message}");
+            logger.LogError("[PluginManager-LoadAllPluginsAsync] Failed to load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
+        }
+    }
 }
