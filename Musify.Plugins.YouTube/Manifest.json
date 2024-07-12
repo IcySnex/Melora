@@ -1,0 +1,9 @@
+{
+  "Name": "YouTube (+ Music)",
+  "Description": "Adds support to search & download videos, playlists, channels, songs & albums from YouTube & YouTube Music.",
+  "Kind": 0,
+  "Author": "IcySnex",
+  "Version": "1.0.0",
+  "EntryPoint": "Musify.Plugins.YouTube.dll",
+  "Dependencies": []
+}
