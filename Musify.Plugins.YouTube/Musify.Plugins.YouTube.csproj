@@ -20,4 +20,9 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath '$(SolutionDir)\Musify\bin\x64\Debug\net8.0-windows10.0.19041.0\win10-x64\Plugins\$(ProjectName).zip'" />
+		<Exec Command="powershell Rename-Item -Path '$(SolutionDir)\Musify\bin\x64\Debug\net8.0-windows10.0.19041.0\win10-x64\Plugins\$(ProjectName).zip' -NewName '$(ProjectName).mfy'" />
+	</Target>
 </Project>
