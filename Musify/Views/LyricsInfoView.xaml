@@ -41,10 +41,13 @@
                     <ThemeShadow />
                 </Border.Shadow>
 
-                <Image x:Name="ArtworkImage" Stretch="UniformToFill" />
+                <Image
+                    DataContext="{x:Bind viewModel.Track}"
+                    Source="{Binding ArtworkUrl}"
+                    Stretch="UniformToFill" />
             </Border>
             <Button
-                hlp:Attributes.Glyph="&#xe896;"
+                hlp:Attributes.Glyph="&#xe74e;"
                 Command="{x:Bind viewModel.SaveArtworkCommand}"
                 Style="{StaticResource HoverButtonStyle}"
                 ToolTipService.ToolTip="Save artwork" />
@@ -97,7 +100,7 @@
                         Margin="0,0,24,0"
                         HorizontalAlignment="Right"
                         Foreground="{ThemeResource TextFillColorTertiaryBrush}">
-                        <Run Text="{x:Bind viewModel.Track.Stats.PageViews.ToString('#,0', x:Null), TargetNullValue='N/A'}" />
+                        <Run Text="{x:Bind viewModel.Track.Stats.PageViews.ToString('#, 0', x:Null), TargetNullValue='N/A'}" />
                         <Run Text="Views" />
                     </TextBlock>
                 </Grid>

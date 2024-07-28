@@ -1,14 +1,13 @@
 using GeniusAPI.Models;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml.Media.Imaging;
 using Musify.ViewModels;
 
 namespace Musify.Views;
 
 public sealed partial class LyricsInfoView : Page
 {
-    LyricsInfoViewModel viewModel = default!;
+    readonly LyricsInfoViewModel viewModel = default!;
 
     public LyricsInfoView(
         LyricsInfoViewModel viewModel)
@@ -18,8 +17,6 @@ public sealed partial class LyricsInfoView : Page
         this.viewModel = viewModel;
 
         SetArtistsInlines();
-        if (viewModel.Track.ArtworkThumbnailUrl is not null)
-            ArtworkImage.Source = new BitmapImage(new(viewModel.Track.ArtworkThumbnailUrl));
     }
 
 

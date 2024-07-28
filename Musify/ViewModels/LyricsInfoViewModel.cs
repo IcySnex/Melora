@@ -37,6 +37,18 @@ public partial class LyricsInfoViewModel : ObservableObject
     [RelayCommand]
     async Task SaveArtworkAsync()
     {
+        if (Track.ArtworklUrl is null)
+        {
+            mainView.ShowNotification("Warning!", "Can't save artwork.", NotificationLevel.Warning, "This track has no artwork set.");
+            return;
+        }
+        Uri source = new(Track.ArtworklUrl);
+        if (source.IsFile)
+        {
+            mainView.ShowNotification("Warning!", "Can't save artwork.", NotificationLevel.Warning, "The artwork source is a file which can not be saved.");
+            return;
+        }
+
         FileSavePicker picker = new()
         {
             CommitButtonText = "Save artwork",
@@ -48,27 +60,27 @@ public partial class LyricsInfoViewModel : ObservableObject
         mainView.Initialize(picker);
 
         StorageFile? file = await picker.PickSaveFileAsync();
-        logger.LogInformation("[LyricsInfoViewModel-DownloadArtworkAsync] File save picker was shown");
+        logger.LogInformation("[LyricsInfoViewModel-SaveArtworkAsync] File save picker was shown");
 
         if (file is null)
             return;
 
         try
         {
-            Stream artwork = await client.GetStreamAsync(Track.ArtworklUrl);
-            logger.LogInformation("[LyricsInfoViewModel-DownloadArtworkAsync] Saved stream for arwork");
+            Stream artwork = await client.GetStreamAsync(source);
+            logger.LogInformation("[LyricsInfoViewModel-SaveArtworkAsync] Saved stream for arwork");
 
             using Stream fileStream = await file.OpenStreamForWriteAsync();
             await artwork.CopyToAsync(fileStream);
 
             mainView.ShowNotification("Success!", "Saved artwork to file.", NotificationLevel.Success);
-            logger.LogInformation("[LyricsInfoViewModel-DownloadArtworkAsync] Saved artwork to file");
+            logger.LogInformation("[LyricsInfoViewModel-SaveArtworkAsync] Saved artwork to file");
 
         }
         catch (Exception ex)
         {
             mainView.ShowNotification("Something went wrong!", "Failed to save artwork.", NotificationLevel.Error, ex.ToFormattedString());
-            logger.LogError("[LyricsInfoViewModel-DownloadArtworkAsync] Failed to save artwork: {exception}", ex.Message);
+            logger.LogError("[LyricsInfoViewModel-SaveArtworkAsync] Failed to save artwork: {exception}", ex.Message);
         }
     }
 
