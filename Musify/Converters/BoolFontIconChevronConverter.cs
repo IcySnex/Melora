@@ -2,11 +2,11 @@
 
 namespace Musify.Converters;
 
-public class IntStringConverter : IValueConverter
+public class BoolFontIconChevronConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language) =>
-        ((int)value).ToString("#,0");
+        (bool)value ? "\xe70e" : "\xe70d";
 
     public object ConvertBack(object value, Type targetType, object parameter, string language) =>
-        int.Parse((string)value);
+        (string)value == "\xe70e";
 }

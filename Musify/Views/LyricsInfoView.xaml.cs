@@ -1,7 +1,7 @@
+using GeniusAPI.Models;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml.Navigation;
-using Musify.Models;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Musify.ViewModels;
 
 namespace Musify.Views;
@@ -16,7 +16,10 @@ public sealed partial class LyricsInfoView : Page
         InitializeComponent();
 
         this.viewModel = viewModel;
+
         SetArtistsInlines();
+        if (viewModel.Track.ArtworkThumbnailUrl is not null)
+            ArtworkImage.Source = new BitmapImage(new(viewModel.Track.ArtworkThumbnailUrl));
     }
 
 
@@ -34,7 +37,7 @@ public sealed partial class LyricsInfoView : Page
         ArtistsBlock.Inlines.Add(CreateHyperlink(viewModel.Track.PrimaryArtist.Name, viewModel.Track.PrimaryArtist.Url));
         for (int i = 0; i < viewModel.Track.FeaturedArtists.Length; i++)
         {
-            LyricsArtist artist = viewModel.Track.FeaturedArtists[i];
+            GeniusArtist artist = viewModel.Track.FeaturedArtists[i];
 
             if (viewModel.Track.FeaturedArtists.Length != i)
                 ArtistsBlock.Inlines.Add(CreateRun(", "));
@@ -42,4 +45,8 @@ public sealed partial class LyricsInfoView : Page
             ArtistsBlock.Inlines.Add(CreateHyperlink(artist.Name, artist.Url));
         }
     }
+
+
+    void OnCopyLyricsHyperlinkClicked(Hyperlink _, HyperlinkClickEventArgs _1) =>
+        viewModel.CopyLyricsToClipboardCommand.Execute(null);
 }

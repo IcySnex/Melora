@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Musify.Plugins.Abstract;
 using Musify.ViewModels;
 
 namespace Musify.Views;
@@ -11,5 +13,12 @@ public sealed partial class SettingsView : Page
     public SettingsView()
     {
         InitializeComponent();
+    }
+
+
+    private async void OnResetPluginConfigClick(object sender, RoutedEventArgs _)
+    {
+        PlatformSupportPlugin plugin = (PlatformSupportPlugin)((Button)sender).DataContext;
+        await viewModel.ResetPluginConfigAsync(plugin);
     }
 }

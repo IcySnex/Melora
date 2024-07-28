@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using Musify.ViewModels;
 
 namespace Musify.Views;
@@ -15,15 +15,14 @@ public sealed partial class LyricsView : Page
     }
 
 
-    protected override void OnNavigatedTo(
-        NavigationEventArgs e)
+    void OnPageLoaded(object _, RoutedEventArgs _1)
     {
-        base.OnNavigatedTo(e);
-
-        if (e.Parameter is not string parameter)
+        if (string.IsNullOrWhiteSpace(App.Parameter))
             return;
 
-        viewModel.Query = parameter;
+        viewModel.Query = App.Parameter;
         viewModel.SearchCommand.Execute(null);
+
+        App.Parameter = null;
     }
 }

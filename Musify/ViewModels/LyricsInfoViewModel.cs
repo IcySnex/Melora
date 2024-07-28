@@ -1,12 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
-using Musify.Models;
 using Musify.Views;
 using Windows.Storage.Pickers;
 using Windows.Storage;
 using Windows.ApplicationModel.DataTransfer;
 using Musify.Enums;
+using Musify.Helpers;
+using GeniusAPI.Models;
 
 namespace Musify.ViewModels;
 
@@ -28,7 +29,7 @@ public partial class LyricsInfoViewModel : ObservableObject
     }
 
 
-    public LyricsTrack Track { get; set; } = default!;
+    public GeniusTrack Track { get; set; } = default!;
 
     public string Lyrics { get; set; } = string.Empty;
 
@@ -66,7 +67,7 @@ public partial class LyricsInfoViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            mainView.ShowNotification("Something went wrong!", "Failed to download artwork.", NotificationLevel.Error, ex.Message);
+            mainView.ShowNotification("Something went wrong!", "Failed to download artwork.", NotificationLevel.Error, ex.ToFormattedString());
             logger.LogError("[LyricsInfoViewModel-DownloadArtworkAsync] Failed to download artwork: {exception}", ex.Message);
         }
     }

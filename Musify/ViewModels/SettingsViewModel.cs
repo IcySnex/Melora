@@ -1,9 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using GeniusAPI;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.UI.Xaml.Controls;
 using Musify.Enums;
 using Musify.Models;
+using Musify.Plugins.Abstract;
+using Musify.Plugins.Models;
+using Musify.Services;
 using Musify.Views;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -16,20 +21,65 @@ public partial class SettingsViewModel : ObservableObject
     readonly MainView mainView;
 
     public Config Config { get; }
+    public PluginManager<PlatformSupportPlugin> PluginManager { get; }
 
     public SettingsViewModel(
         ILogger<SettingsViewModel> logger,
-        IOptions<Config> config,
+        Config config,
+        PluginManager<PlatformSupportPlugin> pluginManager,
         MainView mainView)
     {
         this.logger = logger;
-        this.Config = config.Value;
+        this.PluginManager = pluginManager;
+        this.Config = config;
         this.mainView = mainView;
 
         PathsDownloadLocation = Config.Paths.DownloadLocation;
         PathsFFMPEGLocation = Config.Paths.FFMPEGLocation;
 
         logger.LogInformation("[SettingsViewModel-.ctor] SettingsViewModel has been initialized");
+    }
+
+
+    public async Task ResetPluginConfigAsync(
+        PlatformSupportPlugin plugin)
+    {
+        if (await mainView.AlertAsync("Resetting the plugins the config to default will delete all plugin settings and preferences.", "Are you sure?", "Cancel", "Yes") != ContentDialogResult.Primary)
+            return;
+
+        PlatformSupportPluginConfig defaultPlatformSupportConfig = plugin.GetDefaultConfig();
+        plugin.Config.Items = defaultPlatformSupportConfig.Items;
+        plugin.Config.Quality = defaultPlatformSupportConfig.Quality;
+        plugin.Config.Format = defaultPlatformSupportConfig.Format;
+        plugin.Config.SearchResultsLimit = defaultPlatformSupportConfig.SearchResultsLimit;
+        plugin.Config.SearchResultsSorting = defaultPlatformSupportConfig.SearchResultsSorting;
+        plugin.Config.SearchResultsSortDescending = defaultPlatformSupportConfig.SearchResultsSortDescending;
+
+        mainView.ShowNotification("Success!", $"Reset plugins config: {plugin.Name}", NotificationLevel.Success);
+
+        logger.LogInformation("[SettingsViewModel-ResetPluginConfig] Reset plugins config to default: {pluginName}", plugin.Name);
+    }
+
+    [RelayCommand]
+    async Task ResetConfig()
+    {
+        if (await mainView.AlertAsync("Resetting the config to the default will delete all your settings and preferences.", "Are you sure?", "Cancel", "Yes") != ContentDialogResult.Primary)
+            return;
+
+        Config defaultConfig = new();
+        Config.Lyrics.GeniusAccessToken = defaultConfig.Lyrics.GeniusAccessToken;
+        Config.Lyrics.SearchResultsSorting = defaultConfig.Lyrics.SearchResultsSorting;
+        Config.Lyrics.SearchResultsSortDescending = defaultConfig.Lyrics.SearchResultsSortDescending;
+        Config.Downloads.AlreadyExistsBehavior = defaultConfig.Downloads.AlreadyExistsBehavior;
+        Config.Downloads.Sorting = defaultConfig.Downloads.Sorting;
+        Config.Downloads.SortDescending = defaultConfig.Downloads.SortDescending;
+        Config.Paths.DownloadLocation = defaultConfig.Paths.DownloadLocation;
+        Config.Paths.Filename = defaultConfig.Paths.Filename;
+        Config.Paths.FFMPEGLocation = defaultConfig.Paths.FFMPEGLocation;
+
+        mainView.ShowNotification("Success!", $"Reset config", NotificationLevel.Success);
+
+        logger.LogInformation("[SettingsViewModel-ResetConfig] Reset config");
     }
 
 

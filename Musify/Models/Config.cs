@@ -1,73 +1,35 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Musify.Enums;
+using Musify.Plugins.Abstract;
+using Musify.Plugins.Enums;
 
 namespace Musify.Models;
 
 public class Config
 {
-    public ConfigSpotify Spotify { get; set; } = new();
+    public static readonly string ConfigFilepath = Path.Combine(Environment.CurrentDirectory, "Config.json");
 
-    public ConfigYouTube YouTube { get; set; } = new();
 
-    public ConfigYouTubeMusic YouTubeMusic { get; set; } = new();
+    public Dictionary<string, IPluginConfig> PluginConfigs { get; set; } = [];
 
     public ConfigDownloads Downloads { get; set; } = new();
 
     public ConfigPaths Paths { get; set; } = new();
 
-    public ConfigAdvanced Advanced { get; set; } = new();
+    public ConfigLyrics Lyrics { get; set; } = new();
 }
 
 
-public partial class ConfigSpotify : ObservableObject
+public partial class ConfigLyrics : ObservableObject
 {
     [ObservableProperty]
-    Quality quality = Quality._160kbps;
+    string geniusAccessToken = "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr";
 
     [ObservableProperty]
-    Format format = Format.mp3;
+    Sorting searchResultsSorting = Sorting.Default;
 
     [ObservableProperty]
-    bool saveLyrics = true;
-
-    [ObservableProperty]
-    bool saveArtwork = true;
-
-    public ViewOptions ViewOptions { get; set; } = new(Sorting.Default, false, 1000);
-}
-
-public partial class ConfigYouTube : ObservableObject
-{
-    [ObservableProperty]
-    Quality quality = Quality._160kbps;
-
-    [ObservableProperty]
-    Format format = Format.mp3;
-
-    [ObservableProperty]
-    bool saveDescription = false;
-
-    [ObservableProperty]
-    bool saveThumbnail = true;
-
-    public ViewOptions ViewOptions { get; set; } = new(Sorting.Default, false, 1000);
-}
-
-public partial class ConfigYouTubeMusic : ObservableObject
-{
-    [ObservableProperty]
-    Quality quality = Quality._160kbps;
-
-    [ObservableProperty]
-    Format format = Format.mp3;
-
-    [ObservableProperty]
-    bool saveLyrics = false;
-
-    [ObservableProperty]
-    bool saveArtwork = true;
-
-    public ViewOptions ViewOptions { get; set; } = new(Sorting.Default, false, 1000);
+    bool searchResultsSortDescending = false;
 }
 
 public partial class ConfigDownloads : ObservableObject
@@ -76,18 +38,10 @@ public partial class ConfigDownloads : ObservableObject
     AlreadyExistsBehavior alreadyExistsBehavior = AlreadyExistsBehavior.Ask;
 
     [ObservableProperty]
-    bool writeCurrentDateTimeAsRelease = false;
+    Sorting sorting = Sorting.Default;
 
     [ObservableProperty]
-    bool showSpotifyTracks = true;
-
-    [ObservableProperty]
-    bool showYouTubeTracks = true;
-    
-    [ObservableProperty]
-    bool showYouTubeMusicTracks = true;
-
-    public ViewOptions ViewOptions { get; set; } = new(Sorting.Default, false, default);
+    bool sortDescending = false;
 }
 
 public partial class ConfigPaths : ObservableObject
@@ -100,30 +54,4 @@ public partial class ConfigPaths : ObservableObject
 
     [ObservableProperty]
     string fFMPEGLocation = "FFMPEG.exe";
-}
-
-public partial class ConfigAdvanced : ObservableObject
-{
-    [ObservableProperty]
-    string spotifyYouTubeSearchAlgorithm = "{title} {artist}";
-
-    [ObservableProperty]
-    string spotifySearchMarket = "US";
-
-    [ObservableProperty]
-    string youTubeMusicHL = "en";
-
-    [ObservableProperty]
-    string youTubeMusicGL = "US";
-
-
-    [ObservableProperty]
-    string spotifyClientId = "75e1749b48dd4466858cf28ab32b1c8a";
-
-    [ObservableProperty]
-    string spotifyClientSecret = "b884202c63af4bcbbcac91cfcf16e6c8";
-
-    [ObservableProperty]
-    string geniusAccessToken = "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr";
-
 }

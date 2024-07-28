@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace Musify.Services;
 
@@ -16,17 +16,23 @@ public class JsonConverter
     }
 
 
+    readonly JsonSerializerSettings settings = new()
+    {
+        TypeNameHandling = TypeNameHandling.Auto
+    };
+
+
     public string ToString(
         object input)
     {
         logger.LogInformation("[JsonConverter-ToString] Serializing object to string");
-        return JsonSerializer.Serialize(input);
+        return JsonConvert.SerializeObject(input, settings);
     }
 
     public T? ToObject<T>(
         string input)
     {
         logger.LogInformation("[JsonConverter-ToObject] Deserializing string to object");
-        return JsonSerializer.Deserialize<T>(input);
+        return JsonConvert.DeserializeObject<T>(input, settings);
     }
 }

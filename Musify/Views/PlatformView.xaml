@@ -1,42 +1,79 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Page
-    x:Class="Musify.Views.SpotifyView"
+    x:Class="Musify.Views.PlatformView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ani="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
-    xmlns:cor="using:Microsoft.Xaml.Interactions.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hlp="using:Musify.Helpers"
-    xmlns:int="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:Musify.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:plgm="using:Musify.Plugins.Models"
+    xmlns:sys="using:System"
+    x:Name="Platform"
+    Loaded="OnPageLoaded"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
 
     <Grid>
         <!--  Track Container  -->
-        <ScrollViewer>
-            <ListView
-                Name="SearchResultsContainer"
-                Margin="{x:Bind viewModel.CanDownload, Mode=OneWay, Converter={StaticResource CanDownloadMarginConverter}}"
-                ItemTemplate="{StaticResource SpotifyTrackTemplate}"
-                ItemsSource="{x:Bind viewModel.SearchResults}"
-                SelectionMode="Extended">
-                <int:Interaction.Behaviors>
-                    <cor:EventTriggerBehavior EventName="SelectionChanged">
-                        <cor:InvokeCommandAction Command="{x:Bind viewModel.ForceUpdatePropertyCommand}" CommandParameter="CanDownload" />
-                    </cor:EventTriggerBehavior>
-                </int:Interaction.Behaviors>
-            </ListView>
-        </ScrollViewer>
+        <ListView
+            x:Name="SearchResultsContainer"
+            Padding="48,116,48,24"
+            ItemsSource="{x:Bind viewModel.SearchResults}"
+            SelectionChanged="OnSearchResultsContainerSelectionChanged"
+            SelectionMode="Extended">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="plgm:SearchResult">
+                    <Grid Padding="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
+                                Width="Auto"
+                                MinWidth="50"
+                                MaxWidth="89" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Style="{StaticResource PlaceholderImage}">
+                            <Image Source="{Binding ImageUrl}" Stretch="UniformToFill" />
+                        </Border>
+
+                        <TextBlock
+                            Grid.Column="2"
+                            Margin="0,5,0,0"
+                            Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
+                            Text="{x:Bind Title, TargetNullValue='N/A'}"
+                            TextTrimming="CharacterEllipsis" />
+                        <TextBlock
+                            Grid.Column="2"
+                            Margin="0,26,0,0"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="{x:Bind Artists, TargetNullValue='N/A'}"
+                            TextTrimming="CharacterEllipsis" />
+
+                        <TextBlock
+                            Grid.Column="4"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="{x:Bind Duration, Converter={StaticResource TimeSpanStringConverter}}" />
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <TextBlock
             Margin="0,82,0,0"
             VerticalAlignment="Center"
             FontSize="16"
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             HorizontalTextAlignment="Center"
-            Text="There are currently no search results.&#x0a;Paste in a Spotify URL or type in a track title/artist name to search for tracks..."
-            Visibility="{x:Bind viewModel.SearchResults.Count, Mode=OneWay, Converter={StaticResource IntOverZeroVisibilityConverter}}" />
+            Visibility="{x:Bind viewModel.SearchResults.Count, Mode=OneWay, Converter={StaticResource IntOverZeroVisibilityConverter}}">
+            <Run Text="There are currently no search results.&#x0a;Paste in a URL or type in a query to search on" />
+            <Run Text="{x:Bind viewModel.Plugin.Name}" /><Run Text="." />
+        </TextBlock>
 
         <!--  Search bar  -->
         <Grid
@@ -47,10 +84,11 @@
             CornerRadius="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="8" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="26" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="2" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="2" />
@@ -60,39 +98,39 @@
             <!--  Search  -->
             <TextBox
                 hlp:Attributes.EnterKeyCommand="{x:Bind viewModel.SearchCommand}"
-                PlaceholderText="Search for tracks on Spotify..."
+                CornerRadius="4,0,0,4"
+                PlaceholderText="{x:Bind sys:String.Format('Search for a query on {0}...', viewModel.Plugin.Name)}"
                 Text="{x:Bind viewModel.Query, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+            <NumberBox
+                Grid.Column="2"
+                Width="112"
+                CornerRadius="0,4,4,0"
+                Maximum="9999"
+                Minimum="1"
+                PlaceholderText="No Limit"
+                SpinButtonPlacementMode="Compact"
+                ToolTipService.ToolTip="Search results limit"
+                Value="{x:Bind viewModel.Plugin.Config.SearchResultsLimit, Mode=TwoWay, Converter={StaticResource NullableIntDoubleConverter}}" />
 
             <Button
-                Grid.Column="2"
+                Grid.Column="4"
                 Command="{x:Bind viewModel.SearchCommand}"
                 Style="{StaticResource AccentButtonStyle}"
-                ToolTipService.ToolTip="Search on Spotify">
+                ToolTipService.ToolTip="{x:Bind sys:String.Format('Search on {0}', viewModel.Plugin.Name)}">
                 <StackPanel Orientation="Horizontal" Spacing="4">
                     <FontIcon FontSize="17" Glyph="&#xf78b;" />
                     <TextBlock Text="Search" />
                 </StackPanel>
             </Button>
 
-            <Rectangle Grid.Column="3" Style="{StaticResource VerticalDivider}" />
+            <Rectangle Grid.Column="5" Style="{StaticResource VerticalDivider}" />
 
             <!--  View Options  -->
-            <NumberBox
-                Grid.Column="4"
-                Width="108"
-                BorderThickness="0"
-                CornerRadius="4,0,0,4"
-                Maximum="9999"
-                Minimum="1"
-                PlaceholderText="Limit"
-                SpinButtonPlacementMode="Compact"
-                ToolTipService.ToolTip="Viewable search results limit"
-                Value="{x:Bind viewModel.Config.Spotify.ViewOptions.Limit, Mode=TwoWay}" />
             <ComboBox
-                Grid.Column="6"
+                Grid.Column="7"
                 Width="105"
-                CornerRadius="0"
-                SelectedIndex="{x:Bind viewModel.Config.Spotify.ViewOptions.Sorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
+                CornerRadius="4,0,0,4"
+                SelectedIndex="{x:Bind viewModel.Plugin.Config.SearchResultsSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
                 ToolTipService.ToolTip="Sort search results by">
                 <ComboBoxItem Content="Default" />
                 <ComboBoxItem Content="Title" />
@@ -100,32 +138,31 @@
                 <ComboBoxItem Content="Duration" />
             </ComboBox>
             <ToggleButton
-                Grid.Column="8"
+                Grid.Column="9"
                 Width="32"
                 Height="32"
                 Padding="4"
                 CornerRadius="0,4,4,0"
-                IsChecked="{x:Bind viewModel.Config.Spotify.ViewOptions.Descending, Mode=TwoWay}"
-                ToolTipService.ToolTip="Sort search results descending">
-                <FontIcon FontSize="17" Glyph="{x:Bind viewModel.Config.Spotify.ViewOptions.Descending, Mode=OneWay, Converter={StaticResource BooleanFontIconChevronConverter}}" />
+                IsChecked="{x:Bind viewModel.Plugin.Config.SearchResultsSortDescending, Mode=TwoWay}"
+                ToolTipService.ToolTip="Sort search results descending/ascending">
+                <FontIcon FontSize="17" Glyph="{x:Bind viewModel.Plugin.Config.SearchResultsSortDescending, Mode=OneWay, Converter={StaticResource BoolFontIconChevronConverter}}" />
             </ToggleButton>
         </Grid>
 
         <!--  Download bar  -->
         <Grid
+            x:Name="DownloadBar"
             Margin="24"
             Padding="18"
             VerticalAlignment="Bottom"
             Background="{ThemeResource CardBackgroundAcrylicBrush}"
             CornerRadius="8"
-            IsHitTestVisible="{x:Bind viewModel.CanDownload, Mode=OneWay}"
-            Opacity="{x:Bind viewModel.CanDownload, Mode=OneWay, Converter={StaticResource BoolDoubleConverter}}">
+            IsHitTestVisible="False"
+            Opacity="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="4" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="26" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="26" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
@@ -137,7 +174,7 @@
             <ContentControl hlp:Attributes.Title="Quality" Template="{StaticResource WithHeader}">
                 <ComboBox
                     HorizontalAlignment="Stretch"
-                    SelectedIndex="{x:Bind viewModel.Config.Spotify.Quality, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
+                    SelectedIndex="{x:Bind viewModel.Plugin.Config.Quality, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
                     ToolTipService.ToolTip="Download quality">
                     <ComboBoxItem Content="32 kbps" />
                     <ComboBoxItem Content="64 kbps" />
@@ -155,7 +192,7 @@
                 Template="{StaticResource WithHeader}">
                 <ComboBox
                     HorizontalAlignment="Stretch"
-                    SelectedIndex="{x:Bind viewModel.Config.Spotify.Format, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
+                    SelectedIndex="{x:Bind viewModel.Plugin.Config.Format, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
                     ToolTipService.ToolTip="Audio format">
                     <ComboBoxItem Content="mp3" />
                     <ComboBoxItem Content="wav" />
@@ -168,30 +205,10 @@
 
             <Rectangle Grid.Column="3" Style="{StaticResource VerticalDivider}" />
 
-            <!--  Meta data  -->
-            <ContentControl
-                Grid.Column="4"
-                hlp:Attributes.Title="Meta data"
-                Template="{StaticResource WithHeader}">
-                <Grid>
-                    <CheckBox
-                        Content="Lyrics"
-                        IsChecked="{x:Bind viewModel.Config.Spotify.SaveLyrics, Mode=TwoWay}"
-                        ToolTipService.ToolTip="Search &amp; save lyrics from Genius" />
-                    <CheckBox
-                        Margin="80,0,0,0"
-                        Content="Artwork"
-                        IsChecked="{x:Bind viewModel.Config.Spotify.SaveArtwork, Mode=TwoWay}"
-                        ToolTipService.ToolTip="Download &amp; save the artwork" />
-                </Grid>
-            </ContentControl>
-
-            <Rectangle Grid.Column="5" Style="{StaticResource VerticalDivider}" />
-
             <!--  Download  -->
             <Button
-                Grid.Column="6"
-                Command="{x:Bind viewModel.DownloadCommand}"
+                Grid.Column="4"
+                Command="{x:Bind viewModel.PrepareDownloadsCommand}"
                 Style="{StaticResource AccentButtonStyle}"
                 ToolTipService.ToolTip="Move to download queue">
                 <StackPanel Orientation="Horizontal" Spacing="4">

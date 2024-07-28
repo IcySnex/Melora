@@ -10,12 +10,13 @@ using Microsoft.UI.Xaml.Media;
 using Musify.Helpers;
 using Windows.Foundation;
 using WinRT.Interop;
-using Microsoft.Extensions.Options;
 using Musify.Models;
 using Musify.Services;
 using Microsoft.UI.Xaml.Input;
 using Musify.Enums;
 using Musify.Controls;
+using Musify.Plugins.Abstract;
+using Microsoft.UI.Xaml.Markup;
 
 namespace Musify.Views;
 
@@ -23,22 +24,41 @@ public sealed partial class MainView : Window
 {
     readonly ILogger<MainView> logger;
     readonly Config config;
+    readonly PluginManager<PlatformSupportPlugin> pluginManager;
     readonly JsonConverter jsonConverter;
-
-    readonly IntPtr hWnd;
-    readonly WindowId id;
-    readonly AppWindow window;
-    readonly InputNonClientPointerSource nonClientInputSrc;
-
 
     public MainView(
         ILogger<MainView> logger,
-        IOptions<Config> config,
+        Config config,
+        PluginManager<PlatformSupportPlugin> pluginManager,
         JsonConverter jsonConverter)
     {
         this.logger = logger;
-        this.config = config.Value;
+        this.config = config;
+        this.pluginManager = pluginManager;
         this.jsonConverter = jsonConverter;
+
+        pluginManager.LoadedPlugins.CollectionChanged += (s, e) =>
+        {
+            if (e.NewItems is not null)
+                foreach (PlatformSupportPlugin plugin in e.NewItems.Cast<PlatformSupportPlugin>())
+                {
+                    NavigationViewItem pluginItem = new()
+                    {
+                        Content = plugin.Name,
+                        Icon = new PathIcon() { Data = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), plugin.IconPathData) },
+                        Tag = plugin
+                    };
+                    NavigationView.MenuItems.Insert(NavigationView.MenuItems.Count - 4, pluginItem);
+                }
+
+            if (e.OldItems is not null)
+                foreach (PlatformSupportPlugin plugin in e.OldItems.Cast<PlatformSupportPlugin>())
+                {
+                    NavigationViewItem? pluginItem = NavigationView.MenuItems.OfType<NavigationViewItem>().FirstOrDefault(item => (string)item.Content == plugin.Name);
+                    NavigationView.MenuItems.Remove(pluginItem);
+                }
+        };
 
         hWnd = WindowNative.GetWindowHandle(this);
         id = Win32Interop.GetWindowIdFromWindow(hWnd);
@@ -55,10 +75,19 @@ public sealed partial class MainView : Window
     }
 
 
+    readonly IntPtr hWnd;
+    readonly WindowId id;
+    readonly AppWindow window;
+    readonly InputNonClientPointerSource nonClientInputSrc;
+
+
     void OnClosed(object _, WindowEventArgs _1)
     {
+        foreach (PlatformSupportPlugin plugin in pluginManager.LoadedPlugins)
+            config.PluginConfigs[plugin.GetType().Name] = plugin.Config;
+
         string jsonConfig = jsonConverter.ToString(config);
-        File.WriteAllText("config.json", jsonConfig);
+        File.WriteAllText("Config.json", jsonConfig);
 
         logger.LogInformation("[MainView-Closed] Closed main window.");
     }
@@ -160,8 +189,8 @@ public sealed partial class MainView : Window
     public void ShowNotification(
         string title,
         string message,
-        NotificationLevel level = NotificationLevel.Information,
-        string? innerMessage = null)
+        NotificationLevel level,
+        Action? moreButtonClicked)
     {
         if (NotificationsContainer.Children.Count > 5)
             NotificationsContainer.Children.RemoveAt(0);
@@ -174,8 +203,8 @@ public sealed partial class MainView : Window
             CloseAfter = level switch
             {
                 NotificationLevel.Information => TimeSpan.FromSeconds(3),
-                NotificationLevel.Warning => TimeSpan.FromSeconds(5),
-                NotificationLevel.Error => null,
+                NotificationLevel.Warning => TimeSpan.FromSeconds(10),
+                NotificationLevel.Error => TimeSpan.FromSeconds(10),
                 NotificationLevel.Success => TimeSpan.FromSeconds(3),
                 _ => null
             }
@@ -183,19 +212,30 @@ public sealed partial class MainView : Window
         notification.ClosingRequested += (s, e) =>
             NotificationsContainer.Children.Remove(notification);
 
-        if (innerMessage is not null)
+        if (moreButtonClicked is not null)
         {
             notification.MoreButtonVisibility = Visibility.Visible;
-            notification.MoreButtonClicked += async (s, e) =>
+            notification.MoreButtonClicked += (s, e) =>
             {
                 NotificationsContainer.Children.Remove(notification);
-                await AlertAsync($"{message}\n\n{innerMessage}", title);
+                moreButtonClicked.Invoke();
             };
         }
 
         logger.LogInformation("[MainView-ShowNotification] Notification was requested");
         NotificationsContainer.Children.Add(notification);
     }
+
+    public void ShowNotification(
+        string title,
+        string message,
+        NotificationLevel level = NotificationLevel.Information,
+        string? innerMessage = null) =>
+        ShowNotification(
+            title,
+            message,
+            level,
+            innerMessage is null ? null : async () => await AlertAsync($"{message}\n\n{innerMessage}", title));
 
 
     public LoggerView? LoggerView = null;

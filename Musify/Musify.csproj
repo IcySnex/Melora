@@ -23,25 +23,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Remove="DataTemplates\LyricsHitTemplate.xaml" />
-		<None Remove="DataTemplates\SpotifyTrackTemplate.xaml" />
-		<None Remove="DataTemplates\YouTubeMusicSongTemplate.xaml" />
-		<None Remove="DataTemplates\YouTubeVideoTemplate.xaml" />
-		<None Remove="na.png" />
 		<None Remove="Views\HomeView.xaml" />
 		<None Remove="Views\LoggerView.xaml" />
 		<None Remove="Views\LyricsInfoView.xaml" />
 		<None Remove="Views\LyricsView.xaml" />
 		<None Remove="Views\MainView.xaml" />
+		<None Remove="Views\PlatformView.xaml" />
 		<None Remove="Views\SettingsView.xaml" />
-		<None Remove="Views\SpotifyView.xaml" />
-		<None Remove="Views\YouTubeMusicView.xaml" />
-		<None Remove="Views\YouTubeView.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Content Include="icon.ico" />
-		<Content Include="na.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -50,20 +42,17 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-		<PackageReference Include="HtmlAgilityPack" Version="1.11.60" />
+		<PackageReference Include="GeniusAPI" Version="1.1.1" />
+		<PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240607001" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
-		<PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.9" />
-		<PackageReference Include="Serilog" Version="3.1.1" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240627000" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="Serilog" Version="4.0.1" />
 		<PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
-		<PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
-		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-		<PackageReference Include="SpotifyAPI.Web" Version="7.1.1" />
-		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
-		<PackageReference Include="YoutubeExplode" Version="6.3.16" />
-		<PackageReference Include="YouTubeMusicAPI" Version="1.1.2" />
+		<PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
@@ -77,23 +66,6 @@
 	  <ProjectReference Include="..\Musify.Plugins\Musify.Plugins.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Page Update="DataTemplates\DownloadTemplate.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	  <Page Update="DataTemplates\YouTubeMusicSongTemplate.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="DataTemplates\YouTubeVideoTemplate.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="DataTemplates\SpotifyTrackTemplate.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
 	  <Page Update="Views\LoggerView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>
@@ -104,10 +76,6 @@
 	  </Page>
 	</ItemGroup>
 	<ItemGroup>
-	  <Page Update="DataTemplates\LyricsHitTemplate.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
 	  <Page Update="Views\LyricsView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>
@@ -116,18 +84,9 @@
 	    <SubType>Designer</SubType>
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>
-	  <Page Update="Views\YouTubeMusicView.xaml">
+	  <Page Update="Views\PlatformView.xaml">
 	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 	    <SubType>Designer</SubType>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="Views\YouTubeView.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="Views\SpotifyView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
 	  </Page>
 	</ItemGroup>
 

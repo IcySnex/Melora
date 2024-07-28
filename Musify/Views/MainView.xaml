@@ -6,10 +6,10 @@
     xmlns:ani="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:ctr="using:Musify.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:hlp="using:Musify.Helpers"
     xmlns:local="using:Musify.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mdl="using:Musify.Models"
+    xmlns:vm="using:Musify.ViewModels"
     Title="Musify"
     Closed="OnClosed"
     mc:Ignorable="d">
@@ -89,7 +89,6 @@
             Grid.Row="1"
             x:FieldModifier="public"
             IsBackButtonVisible="Collapsed"
-            IsBackEnabled="{x:Bind ContentFrame.CanGoBack, Mode=OneWay}"
             IsSettingsVisible="False"
             OpenPaneLength="200">
             <NavigationView.MenuItems>
@@ -98,24 +97,9 @@
 
                 <NavigationViewItemHeader Content="Search" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
 
-                <NavigationViewItem Content="Spotify">
-                    <NavigationViewItem.Icon>
-                        <PathIcon Data="{x:Bind hlp:Icons.Spotify}" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem Content="YouTube">
-                    <NavigationViewItem.Icon>
-                        <PathIcon Data="{x:Bind hlp:Icons.YouTube}" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem Content="YouTube Music">
-                    <NavigationViewItem.Icon>
-                        <PathIcon Data="{x:Bind hlp:Icons.YouTubeMusic}" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
                 <NavigationViewItem Content="Lyrics">
                     <NavigationViewItem.Icon>
-                        <PathIcon Data="{x:Bind hlp:Icons.Lyrics}" />
+                        <PathIcon Data="{x:Bind vm:LyricsViewModel.IconPathData}" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
@@ -130,7 +114,11 @@
                 <NavigationViewItem Content="Android" Icon="CellPhone" />-->
             </NavigationView.MenuItems>
 
-            <Frame Name="ContentFrame" x:FieldModifier="public" />
+            <ContentPresenter x:Name="Presenter" x:FieldModifier="public">
+                <ContentPresenter.ContentTransitions>
+                    <ContentThemeTransition />
+                </ContentPresenter.ContentTransitions>
+            </ContentPresenter>
         </NavigationView>
 
         <StackPanel

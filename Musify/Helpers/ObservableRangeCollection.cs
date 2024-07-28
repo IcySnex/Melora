@@ -162,9 +162,6 @@ public class ObservableRangeCollection<T> : Collection<T>, INotifyCollectionChan
 
         originalList.Insert(index, item);
 
-        if (Count >= Limit)
-            return;
-
         base.InsertItem(index, item);
 
         OnPropertyChanged(EventArgsCache.CountPropertyChanged);
@@ -207,46 +204,17 @@ public class ObservableRangeCollection<T> : Collection<T>, INotifyCollectionChan
     {
         CheckReentrancy();
 
-        int startingIndex = Count;
-
         using IEnumerator<T> enumerator = items.GetEnumerator();
         while (enumerator.MoveNext())
             originalList.Add(enumerator.Current);
 
-        if (startingIndex >= Limit)
-            return;
-
         Refresh();
+
+        OnPropertyChanged(EventArgsCache.CountPropertyChanged);
+        OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
+        OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
     }
 
-    public async Task AddRangeAsync(
-        IAsyncEnumerable<T> items,
-        Action<int, T>? callback = null,
-        CancellationToken cancellationToken = default!)
-    {
-        CheckReentrancy();
-
-        int startingIndex = Count;
-
-        int itemCount = 0;
-        await using IAsyncEnumerator<T> enumerator = items.GetAsyncEnumerator(cancellationToken);
-        while (await enumerator.MoveNextAsync(cancellationToken))
-        {
-            itemCount++;
-            T item = enumerator.Current;
-
-            callback?.Invoke(itemCount, item);
-            originalList.Add(item);
-        }
-
-        if (startingIndex >= Limit)
-            return;
-
-        Refresh();
-    }
-
-
-    //
     public void Refresh()
     {
         if (originalList.Count <= 0)
@@ -263,19 +231,21 @@ public class ObservableRangeCollection<T> : Collection<T>, INotifyCollectionChan
         CheckReentrancy();
 
         Items.Clear();
+        OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
+
         if (KeySelector is null)
         {
             if (Descending)
-                for (int i = originalList.Count - 1; i >= 0 && i >= originalList.Count - Limit; i--)
+                for (int i = originalList.Count - 1; i >= 0 && i >= 0; i--)
                     Add(originalList[i]);
             else
-                for (int i = 0; i < Math.Min(originalList.Count, Limit); i++)
+                for (int i = 0; i < originalList.Count; i++)
                     Add(originalList[i]);
         }
         else
         {
             List<T> sortedList = new(Descending ? originalList.OrderByDescending(KeySelector) : originalList.OrderBy(KeySelector));
-            for (int i = 0; i < Math.Min(originalList.Count, Limit); i++)
+            for (int i = 0; i < originalList.Count; i++)
                 Add(sortedList[i]);
         }
 
@@ -283,6 +253,7 @@ public class ObservableRangeCollection<T> : Collection<T>, INotifyCollectionChan
         OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
         OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
     }
+
 
     // Sorting
     private readonly IList<T> originalList = [];
@@ -312,35 +283,6 @@ public class ObservableRangeCollection<T> : Collection<T>, INotifyCollectionChan
             descending = value;
 
             Refresh();
-        }
-    }
-
-
-    // Limit
-    private int limit = int.MaxValue;
-
-    public int Limit
-    {
-        get => limit;
-        set
-        {
-            limit = value;
-
-            if (value > originalList.Count && originalList.Count <= Items.Count)
-                return;
-
-            if (Items.Count < value)
-            {
-                Refresh();
-                return;
-            }
-
-            for (int i = Items.Count - 1; i >= limit; i--)
-                Items.RemoveAt(i);
-
-            OnPropertyChanged(EventArgsCache.CountPropertyChanged);
-            OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
-            OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
         }
     }
 

@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using GeniusAPI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Musify.Helpers;
 using Musify.Models;
@@ -19,6 +20,8 @@ public partial class App : Application
     public static IServiceProvider Provider { get; private set; } = default!;
     public static InMemorySink Sink { get; private set; } = new();
 
+    public static string? Parameter { get; set; }
+
     public App()
     {
         host = Host.CreateDefaultBuilder()
@@ -28,38 +31,38 @@ public partial class App : Application
                 configuration.WriteTo.File(@"Logs\Log-.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 10);
                 configuration.WriteTo.Sink(Sink);
             })
-            .ConfigureAppConfiguration((context, builder) =>
-            {
-                builder.AddJsonFile("Config.json", true);
-            })
             .ConfigureServices((context, services) =>
             {
                 // Configuration
-                services.Configure<Config>(context.Configuration);
-                //Config config = context.Configuration.Get<Config>() ?? new();
+                services.AddSingleton(provider =>
+                {
+                    if (!File.Exists(Config.ConfigFilepath))
+                        return new();
+
+                    string json = File.ReadAllText(Config.ConfigFilepath);
+
+                    JsonConverter converter = provider.GetRequiredService<JsonConverter>();
+                    return converter.ToObject<Config>(json) ?? new();
+                });
 
                 // Add services
                 services.AddSingleton<AppStartupHandler>();
-                services.AddSingleton<PluginManager<IPlugin>>();
+                services.AddSingleton<PluginManager<PlatformSupportPlugin>>();
                 services.AddSingleton<Navigation>();
                 services.AddSingleton<JsonConverter>();
-                services.AddSingleton<Spotify>();
-                services.AddSingleton<YouTube>();
-                services.AddSingleton<YouTubeMusic>();
-                services.AddSingleton<Lyrics>();
+                services.AddSingleton(provider => new GeniusClient(
+                    provider.GetRequiredService<Config>().Lyrics.GeniusAccessToken,
+                    provider.GetRequiredService<ILogger<GeniusClient>>()));
 
                 // Add ViewModels and MainView
                 services.AddSingleton<HomeViewModel>();
                 services.AddSingleton<SettingsViewModel>();
 
-                services.AddSingleton<SpotifyViewModel>();
-                services.AddSingleton<YouTubeViewModel>();
-                services.AddSingleton<YouTubeMusicViewModel>();
+                services.AddTransient<PlatformViewModel>();
                 services.AddSingleton<LyricsViewModel>();
+                services.AddTransient<LyricsInfoViewModel>();
 
                 services.AddSingleton<DownloadsViewModel>();
-
-                services.AddTransient<LyricsInfoViewModel>();
 
                 services.AddSingleton<MainView>();
 
@@ -71,7 +74,7 @@ public partial class App : Application
     }
 
 
-    protected override async void OnLaunched(LaunchActivatedEventArgs args) =>
-        await Provider.GetRequiredService<AppStartupHandler>().PrepareStartupAsync();
+    protected override void OnLaunched(LaunchActivatedEventArgs args) =>
+        Provider.GetRequiredService<AppStartupHandler>();
 
 }

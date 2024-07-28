@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Musify.Enums;
+using Musify.Plugins.Abstract;
 using Musify.Services;
 using Musify.Views;
 using Windows.ApplicationModel.DataTransfer;
@@ -62,18 +63,9 @@ public partial class HomeViewModel : ObservableObject
 
     [RelayCommand]
     void Search(
-        string source)
+        string page)
     {
-        int pageIndex = source switch
-        {
-            "Spotify" => 3,
-            "YouTube" => 4,
-            "YouTube Music" => 5,
-            "Lyrics" => 6,
-            _ => 0
-        };
-
-        navigation.Navigate(source, Query);
-        navigation.SetCurrentIndex(pageIndex);
+        App.Parameter = Query;
+        navigation.SetCurrentItem(page);
     }
 }

@@ -9,26 +9,127 @@
     xmlns:hlp="using:Musify.Helpers"
     xmlns:local="using:Musify.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:plgm="using:Musify.Plugins.Models"
+    x:Name="Downloads"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
 
     <Grid>
         <!--  Track Container  -->
-        <ScrollViewer>
-            <ListView
-                Name="DownloadsContainer"
-                Margin="24,116,24,24"
-                ItemTemplate="{StaticResource DownloadTemplate}"
-                ItemsSource="{x:Bind viewModel.Downloads}"
-                SelectionMode="None" />
-        </ScrollViewer>
+        <ListView
+            Name="DownloadsContainer"
+            Padding="24,116,24,24"
+            ItemsSource="{x:Bind viewModel.Downloads}"
+            SelectionMode="None">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="plgm:DownloadableTrack">
+                    <Grid Padding="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="3*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="90" />
+                            <ColumnDefinition Width="24" />
+                            <ColumnDefinition Width="32" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Style="{StaticResource PlaceholderImage}">
+                            <Image
+                                HorizontalAlignment="Center"
+                                Source="{Binding ArtworkUrl}"
+                                Stretch="UniformToFill" />
+                        </Border>
+
+                        <TextBlock
+                            Grid.Column="2"
+                            VerticalAlignment="Center"
+                            FontSize="22"
+                            Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
+                            Text="{x:Bind Title, TargetNullValue='N/A'}"
+                            TextTrimming="CharacterEllipsis" />
+                        <TextBlock
+                            Grid.Column="4"
+                            VerticalAlignment="Center"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="{x:Bind Artists, TargetNullValue='N/A'}"
+                            TextTrimming="CharacterEllipsis" />
+                        <TextBlock
+                            Grid.Column="6"
+                            VerticalAlignment="Center"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="{x:Bind Album, TargetNullValue='N/A'}"
+                            TextTrimming="CharacterEllipsis" />
+
+                        <TextBlock
+                            Grid.Column="8"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="{x:Bind Duration, Converter={StaticResource TimeSpanStringConverter}}" />
+
+                        <Button
+                            Grid.Column="10"
+                            Width="32"
+                            Height="32"
+                            Padding="4">
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem
+                                        Click="OnDownloadClick"
+                                        Text="Download"
+                                        ToolTipService.ToolTip="Download now">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xe896;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem
+                                        Click="OnTrackInfoClick"
+                                        Text="Track Info"
+                                        ToolTipService.ToolTip="View &amp; edit track info">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xe90b;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem
+                                        Click="OnOpenSourceClick"
+                                        Text="Open source"
+                                        ToolTipService.ToolTip="Open on source platform">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xe71b;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem
+                                        Click="OnRemoveClick"
+                                        Text="Remove"
+                                        ToolTipService.ToolTip="Remove from downloads">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xe74d;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Button.Flyout>
+
+                            <FontIcon
+                                FontSize="17"
+                                Glyph="&#xe712;"
+                                ToolTipService.ToolTip="More Options" />
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <TextBlock
             Margin="0,82,0,0"
             VerticalAlignment="Center"
             FontSize="16"
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             HorizontalTextAlignment="Center"
-            Text="There are currently no downloads.&#x0a;Search for tracks on Spotify or YouTube to start downloading..."
+            Text="There are currently no downloads.&#x0a;Search for tracks on a plugin to start downloading or change the filter options..."
             Visibility="{x:Bind viewModel.Downloads.Count, Mode=OneWay, Converter={StaticResource IntOverZeroVisibilityConverter}}" />
 
         <!--  Search bar  -->
@@ -65,11 +166,7 @@
                 Padding="4"
                 ToolTipService.ToolTip="Show tracks from">
                 <Button.Flyout>
-                    <MenuFlyout>
-                        <ToggleMenuFlyoutItem IsChecked="{x:Bind viewModel.Config.Downloads.ShowSpotifyTracks, Mode=TwoWay}" Text="Spotify" />
-                        <ToggleMenuFlyoutItem IsChecked="{x:Bind viewModel.Config.Downloads.ShowYouTubeTracks, Mode=TwoWay}" Text="YouTube" />
-                        <ToggleMenuFlyoutItem IsChecked="{x:Bind viewModel.Config.Downloads.ShowYouTubeMusicTracks, Mode=TwoWay}" Text="YouTube Music" />
-                    </MenuFlyout>
+                    <MenuFlyout x:Name="ShowTracksFromFlyout" />
                 </Button.Flyout>
 
                 <FontIcon FontSize="17" Glyph="&#xe71c;" />
@@ -80,7 +177,7 @@
                 Grid.Column="4"
                 Width="105"
                 CornerRadius="4,0,0,4"
-                SelectedIndex="{x:Bind viewModel.Config.Downloads.ViewOptions.Sorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
+                SelectedIndex="{x:Bind viewModel.Config.Downloads.Sorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
                 ToolTipService.ToolTip="Sort search results by">
                 <ComboBoxItem Content="Default" />
                 <ComboBoxItem Content="Title" />
@@ -93,9 +190,9 @@
                 Height="32"
                 Padding="4"
                 CornerRadius="0,4,4,0"
-                IsChecked="{x:Bind viewModel.Config.Downloads.ViewOptions.Descending, Mode=TwoWay}"
-                ToolTipService.ToolTip="Sort search results descending">
-                <FontIcon FontSize="17" Glyph="{x:Bind viewModel.Config.Downloads.ViewOptions.Descending, Mode=OneWay, Converter={StaticResource BooleanFontIconChevronConverter}}" />
+                IsChecked="{x:Bind viewModel.Config.Downloads.SortDescending, Mode=TwoWay}"
+                ToolTipService.ToolTip="Sort search results descending/ascending">
+                <FontIcon FontSize="17" Glyph="{x:Bind viewModel.Config.Downloads.SortDescending, Mode=OneWay, Converter={StaticResource BoolFontIconChevronConverter}}" />
             </ToggleButton>
 
             <Rectangle Grid.Column="7" Style="{StaticResource VerticalDivider}" />

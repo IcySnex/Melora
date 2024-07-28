@@ -1,12 +1,13 @@
 ﻿using Microsoft.UI.Xaml.Data;
+using Musify.Plugins.Models;
 
 namespace Musify.Converters;
 
-public class BoolDoubleConverter : IValueConverter
+public class PluginConfigDescriptionConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language) =>
-        (bool)value ? 1.0 : 0.0;
+        $"{string.Join(", ", ((PlatformSupportPluginConfig)value).Items.Select(item => item.Name).Take(3))}...";
 
     public object ConvertBack(object value, Type targetType, object parameter, string language) =>
-        (int)value == 1.0;
+        throw new NotImplementedException();
 }

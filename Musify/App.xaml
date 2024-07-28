@@ -7,42 +7,42 @@
     xmlns:ctr="using:Musify.Controls"
     xmlns:hlp="using:Musify.Helpers"
     xmlns:local="using:Musify"
-    xmlns:md="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:mdl="using:Musify.Models"
-    xmlns:tmplts="using:Musify.DataTemplates">
+    xmlns:wui="using:Windows.UI">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-
-                <tmplts:DownloadTemplate />
-                <tmplts:SpotifyTrackTemplate />
-                <tmplts:YouTubeVideoTemplate />
-                <tmplts:YouTubeMusicSongTemplate />
-                <tmplts:LyricsHitTemplate />
             </ResourceDictionary.MergedDictionaries>
+
+            <!--  Colors  -->
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <wui:Color x:Key="FadeScrollColor">#ffffff</wui:Color>
+                    <wui:Color x:Key="FadeScrollTransparentColor">#00ffffff</wui:Color>
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="Dark">
+                    <wui:Color x:Key="FadeScrollColor">#2b2b2b</wui:Color>
+                    <wui:Color x:Key="FadeScrollTransparentColor">#002b2b2b</wui:Color>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <wui:Color x:Key="FadeScrollColor">#2b2b2b</wui:Color>
+            <wui:Color x:Key="FadeScrollTransparentColor">#002b2b2b</wui:Color>
+
 
             <!--  Converters  -->
             <conv:EnumIntConverter x:Key="EnumIntConverter" />
-            <conv:BoolDoubleConverter x:Key="BoolDoubleConverter" />
-            <conv:CanDownloadMarginConverter x:Key="CanDownloadMarginConverter" />
             <conv:TimeSpanStringConverter x:Key="TimeSpanStringConverter" />
             <conv:IntOverZeroVisibilityConverter x:Key="IntOverZeroVisibilityConverter" />
-            <conv:DateTimeStringConverter x:Key="DateTimeStringConverter" />
-            <conv:IntStringConverter x:Key="IntStringConverter" />
-            <conv:SpotifyArtistsStringConverter x:Key="SpotifyArtistsStringConverter" />
-            <conv:DurationMsStringConverter x:Key="DurationMsStringConverter" />
-            <conv:SpotifyAlbumImageConverter x:Key="SpotifyAlbumImageConverter" />
-            <conv:StringNullEmptyNaConverter x:Key="StringNullEmptyNaConverter" />
-            <conv:YouTubeThumbnailImageConverter x:Key="YouTubeThumbnailImageConverter" />
-            <conv:BooleanFontIconChevronConverter x:Key="BooleanFontIconChevronConverter" />
-            <conv:StringImageConverter x:Key="StringImageConverter" />
-            <conv:YouTubeMusicArtistsStringConverter x:Key="YouTubeMusicArtistsStringConverter" />
-            <conv:YouTubeMusicThumbnailImageConverter x:Key="YouTubeMusicThumbnailImageConverter" />
+            <conv:BoolFontIconChevronConverter x:Key="BoolFontIconChevronConverter" />
+            <conv:PluginConfigDescriptionConverter x:Key="PluginConfigDescriptionConverter" />
+            <conv:NullableIntDoubleConverter x:Key="NullableIntDoubleConverter" />
 
 
             <!--  Colors  -->
-            <md:AcrylicBrush
+            <AcrylicBrush
                 x:Key="CardBackgroundAcrylicBrush"
                 FallbackColor="{ThemeResource ControlSolidFillColorDefault}"
                 TintColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
@@ -76,13 +76,22 @@
                 <Setter Property="Width" Value="2" />
                 <Setter Property="RadiusX" Value="2" />
                 <Setter Property="RadiusY" Value="2" />
-                <Setter Property="Margin" Value="0,-5" />
+                <Setter Property="Margin" Value="2,-5,0,-5" />
+                <Setter Property="Fill" Value="{ThemeResource ControlStrokeColorDefault}" />
+            </Style>
+
+            <Style x:Name="HorizontalDivider" TargetType="Rectangle">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="Height" Value="2" />
+                <Setter Property="RadiusX" Value="2" />
+                <Setter Property="RadiusY" Value="2" />
+                <Setter Property="Margin" Value="-5,0" />
                 <Setter Property="Fill" Value="{ThemeResource ControlStrokeColorDefault}" />
             </Style>
 
             <Style x:Key="HoverButtonStyle" TargetType="Button">
-                <Setter Property="Height" Value="85" />
-                <Setter Property="Width" Value="85" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Stretch" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
@@ -142,8 +151,51 @@
                 </Style.Setters>
             </Style>
 
+            <Style x:Key="PlaceholderImage" TargetType="Border">
+                <Style.Setters>
+                    <Setter Property="Height" Value="50" />
+                    <Setter Property="CornerRadius" Value="4" />
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush>
+                                <GradientStop Offset="0" Color="#90606060" />
+                                <GradientStop Offset="1" Color="#00606060" />
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Style.Setters>
+            </Style>
+
 
             <!--  Controls  -->
+            <ControlTemplate x:Key="PluginSettingsExpander" TargetType="ContentControl">
+                <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                    <Expander.Header>
+                        <Grid Margin="10,16">
+                            <Viewbox
+                                Width="25"
+                                Height="25"
+                                HorizontalAlignment="Left">
+                                <PathIcon Data="{TemplateBinding hlp:Attributes.IconPathData}" />
+                            </Viewbox>
+
+                            <TextBlock
+                                Margin="46,0,0,0"
+                                Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
+                                Text="{TemplateBinding hlp:Attributes.Title}"
+                                TextTrimming="CharacterEllipsis" />
+                            <TextBlock
+                                Margin="46,20,0,0"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Text="{TemplateBinding hlp:Attributes.Description}"
+                                TextTrimming="CharacterEllipsis" />
+                        </Grid>
+                    </Expander.Header>
+
+                    <ContentPresenter />
+                </Expander>
+            </ControlTemplate>
+
             <ControlTemplate x:Key="SettingsExpander" TargetType="ContentControl">
                 <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                     <Expander.Header>
@@ -207,6 +259,19 @@
 
                     <ContentPresenter Margin="0,22,0,0" />
                 </Grid>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="Image" TargetType="ContentControl">
+                <Border Height="50" CornerRadius="4">
+                    <Border.Background>
+                        <LinearGradientBrush>
+                            <GradientStop Offset="0" Color="#90606060" />
+                            <GradientStop Offset="1" Color="#00606060" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+
+                    <Image Source="{TemplateBinding hlp:Attributes.ImageUrl}" Stretch="UniformToFill" />
+                </Border>
             </ControlTemplate>
 
 
@@ -558,7 +623,7 @@
                                         <ScalarTransition Duration="0:0:0.2" />
                                     </Grid.OpacityTransition>
                                     <Grid.Background>
-                                        <md:AcrylicBrush
+                                        <AcrylicBrush
                                             x:Name="RootBackground"
                                             FallbackColor="{ThemeResource SystemFillColorSolidAttentionBackground}"
                                             TintColor="{ThemeResource SystemFillColorSolidAttentionBackground}"

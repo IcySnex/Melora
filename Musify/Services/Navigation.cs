@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using Musify.Plugins.Abstract;
+using Musify.ViewModels;
 using Musify.Views;
-using System;
 
 namespace Musify.Services;
 
@@ -10,8 +12,6 @@ public class Navigation
 {
     readonly ILogger<Navigation> logger;
     readonly MainView mainView;
-
-    bool skipEvent = false;
 
     public Navigation(
         ILogger<Navigation> logger,
@@ -22,8 +22,19 @@ public class Navigation
 
         mainView.NavigationView.SelectionChanged += (s, e) =>
         {
-            if (!skipEvent && e.SelectedItemContainer is NavigationViewItem item)
-                Navigate(item.Content.ToString()!);
+            if (e.SelectedItemContainer.Tag is PlatformSupportPlugin plugin)
+            {
+                Navigate(plugin.Name, () => 
+                {
+                    PlatformViewModel viewModel = App.Provider.GetRequiredService<PlatformViewModel>();
+                    viewModel.Plugin = plugin;
+
+                    return new PlatformView(viewModel);
+                });
+                return;
+            }
+
+            Navigate((string)e.SelectedItemContainer.Content);
         };
         mainView.NavigationView.BackRequested += (s, e) => GoBack();
         mainView.BackButton.Click += (s, e) => GoBack();
@@ -32,87 +43,109 @@ public class Navigation
     }
 
 
-    public void Navigate(
-        string page,
-        object? parameter = null)
+    readonly Dictionary<string, Page> viewsCache = new()
     {
-        Type? pageType = Type.GetType($"Musify.Views.{page.Replace(" ", string.Empty)}View, Musify");
-        if (pageType is null)
+        { "Settings", new SettingsView() },
+        { "Downloads", new DownloadsView() },
+        { "Lyrics", new LyricsView() }
+    };
+    readonly Stack<Page> viewsHistory = [];
+
+
+    void SetPage(
+        Page page)
+    {
+        mainView.Presenter.Content = page;
+        viewsHistory.Push(page);
+        CanGoBackChanged();
+
+        logger.LogInformation("[Navigation-SetPage] Page was set");
+    }
+
+
+    public void Navigate(
+        string key,
+        Func<Page> createPage)
+    {
+        if (!viewsCache.TryGetValue(key, out Page? page))
         {
-            logger.LogError("[Navigation-Navigate] Failed to navigate: Could not find page: {page}", page);
+            page = createPage.Invoke();
+            viewsCache[key] = page;
+        }
+
+        SetPage(page);
+    }
+
+    public void Navigate(
+        string key)
+    {
+        if (viewsCache.TryGetValue(key, out Page? page))
+        {
+            SetPage(page);
             return;
         }
 
-        mainView.ContentFrame.Navigate(pageType, parameter);
-        CanGoBackChanged();
+        Type? pageType = Type.GetType($"Musify.Views.{key}View, Musify");
+        if (pageType is null)
+        {
+            logger.LogError("[Navigation-Navigate] Failed to navigate to page: Could not find page: {key}", key);
+            return;
+        }
+        Page? newPage = (Page?)Activator.CreateInstance(pageType);
+        if (newPage is null)
+        {
+            logger.LogError("[Navigation-Navigate] Failed to navigate to page: Could not create page: {key}", key);
+            return;
+        }
 
-        logger.LogInformation("[Navigation-Navigate] Navigated to page: {page}", page);
+        viewsCache[key] = newPage;
+        SetPage(newPage);
     }
 
-    public bool SetCurrentIndex(
-        int index)
+
+    public void SetCurrentItem(
+        string key)
     {
-        try
+        object? item = mainView.NavigationView.MenuItems.FirstOrDefault(item => item is NavigationViewItem navItem && (string)navItem.Content == key);
+        if (item is null)
         {
-            object selectedItem = mainView.NavigationView.MenuItems.ElementAt(index);
-
-            if (mainView.NavigationView.SelectedItem == selectedItem)
-                return false;
-
-            skipEvent = true;
-            mainView.NavigationView.SelectedItem = selectedItem;
-            skipEvent = false;
-
-            logger.LogInformation("[Navigation-SetCurrentIndex] Set current navigation item");
-            return true;
+            logger.LogError("[Navigation-SetCurrentIndex] Failed to set current navigation item: Could not find item: {key}", key);
+            return;
         }
-        catch (Exception ex)
-        {
-            logger.LogError("[Navigation-SetCurrentIndex] Failed to set current navigation item: {error}", ex.Message);
-            return false;
-        }
+
+        mainView.NavigationView.SelectedItem = item;
+        logger.LogInformation("[Navigation-SetCurrentItem] Current navigation item was set");
     }
 
 
     public void GoBack()
     {
-        if (!mainView.ContentFrame.CanGoBack)
+        if (viewsHistory.Count < 2)
         {
             logger.LogError("[Navigation-GoBack] Failed to go back: Not possible at the time");
             return;
         }
 
-        mainView.ContentFrame.GoBack();
-        CanGoBackChanged();
+        viewsHistory.Pop();
+        Page page = viewsHistory.Pop();
 
-        object? selectedItem = mainView.NavigationView.MenuItems.Where(item => item is NavigationViewItem navItem && Type.GetType($"Musify.Views.{navItem.Content.ToString()?.Replace(" ", string.Empty)}View, Musify") == mainView.ContentFrame.CurrentSourcePageType).FirstOrDefault();
-        if (selectedItem is null)
-        {
-            logger.LogError("[Navigation-GoBack] Failed to set current navigation item: selectedItem is null");
-        }
-        
-        skipEvent = true;
-        mainView.NavigationView.SelectedItem = selectedItem;
-        skipEvent = false;
-
-        logger.LogInformation("[Navigation-GoBack] Navigated one page back");
+        SetCurrentItem(page.Name);
     }
-
 
     void CanGoBackChanged()
     {
-        if (mainView.ContentFrame.CanGoBack == (mainView.BackButton.Opacity != 0))
+        if (viewsHistory.Count > 1 == (mainView.BackButton.Opacity != 0))
             return;
 
-        if (mainView.ContentFrame.CanGoBack)
-        {
-            mainView.BackButton.Opacity = 1;
-            ((Storyboard)mainView.BackButton.Resources["InBoard"]).Begin();
-        }
-        else
+        if (viewsHistory.Count < 2)
         {
             mainView.BackButton.Opacity = 0;
             ((Storyboard)mainView.BackButton.Resources["OutBoard"]).Begin();
+        }
+        else
+        {
+            mainView.BackButton.Opacity = 1;
+            ((Storyboard)mainView.BackButton.Resources["InBoard"]).Begin();
         }
     }
 }

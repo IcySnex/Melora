@@ -1,13 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.UI.Xaml.Controls;
-using Musify.Enums;
 using Musify.Helpers;
 using Musify.Models;
+using Musify.Plugins.Enums;
+using Musify.Plugins.Models;
 using Musify.Views;
 using System.ComponentModel;
+using Windows.System;
 
 namespace Musify.ViewModels;
 
@@ -20,100 +21,88 @@ public partial class DownloadsViewModel : ObservableObject
 
     public DownloadsViewModel(
         ILogger<DownloadsViewModel> logger,
-        IOptions<Config> config,
+        Config config,
         MainView mainView)
     {
         this.logger = logger;
-        this.Config = config.Value;
+        this.Config = config;
         this.mainView = mainView;
 
         Downloads = new()
         {
-            KeySelector = Config.Downloads.ViewOptions.Sorting switch
+            KeySelector = Config.Downloads.Sorting switch
             {
                 Sorting.Default => null,
                 Sorting.Title => track => track.Title,
-                Sorting.Artist => track => track.Artist,
+                Sorting.Artist => track => track.Artists,
                 Sorting.Duration => track => track.Duration,
                 _ => null
             },
-            Descending = Config.Downloads.ViewOptions.Descending
+            Descending = Config.Downloads.SortDescending,
+            Filter = track =>
+                (track.Title.Contains(Query, StringComparison.InvariantCultureIgnoreCase) || track.Artists.Contains(Query, StringComparison.InvariantCultureIgnoreCase)) &&
+                ShowTracksFrom.Any(pair => track.Plugin.Name == pair.Key && pair.Value)
         };
-        Config.Downloads.PropertyChanged += OnPropertyChanged;
-        Config.Downloads.ViewOptions.PropertyChanged += OnViewOptionsPropertyChanged;
 
-        Downloads.Filter = track =>
-            (track.Title.Contains(Query, StringComparison.InvariantCultureIgnoreCase) || track.Artist.Contains(Query, StringComparison.InvariantCultureIgnoreCase)) &&
-            (Config.Downloads.ShowSpotifyTracks || track.Source != Source.Spotify) &&
-            (Config.Downloads.ShowYouTubeTracks || track.Source != Source.YouTube) &&
-            (Config.Downloads.ShowYouTubeMusicTracks || track.Source != Source.YouTubeMusic);
+        Config.Downloads.PropertyChanged += OnConfigPropertyChanged;
 
         logger.LogInformation("[DownloadsViewModel-.ctor] DownloadsViewModel has been initialized");
     }
 
-    [RelayCommand]
-    void ForceUpdateProperty(
-        string propertyName) =>
-        OnPropertyChanged(propertyName);
 
-
-    public ObservableRangeCollection<Track> Downloads { get; }
-
-
-    private void OnPropertyChanged(
-        object? _,
-        PropertyChangedEventArgs e)
-    {
-        switch (e.PropertyName)
-        {
-            case "ShowSpotifyTracks":
-            case "ShowYouTubeTracks":
-            case "ShowYouTubeMusicTracks":
-                Downloads.Refresh();
-                logger.LogInformation("[DownloadsViewModel-OnPropertyChanged] Refreshed downloads");
-                break;
-        }
-    }
-
-    private void OnViewOptionsPropertyChanged(
-        object? _,
-        PropertyChangedEventArgs e)
+    void OnConfigPropertyChanged(object? _, PropertyChangedEventArgs e)
     {
         switch (e.PropertyName)
         {
             case "Sorting":
-                Downloads.KeySelector = Config.Downloads.ViewOptions.Sorting switch
+                Downloads.KeySelector = Config.Downloads.Sorting switch
                 {
                     Sorting.Default => null,
                     Sorting.Title => track => track.Title,
-                    Sorting.Artist => track => track.Artist,
+                    Sorting.Artist => track => track.Artists,
                     Sorting.Duration => track => track.Duration,
                     _ => null
                 };
-                logger.LogInformation("[DownloadsViewModel-OnViewOptionsPropertyChanged] Reordered downloads");
                 break;
-            case "Descending":
-                Downloads.Descending = Config.Downloads.ViewOptions.Descending;
-                logger.LogInformation("[DownloadsViewModel-OnViewOptionsPropertyChanged] Reordered downloads");
+            case "SortDescending":
+                Downloads.Descending = Config.Downloads.SortDescending;
                 break;
         }
+        logger.LogInformation("[DownloadsViewModel-OnViewOptionsPropertyChanged] Reordered search results");
     }
 
 
-    public async Task AddAsync(
-        IAsyncEnumerable<Track> downloads,
-        Action<int, Track>? callback = null,
-        CancellationToken cancellationToken = default)
+    public ObservableRangeCollection<DownloadableTrack> Downloads { get; }
+
+
+    public Dictionary<string, bool> ShowTracksFrom { get; } = [];
+
+
+    public async Task StartDownloadAsync(
+        DownloadableTrack download)
     {
-        await Downloads.AddRangeAsync(downloads, callback, cancellationToken);
-        logger.LogInformation("[DownloadsViewModel-AddAsync] Added tracks to downloads");
+        await Task.Delay(1000);
+        logger.LogInformation("[HomeViewModel-StartDownloadAsync] Started download of track");
     }
 
-    public void Remove(
-        Track track)
+    public void ShowDownloadInfo(
+        DownloadableTrack download)
     {
-        Downloads.Remove(track);
-        logger.LogInformation("[DownloadsViewModel-Remove] Removed track from downloads");
+        logger.LogInformation("[HomeViewModel-RemoveDownload] Showed download track info");
+    }
+
+    public async Task OpenDownloadSourceAsync(
+        DownloadableTrack download)
+    {
+        await Launcher.LaunchUriAsync(new(download.Url));
+        logger.LogInformation("[HomeViewModel-OpenDownloadSourceAsync] Browser was opened with track source url");
+    }
+    
+    public void RemoveDownload(
+        DownloadableTrack download)
+    {
+        Downloads.Remove(download);
+        logger.LogInformation("[HomeViewModel-RemoveDownload] Removed track from downloads");
     }
 
 
