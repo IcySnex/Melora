@@ -35,7 +35,7 @@ public partial class LyricsInfoViewModel : ObservableObject
 
 
     [RelayCommand]
-    async Task DownloadArtworkAsync()
+    async Task SaveArtworkAsync()
     {
         FileSavePicker picker = new()
         {
@@ -56,19 +56,19 @@ public partial class LyricsInfoViewModel : ObservableObject
         try
         {
             Stream artwork = await client.GetStreamAsync(Track.ArtworklUrl);
-            logger.LogInformation("[LyricsInfoViewModel-DownloadArtworkAsync] Downloaded stream for arwork");
+            logger.LogInformation("[LyricsInfoViewModel-DownloadArtworkAsync] Saved stream for arwork");
 
             using Stream fileStream = await file.OpenStreamForWriteAsync();
             await artwork.CopyToAsync(fileStream);
 
-            mainView.ShowNotification("Success!", "Downloaded artwork to file.", NotificationLevel.Success);
-            logger.LogInformation("[LyricsInfoViewModel-DownloadArtworkAsync] Downloaded artwork to file");
+            mainView.ShowNotification("Success!", "Saved artwork to file.", NotificationLevel.Success);
+            logger.LogInformation("[LyricsInfoViewModel-DownloadArtworkAsync] Saved artwork to file");
 
         }
         catch (Exception ex)
         {
-            mainView.ShowNotification("Something went wrong!", "Failed to download artwork.", NotificationLevel.Error, ex.ToFormattedString());
-            logger.LogError("[LyricsInfoViewModel-DownloadArtworkAsync] Failed to download artwork: {exception}", ex.Message);
+            mainView.ShowNotification("Something went wrong!", "Failed to save artwork.", NotificationLevel.Error, ex.ToFormattedString());
+            logger.LogError("[LyricsInfoViewModel-DownloadArtworkAsync] Failed to save artwork: {exception}", ex.Message);
         }
     }
 
