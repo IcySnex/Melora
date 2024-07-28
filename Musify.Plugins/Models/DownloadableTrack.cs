@@ -1,4 +1,5 @@
-﻿using Musify.Plugins.Abstract;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Musify.Plugins.Abstract;
 
 namespace Musify.Plugins.Models;
 
@@ -22,7 +23,7 @@ namespace Musify.Plugins.Models;
 /// <remarks>
 /// Creates a new DownloadableTrack.
 /// </remarks>
-public class DownloadableTrack(
+public partial class DownloadableTrack(
     string title,
     string artists,
     TimeSpan duration,
@@ -36,62 +37,73 @@ public class DownloadableTrack(
     int trackNumber,
     int totalTracks,
     string id,
-    PlatformSupportPlugin plugin)
+    PlatformSupportPlugin plugin) : ObservableObject
 {
     /// <summary>
     /// The title of the downloadable track.
     /// </summary>
-    public string Title { get; } = title;
+    [ObservableProperty]
+    string title = title;
 
     /// <summary>
     /// The artists of the downloadable track.
     /// </summary>
-    public string Artists { get; } = artists;
+    [ObservableProperty]
+    string artists = artists;
 
     /// <summary>
     /// The duration of the downloadable track.
     /// </summary>
-    public TimeSpan Duration { get; } = duration;
+    [ObservableProperty]
+    TimeSpan duration = duration;
 
     /// <summary>
     /// The url to the artwork of the downloadable track.
     /// </summary>
-    public string? ArtworkUrl { get; } = artworkUrl;
+    [ObservableProperty]
+    string? artworkUrl = artworkUrl;
 
     /// <summary>
-    /// Weither the downloadable track is explicit or not.
+    /// Whether the downloadable track is explicit or not.
     /// </summary>
-    public bool IsExplicit { get; } = isExplicit;
-    
+    [ObservableProperty]
+    bool isExplicit = isExplicit;
+
     /// <summary>
     /// The date and time when the downloadable track was released.
     /// </summary>
-    public DateTime ReleasedAt { get; } = releasedAt;
-    
+    [ObservableProperty]
+    DateTime releasedAt = releasedAt;
+
     /// <summary>
     /// The album of the downloadable track.
     /// </summary>
-    public string? Album { get; } = album;
-    
+    [ObservableProperty]
+    string? album = album;
+
     /// <summary>
     /// The genre of the downloadable track.
     /// </summary>
-    public string? Genre { get; } = genre;
+    [ObservableProperty]
+    string? genre = genre;
 
     /// <summary>
     /// The lyrics of the downloadable track.
     /// </summary>
-    public string? Lyrics { get; } = lyrics;
+    [ObservableProperty]
+    string? lyrics = lyrics;
 
     /// <summary>
     /// The track number of the downloadable track.
     /// </summary>
-    public int TrackNumber { get; } = trackNumber;
+    [ObservableProperty]
+    int trackNumber = trackNumber;
 
     /// <summary>
-    /// The total tracks of the downloadable tracks album.
+    /// The total tracks of the downloadable track's album.
     /// </summary>
-    public int TotalTracks { get; } = totalTracks;
+    [ObservableProperty]
+    int totalTracks = totalTracks;
 
     /// <summary>
     /// The url of the downloadable track.

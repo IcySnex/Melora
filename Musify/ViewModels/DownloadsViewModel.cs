@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Musify.Helpers;
@@ -7,6 +8,7 @@ using Musify.Models;
 using Musify.Plugins.Enums;
 using Musify.Plugins.Models;
 using Musify.Views;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 using Windows.System;
 
@@ -82,27 +84,31 @@ public partial class DownloadsViewModel : ObservableObject
         DownloadableTrack download)
     {
         await Task.Delay(1000);
-        logger.LogInformation("[HomeViewModel-StartDownloadAsync] Started download of track");
+        logger.LogInformation("[DownloadsViewModel-StartDownloadAsync] Started download of track");
     }
 
-    public void ShowDownloadInfo(
+    public async Task ShowDownloadInfoAsync(
         DownloadableTrack download)
     {
-        logger.LogInformation("[HomeViewModel-RemoveDownload] Showed download track info");
+        DownloadableTrackInfoViewModel viewModel = App.Provider.GetRequiredService<DownloadableTrackInfoViewModel>();
+        viewModel.Track = download;
+
+        await mainView.AlertAsync(new DownloadableTrackInfoView(viewModel));
+        logger.LogInformation("[DownloadsViewModel-ShowDownloadInfo] Showed download track info");
     }
 
     public async Task OpenDownloadSourceAsync(
         DownloadableTrack download)
     {
         await Launcher.LaunchUriAsync(new(download.Url));
-        logger.LogInformation("[HomeViewModel-OpenDownloadSourceAsync] Browser was opened with track source url");
+        logger.LogInformation("[DownloadsViewModel-OpenDownloadSourceAsync] Browser was opened with track source url");
     }
     
     public void RemoveDownload(
         DownloadableTrack download)
     {
         Downloads.Remove(download);
-        logger.LogInformation("[HomeViewModel-RemoveDownload] Removed track from downloads");
+        logger.LogInformation("[DownloadsViewModel-RemoveDownload] Removed track from downloads");
     }
 
 

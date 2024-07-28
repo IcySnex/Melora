@@ -23,6 +23,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="Views\DownloadableTrackInfoView.xaml" />
 		<None Remove="Views\HomeView.xaml" />
 		<None Remove="Views\LoggerView.xaml" />
 		<None Remove="Views\LyricsInfoView.xaml" />
@@ -68,6 +69,10 @@
 	<ItemGroup>
 	  <Page Update="Views\LoggerView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
+	  <Page Update="Views\DownloadableTrackInfoView.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
 	  </Page>
 	</ItemGroup>
 	<ItemGroup>

@@ -95,12 +95,125 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
+                            <Grid x:Name="RootLayout" Opacity="0">
+                                <Grid.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Offset="0" Color="#ee000000" />
+                                        <GradientStop Offset="1" Color="#77000000" />
+                                    </LinearGradientBrush>
+                                </Grid.Background>
+
+                                <FontIcon Glyph="{TemplateBinding hlp:Attributes.Glyph}" />
+
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal">
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="RootLayout"
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    To="0"
+                                                    Duration="0:0:0.15" />
+                                            </Storyboard>
+                                        </VisualState>
+
+                                        <VisualState x:Name="PointerOver">
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="RootLayout"
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    To="1"
+                                                    Duration="0:0:0.15" />
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="TopHoverButtonStyle" TargetType="Button">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+                <Setter Property="Height" Value="42.5" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
                             <Grid
                                 x:Name="RootLayout"
-                                Background="#bb000000"
-                                CornerRadius="4"
+                                Height="42.5"
+                                Background="Transparent"
                                 Opacity="0">
-                                <FontIcon Glyph="{TemplateBinding hlp:Attributes.Glyph}" />
+                                <Border
+                                    Margin="0,0,0,-42.5"
+                                    CornerRadius="4"
+                                    IsHitTestVisible="False">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Offset="0.15" Color="#ee000000" />
+                                            <GradientStop Offset="1" Color="#77000000" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+
+                                    <FontIcon Glyph="{TemplateBinding hlp:Attributes.Glyph}" />
+                                </Border>
+
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal">
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="RootLayout"
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    To="0"
+                                                    Duration="0:0:0.15" />
+                                            </Storyboard>
+                                        </VisualState>
+
+                                        <VisualState x:Name="PointerOver">
+                                            <Storyboard>
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="RootLayout"
+                                                    Storyboard.TargetProperty="Opacity"
+                                                    To="1"
+                                                    Duration="0:0:0.15" />
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="BottomHoverButtonStyle" TargetType="Button">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Bottom" />
+                <Setter Property="Height" Value="42.5" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid
+                                x:Name="RootLayout"
+                                Height="42.5"
+                                Background="Transparent"
+                                Opacity="0">
+                                <Border
+                                    Margin="0,-42.5,0,0"
+                                    CornerRadius="4"
+                                    IsHitTestVisible="False">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                                            <GradientStop Offset="0.15" Color="#ee000000" />
+                                            <GradientStop Offset="1" Color="#77000000" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+
+                                    <FontIcon Glyph="{TemplateBinding hlp:Attributes.Glyph}" />
+                                </Border>
 
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="CommonStates">

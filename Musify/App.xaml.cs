@@ -59,10 +59,12 @@ public partial class App : Application
                 services.AddSingleton<SettingsViewModel>();
 
                 services.AddTransient<PlatformViewModel>();
+
                 services.AddSingleton<LyricsViewModel>();
                 services.AddTransient<LyricsInfoViewModel>();
 
                 services.AddSingleton<DownloadsViewModel>();
+                services.AddSingleton<DownloadableTrackInfoViewModel>();
 
                 services.AddSingleton<MainView>();
 

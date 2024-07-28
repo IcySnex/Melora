@@ -54,10 +54,10 @@ public sealed partial class DownloadsView : Page
         await viewModel.StartDownloadAsync(download);
     }
 
-    void OnTrackInfoClick(object sender, RoutedEventArgs _)
+    async void OnTrackInfoClick(object sender, RoutedEventArgs _)
     {
         DownloadableTrack download = (DownloadableTrack)((MenuFlyoutItem)sender).DataContext;
-        viewModel.ShowDownloadInfo(download);
+        await viewModel.ShowDownloadInfoAsync(download);
     }
 
     async void OnOpenSourceClick(object sender, RoutedEventArgs _)
