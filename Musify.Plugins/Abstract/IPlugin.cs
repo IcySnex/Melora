@@ -17,11 +17,20 @@ public interface IPlugin
     /// </summary>
     PluginKind Kind { get; }
 
+    /// <summary>
+    /// The path date for the plugin icon.
+    /// </summary>
+    string IconPathData { get; }
+
 
     /// <summary>
-    /// Test
+    /// Gets the default config of the plugin.
     /// </summary>
-    /// <param name="parameter">Test parameter.</param>
-    Task TestAsync(
-        string parameter);
+    /// <returns>A new IPluginConfig</returns>
+    public IPluginConfig GetDefaultConfig();
+
+    /// <summary>
+    /// The config for the plugin.
+    /// </summary>
+    IPluginConfig Config { get; }
 }

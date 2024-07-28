@@ -2,14 +2,16 @@
 using System.IO.Compression;
 using System.Text.Json;
 
-namespace Musify.Plugins;
+namespace Musify.Plugins.Models;
 
 /// <summary>
 /// Contains information for a plugin.
 /// </summary>
+/// <remarks>
+/// Creates a new Manifest.
+/// </remarks>
 /// <param name="name">The name of the plugin.</param>
 /// <param name="description">The description of the plugin.</param>
-/// <param name="kind">The kind of the plugin.</param>
 /// <param name="author">The author of the plugin.</param>
 /// <param name="version">The version of the plugin.</param>
 /// <param name="entryPoint">The path to the entry point of the plugin.</param>
@@ -17,7 +19,6 @@ namespace Musify.Plugins;
 public class Manifest(
     string name,
     string description,
-    PluginKind kind,
     string author,
     Version version,
     string entryPoint,
@@ -53,11 +54,6 @@ public class Manifest(
     /// The description of the plugin.
     /// </summary>
     public string Description { get; } = description;
-
-    /// <summary>
-    /// The kind of the plugin.
-    /// </summary>
-    public PluginKind Kind { get; } = kind;
 
     /// <summary>
     /// The author of the plugin.
