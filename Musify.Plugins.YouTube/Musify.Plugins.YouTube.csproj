@@ -17,12 +17,18 @@
 
 	<ItemGroup>
 		<Content Include="Manifest.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
 
+	<ItemGroup>
+		<PackageReference Include="GeniusAPI" Version="1.1.1" />
+		<PackageReference Include="YoutubeExplode" Version="6.4.0" />
+		<PackageReference Include="YouTubeMusicAPI" Version="1.1.4" />
+	</ItemGroup>
+
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath '$(SolutionDir)\Musify\bin\x64\Debug\net8.0-windows10.0.19041.0\win10-x64\Plugins\$(ProjectName).zip'" />
-		<Exec Command="powershell Rename-Item -Path '$(SolutionDir)\Musify\bin\x64\Debug\net8.0-windows10.0.19041.0\win10-x64\Plugins\$(ProjectName).zip' -NewName '$(ProjectName).mfy'" />
+		<Exec Command="powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath '$(TargetDir)\PluginArchive.zip' -Force" />
+		<Exec Command="powershell Copy-Item -Path '$(TargetDir)\PluginArchive.zip' -Destination '$(SolutionDir)\Musify\bin\x64\Debug\net8.0-windows10.0.19041.0\win10-x64\Plugins\$(ProjectName).mfy'" />
 	</Target>
 </Project>
