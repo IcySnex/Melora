@@ -9,6 +9,7 @@
     xmlns:local="using:Musify.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:plgm="using:Musify.Plugins.Models"
+    xmlns:sys="using:System"
     x:Name="Downloads"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
@@ -108,6 +109,11 @@
                                         ToolTipService.ToolTip="Remove from downloads">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xe74d;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem IsEnabled="False" Text="{x:Bind Plugin.Name}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xe946;" />
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                 </MenuFlyout>

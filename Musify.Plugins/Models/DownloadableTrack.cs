@@ -54,8 +54,7 @@ public partial class DownloadableTrack(
     /// <summary>
     /// The duration of the downloadable track.
     /// </summary>
-    [ObservableProperty]
-    TimeSpan duration = duration;
+    public TimeSpan Duration { get; } = duration;
 
     /// <summary>
     /// The url to the artwork of the downloadable track.

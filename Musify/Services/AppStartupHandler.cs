@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.AppLifecycle;
 using Musify.Enums;
@@ -6,6 +7,7 @@ using Musify.Helpers;
 using Musify.Models;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Exceptions;
+using Musify.ViewModels;
 using Musify.Views;
 
 namespace Musify.Services;
@@ -29,8 +31,8 @@ public class AppStartupHandler
         this.pluginManager = pluginManager;
         this.mainView = mainView;
 
-        mainView.SetSize(1100, 559);
-        mainView.SetMinSize(670, 470);
+        mainView.SetSize(1100, 560);
+        mainView.SetMinSize(700, 520);
         mainView.SetIcon("icon.ico");
         mainView.Activate();
 
@@ -90,5 +92,20 @@ public class AppStartupHandler
                 logger.LogError("[PluginManager-LoadAllPluginsAsync] Failed to load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
             }
         }
+
+
+        // I DONT WANT TO DO IT EVERY TIME IM UPDATING THE UI AAAAAAAAH:
+        var navigation = App.Provider.GetRequiredService<Navigation>();
+
+        PlatformViewModel viewModel = App.Provider.GetRequiredService<PlatformViewModel>();
+        viewModel.Plugin = pluginManager.LoadedPlugins.First(plugin => plugin.Name == "Spotify");
+
+        navigation.Navigate("Spotify", () => new PlatformView(viewModel));
+
+        viewModel.Query = "Pashanim";
+        await viewModel.SearchCommand.ExecuteAsync(null);
+
+        viewModel.SelectedSearchResults.Add(viewModel.SearchResults.First());
+        await viewModel.PrepareDownloadsCommand.ExecuteAsync(null);
     }
 }

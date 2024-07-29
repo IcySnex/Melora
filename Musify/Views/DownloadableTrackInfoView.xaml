@@ -8,34 +8,40 @@
     xmlns:local="using:Musify.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mdl="using:Musify.Models"
+    xmlns:sys="using:System"
     x:Name="LyricsInfo"
     mc:Ignorable="d">
 
     <Grid MaxWidth="800">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="8" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="124" />
+            <RowDefinition Height="16" />
+            <RowDefinition Height="54" />
             <RowDefinition Height="12" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!--  Info bar  -->
-        <Grid Grid.Row="2">
-            <!--  Artwork  -->
+        <!--  Artwork & Title/Artists & Album/Genre  -->
+        <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition
-                    Width="Auto"
-                    MinWidth="85"
-                    MaxWidth="151" />
+                <ColumnDefinition Width="114" />
                 <ColumnDefinition Width="12" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="180" />
                 <ColumnDefinition Width="12" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="180" />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="54" />
+                <RowDefinition Height="16" />
+                <RowDefinition Height="54" />
+            </Grid.RowDefinitions>
+
+            <!--  Artwork  -->
             <Border
-                Width="85"
-                Height="85"
+                Grid.RowSpan="3"
+                Width="114"
+                Height="114"
+                VerticalAlignment="Bottom"
                 Style="{StaticResource PlaceholderImage}"
                 Translation="0,0,32">
                 <Border.Shadow>
@@ -50,36 +56,111 @@
             </Border>
 
             <Button
+                Grid.RowSpan="3"
+                Margin="0,10,0,0"
                 hlp:Attributes.Glyph="&#xe74e;"
                 Command="{x:Bind viewModel.SaveArtworkCommand}"
                 Style="{StaticResource TopHoverButtonStyle}"
                 ToolTipService.ToolTip="Save artwork" />
-
             <Button
-                Grid.Row="1"
-                hlp:Attributes.Glyph="&#xe8a7;"
+                Grid.RowSpan="3"
+                hlp:Attributes.Glyph="&#xe70f;"
                 Command="{x:Bind viewModel.ChangeArtworkCommand}"
                 Style="{StaticResource BottomHoverButtonStyle}"
                 ToolTipService.ToolTip="Change artwork" />
 
             <!--  Title/Artists  -->
-            <Grid Grid.Column="2" VerticalAlignment="Center">
-                <TextBlock
-                    HorizontalAlignment="Left"
-                    FontSize="24"
-                    Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
-                    Text="{x:Bind viewModel.Track.Title, TargetNullValue='N/A'}"
-                    TextTrimming="CharacterEllipsis" />
-                <TextBlock
-                    Name="ArtistsBlock"
-                    Margin="0,27,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    TextTrimming="CharacterEllipsis"
-                    ToolTipService.ToolTip="Open artist on Genius" />
-            </Grid>
+            <ContentControl
+                Grid.Column="2"
+                hlp:Attributes.Title="Title"
+                Template="{StaticResource WithHeader}">
+                <TextBox Text="{x:Bind viewModel.Track.Title, Mode=TwoWay}" />
+            </ContentControl>
+            <ContentControl
+                Grid.Column="4"
+                hlp:Attributes.Title="Artists"
+                Template="{StaticResource WithHeader}">
+                <TextBox Text="{x:Bind viewModel.Track.Artists, Mode=TwoWay}" />
+            </ContentControl>
 
+            <!--  Album/Genre  -->
+            <ContentControl
+                Grid.Row="2"
+                Grid.Column="2"
+                hlp:Attributes.Title="Album"
+                Template="{StaticResource WithHeader}">
+                <TextBox Text="{x:Bind viewModel.Track.Album, Mode=TwoWay}" />
+            </ContentControl>
+
+            <ContentControl
+                Grid.Row="2"
+                Grid.Column="4"
+                hlp:Attributes.Title="Genre"
+                Template="{StaticResource WithHeader}">
+                <TextBox Text="{x:Bind viewModel.Track.Genre, Mode=TwoWay}" />
+            </ContentControl>
         </Grid>
+
+        <!--  Duration & Release Data & Track Numer/Total Tracks  -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="101" />
+                <ColumnDefinition Width="2" />
+                <ColumnDefinition Width="101" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Released At  -->
+            <ContentControl hlp:Attributes.Title="Released At" Template="{StaticResource WithHeader}">
+                <CalendarDatePicker Date="{x:Bind viewModel.Track.ReleasedAt, Mode=TwoWay, Converter={StaticResource DateTimeDateTimeOffsetConverter}}" />
+            </ContentControl>
+
+            <!--  Is Explicit  -->
+            <ContentControl
+                Grid.Column="6"
+                hlp:Attributes.Title="Is Explicit"
+                Template="{StaticResource WithHeader}">
+                <ToggleSwitch IsOn="{x:Bind viewModel.Track.IsExplicit, Mode=TwoWay}" />
+            </ContentControl>
+
+            <!--  Track Numer/Total Tracks  -->
+            <ContentControl
+                Grid.Column="2"
+                hlp:Attributes.Title="Track"
+                Template="{StaticResource WithHeader}">
+                <NumberBox
+                    CornerRadius="4,0,0,4"
+                    Maximum="{x:Bind viewModel.Track.TotalTracks, Mode=OneWay}"
+                    Minimum="0"
+                    SpinButtonPlacementMode="Compact"
+                    Value="{x:Bind viewModel.Track.TrackNumber, Mode=TwoWay}" />
+            </ContentControl>
+            <ContentControl
+                Grid.Column="4"
+                hlp:Attributes.Title="Total"
+                Template="{StaticResource WithHeader}">
+                <NumberBox
+                    CornerRadius="0,4,4,0"
+                    Maximum="999"
+                    Minimum="0"
+                    SpinButtonPlacementMode="Compact"
+                    Value="{x:Bind viewModel.Track.TotalTracks, Mode=TwoWay}" />
+            </ContentControl>
+        </Grid>
+
+        <ContentControl
+            Grid.Row="4"
+            hlp:Attributes.Title="Lyrics"
+            Template="{StaticResource WithHeader}">
+            <TextBox
+                Height="Auto"
+                MaxHeight="150"
+                AcceptsReturn="True"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                Text="{x:Bind viewModel.Track.Lyrics, Mode=TwoWay}" />
+        </ContentControl>
     </Grid>
 </Page>
