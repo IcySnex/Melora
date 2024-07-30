@@ -42,7 +42,11 @@ public partial class DownloadsViewModel : ObservableObject
             },
             Descending = Config.Downloads.SortDescending,
             Filter = track =>
-                (track.Title.Contains(Query, StringComparison.InvariantCultureIgnoreCase) || track.Artists.Contains(Query, StringComparison.InvariantCultureIgnoreCase)) &&
+                (
+                    track.Title.Contains(Query, StringComparison.InvariantCultureIgnoreCase) ||
+                    track.Artists.Contains(Query, StringComparison.InvariantCultureIgnoreCase) ||
+                    (track.Album?.Contains(Query, StringComparison.InvariantCultureIgnoreCase) ?? false)
+                ) &&
                 ShowTracksFrom.Any(pair => track.Plugin.Name == pair.Key && pair.Value)
         };
 
