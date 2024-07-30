@@ -24,7 +24,7 @@
         <!--  Artwork & Title/Artists & Album/Genre  -->
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="114" />
+                <ColumnDefinition Width="110" />
                 <ColumnDefinition Width="12" />
                 <ColumnDefinition Width="180" />
                 <ColumnDefinition Width="12" />
@@ -39,8 +39,8 @@
             <!--  Artwork  -->
             <Border
                 Grid.RowSpan="3"
-                Width="114"
-                Height="114"
+                Width="110"
+                Height="110"
                 VerticalAlignment="Bottom"
                 Style="{StaticResource PlaceholderImage}"
                 Translation="0,0,32">
@@ -57,7 +57,7 @@
 
             <Button
                 Grid.RowSpan="3"
-                Margin="0,10,0,0"
+                Margin="0,14,0,0"
                 hlp:Attributes.Glyph="&#xe74e;"
                 Command="{x:Bind viewModel.SaveArtworkCommand}"
                 Style="{StaticResource TopHoverButtonStyle}"

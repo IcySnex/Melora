@@ -135,23 +135,23 @@
             <Style x:Key="TopHoverButtonStyle" TargetType="Button">
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="VerticalAlignment" Value="Top" />
-                <Setter Property="Height" Value="57" />
+                <Setter Property="Height" Value="55" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
                             <Grid
                                 x:Name="RootLayout"
-                                Height="57"
+                                Height="55"
                                 Background="Transparent"
                                 Opacity="0">
                                 <Border
-                                    Margin="0,0,0,-57"
+                                    Margin="0,0,0,-55"
                                     CornerRadius="4"
                                     IsHitTestVisible="False">
                                     <Border.Background>
                                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                            <GradientStop Offset="0.15" Color="#ee000000" />
-                                            <GradientStop Offset="1" Color="#77000000" />
+                                            <GradientStop Offset="0.15" Color="#e3000000" />
+                                            <GradientStop Offset="1" Color="#88000000" />
                                         </LinearGradientBrush>
                                     </Border.Background>
 
@@ -190,23 +190,23 @@
             <Style x:Key="BottomHoverButtonStyle" TargetType="Button">
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="VerticalAlignment" Value="Bottom" />
-                <Setter Property="Height" Value="57" />
+                <Setter Property="Height" Value="55" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
                             <Grid
                                 x:Name="RootLayout"
-                                Height="57"
+                                Height="55"
                                 Background="Transparent"
                                 Opacity="0">
                                 <Border
-                                    Margin="0,-57,0,0"
+                                    Margin="0,-55,0,0"
                                     CornerRadius="4"
                                     IsHitTestVisible="False">
                                     <Border.Background>
                                         <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                                            <GradientStop Offset="0.15" Color="#ee000000" />
-                                            <GradientStop Offset="1" Color="#77000000" />
+                                            <GradientStop Offset="0.15" Color="#e3000000" />
+                                            <GradientStop Offset="1" Color="#88000000" />
                                         </LinearGradientBrush>
                                     </Border.Background>
 

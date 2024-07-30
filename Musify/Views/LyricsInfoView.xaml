@@ -26,15 +26,15 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
                     Width="Auto"
-                    MinWidth="85"
-                    MaxWidth="151" />
+                    MinWidth="110"
+                    MaxWidth="195" />
                 <ColumnDefinition Width="12" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="48" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Border
-                Height="85"
+                Height="110"
                 Style="{StaticResource PlaceholderImage}"
                 Translation="0,0,32">
                 <Border.Shadow>
