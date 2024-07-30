@@ -91,7 +91,7 @@
                                     hlp:Attributes.Description="The quality in which tracks get downloaded in"
                                     hlp:Attributes.Title="Quality"
                                     Template="{StaticResource SettingsCard}">
-                                    <ComboBox Width="110" SelectedIndex="{x:Bind Config.Quality, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                                    <ComboBox Width="110" SelectedIndex="{x:Bind Config.Quality, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}">
                                         <ComboBoxItem Content="32 kbps" />
                                         <ComboBoxItem Content="64 kbps" />
                                         <ComboBoxItem Content="128 kbps" />
@@ -106,7 +106,7 @@
                                     hlp:Attributes.Description="The audio format tracks get converted to"
                                     hlp:Attributes.Title="Format"
                                     Template="{StaticResource SettingsCard}">
-                                    <ComboBox Width="90" SelectedIndex="{x:Bind Config.Format, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                                    <ComboBox Width="90" SelectedIndex="{x:Bind Config.Format, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}">
                                         <ComboBoxItem Content="mp3" />
                                         <ComboBoxItem Content="wav" />
                                         <ComboBoxItem Content="m4a" />
@@ -136,7 +136,7 @@
                                     hlp:Attributes.Description="The sorting of search results"
                                     hlp:Attributes.Title="Search Results &gt; Sorting"
                                     Template="{StaticResource SettingsCard}">
-                                    <ComboBox Width="105" SelectedIndex="{x:Bind Config.SearchResultsSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                                    <ComboBox Width="105" SelectedIndex="{x:Bind Config.SearchResultsSorting, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}">
                                         <ComboBoxItem Content="Default" />
                                         <ComboBoxItem Content="Title" />
                                         <ComboBoxItem Content="Artist" />
@@ -187,7 +187,7 @@
                         hlp:Attributes.Description="The sorting of search results"
                         hlp:Attributes.Title="Search Results &gt; Sorting"
                         Template="{StaticResource SettingsCard}">
-                        <ComboBox Width="105" SelectedIndex="{x:Bind viewModel.Config.Lyrics.SearchResultsSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                        <ComboBox Width="105" SelectedIndex="{x:Bind viewModel.Config.Lyrics.SearchResultsSorting, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}">
                             <ComboBoxItem Content="Default" />
                             <ComboBoxItem Content="Title" />
                             <ComboBoxItem Content="Artist" />
@@ -216,7 +216,7 @@
                         hlp:Attributes.Description="What happens when trying to download a track which already exists"
                         hlp:Attributes.Title="Already exists behavior"
                         Template="{StaticResource SettingsCard}">
-                        <ComboBox Width="160" SelectedIndex="{x:Bind viewModel.Config.Downloads.AlreadyExistsBehavior, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                        <ComboBox Width="160" SelectedIndex="{x:Bind viewModel.Config.Downloads.AlreadyExistsBehavior, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}">
                             <ComboBoxItem Content="Ask each time" />
                             <ComboBoxItem Content="Skip track" />
                             <ComboBoxItem Content="Overwrite track" />
@@ -252,7 +252,7 @@
                         hlp:Attributes.Description="The sorting of downloads"
                         hlp:Attributes.Title="Sorting"
                         Template="{StaticResource SettingsCard}">
-                        <ComboBox Width="105" SelectedIndex="{x:Bind viewModel.Config.Downloads.Sorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}">
+                        <ComboBox Width="105" SelectedIndex="{x:Bind viewModel.Config.Downloads.Sorting, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}">
                             <ComboBoxItem Content="Default" />
                             <ComboBoxItem Content="Title" />
                             <ComboBoxItem Content="Artist" />

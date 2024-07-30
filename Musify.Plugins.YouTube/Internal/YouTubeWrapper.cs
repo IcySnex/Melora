@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Musify.Plugins.Abstract;
+using Musify.Plugins.Enums;
 using Musify.Plugins.Models;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -9,6 +10,7 @@ using YoutubeExplode.Common;
 using YoutubeExplode.Playlists;
 using YoutubeExplode.Search;
 using YoutubeExplode.Videos;
+using YoutubeExplode.Videos.Streams;
 
 namespace Musify.Plugins.YouTube.Internal;
 
@@ -251,6 +253,7 @@ internal partial class YouTubeWrapper
         bool saveDescription = config.GetItem<bool>("Save Description");
         bool saveThumbnail = config.GetItem<bool>("Save Thumbnail");
 
+        logger?.LogInformation("[YouTubeWrapper-PrepareDownloadAsync] Getting video...");
         Video video = await client.Videos.GetAsync(searchResult.Id, cancellationToken);
 
         return new DownloadableTrack(
@@ -268,5 +271,25 @@ internal partial class YouTubeWrapper
             totalTracks: searchResult.GetItem<int>("PlaylistTotalVideos"),
             id: searchResult.Id,
             plugin: responsiblePlugin);
+    }
+
+
+    public async Task<Stream> GetStreamAsync(
+        string id,
+        CancellationToken cancellationToken = default)
+    {
+        logger?.LogInformation("[YouTubeWrapper-GetStreamAsync] Getting video stream...");
+        StreamManifest manifest = await client.Videos.Streams.GetManifestAsync(id, cancellationToken);
+
+        AudioOnlyStreamInfo? stream = manifest
+            .GetAudioOnlyStreams()
+            .MinBy(streamInfo => Math.Abs((int)config.Quality - streamInfo.Bitrate.KiloBitsPerSecond));
+        if (stream is null)
+        {
+            logger?.LogError("[YouTubeWrapper-GetStreamAsync] Could not find any suitable audio only streams in the streams manifest");
+            throw new Exception("Could not find any suitable audio only streams in the streams manifest.");
+        }
+
+        return await client.Videos.Streams.GetAsync(stream, cancellationToken);
     }
 }

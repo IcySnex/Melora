@@ -101,7 +101,7 @@
                 Grid.Column="5"
                 Width="105"
                 CornerRadius="4,0,0,4"
-                SelectedIndex="{x:Bind viewModel.Config.Lyrics.SearchResultsSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
+                SelectedIndex="{x:Bind viewModel.Config.Lyrics.SearchResultsSorting, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}"
                 ToolTipService.ToolTip="Sort search results by">
                 <ComboBoxItem Content="Default" />
                 <ComboBoxItem Content="Title" />

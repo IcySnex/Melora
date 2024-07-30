@@ -97,4 +97,11 @@ public class YouTubePlugin : PlatformSupportPlugin
         });
         return results;
     }
+
+    public override Task<Stream> GetStreamAsync(
+        DownloadableTrack track,
+        CancellationToken cancellationToken = default)
+    {
+        return wrapper.GetStreamAsync(track.Id, cancellationToken);
+    }
 }

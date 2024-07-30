@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Musify.Enums;
 using Musify.Helpers;
+using Musify.Models;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Enums;
 using Musify.Plugins.Models;
@@ -137,7 +138,7 @@ public partial class PlatformViewModel : ObservableObject
         try
         {
             IEnumerable<DownloadableTrack> results = await plugin.PrepareDownloadsAsync(SelectedSearchResults.Cast<SearchResult>(), progress, cts.Token);
-            downloadsViewModel.Downloads.AddRange(results);
+            downloadsViewModel.Downloads.AddRange(results.Select(d => new DownloadContainer(d)));
 
             mainView.HideLoadingPopup();
             navigation.SetCurrentItem("Downloads");

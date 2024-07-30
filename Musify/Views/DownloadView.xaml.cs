@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Musify.Models;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Models;
 using Musify.Services;
@@ -50,25 +51,25 @@ public sealed partial class DownloadsView : Page
 
     async void OnDownloadClick(object sender, RoutedEventArgs _)
     {
-        DownloadableTrack download = (DownloadableTrack)((MenuFlyoutItem)sender).DataContext;
-        await viewModel.StartDownloadAsync(download);
+        DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
+        await viewModel.DownloadAsync(download);
     }
 
     async void OnTrackInfoClick(object sender, RoutedEventArgs _)
     {
-        DownloadableTrack download = (DownloadableTrack)((MenuFlyoutItem)sender).DataContext;
-        await viewModel.ShowDownloadInfoAsync(download);
+        DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
+        await viewModel.ShowTrackInfoAsync(download);
     }
 
     async void OnOpenSourceClick(object sender, RoutedEventArgs _)
     {
-        DownloadableTrack download = (DownloadableTrack)((MenuFlyoutItem)sender).DataContext;
-        await viewModel.OpenDownloadSourceAsync(download);
+        DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
+        await viewModel.OpenTrackSourceAsync(download);
     }
 
     void OnRemoveClick(object sender, RoutedEventArgs _)
     {
-        DownloadableTrack download = (DownloadableTrack)((MenuFlyoutItem)sender).DataContext;
-        viewModel.RemoveDownload(download);
+        DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
+        viewModel.Remove(download);
     }
 }

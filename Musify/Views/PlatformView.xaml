@@ -130,7 +130,7 @@
                 Grid.Column="7"
                 Width="105"
                 CornerRadius="4,0,0,4"
-                SelectedIndex="{x:Bind viewModel.Plugin.Config.SearchResultsSorting, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
+                SelectedIndex="{x:Bind viewModel.Plugin.Config.SearchResultsSorting, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}"
                 ToolTipService.ToolTip="Sort search results by">
                 <ComboBoxItem Content="Default" />
                 <ComboBoxItem Content="Title" />
@@ -174,7 +174,7 @@
             <ContentControl hlp:Attributes.Title="Quality" Template="{StaticResource WithHeader}">
                 <ComboBox
                     HorizontalAlignment="Stretch"
-                    SelectedIndex="{x:Bind viewModel.Plugin.Config.Quality, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
+                    SelectedIndex="{x:Bind viewModel.Plugin.Config.Quality, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}"
                     ToolTipService.ToolTip="Download quality">
                     <ComboBoxItem Content="32 kbps" />
                     <ComboBoxItem Content="64 kbps" />
@@ -192,7 +192,7 @@
                 Template="{StaticResource WithHeader}">
                 <ComboBox
                     HorizontalAlignment="Stretch"
-                    SelectedIndex="{x:Bind viewModel.Plugin.Config.Format, Mode=TwoWay, Converter={StaticResource EnumIntConverter}}"
+                    SelectedIndex="{x:Bind viewModel.Plugin.Config.Format, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}"
                     ToolTipService.ToolTip="Audio format">
                     <ComboBoxItem Content="mp3" />
                     <ComboBoxItem Content="wav" />

@@ -109,4 +109,14 @@ public abstract class PlatformSupportPlugin : IPlugin
         IEnumerable<SearchResult> searchResults,
         IProgress<string> progress,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets the stream of a downloadable track.
+    /// </summary>
+    /// <param name="track">The downloadable track to get the stream from.</param>
+    /// <param name="cancellationToken">The token to cancel this action.</param>
+    /// <returns>The downloadable tracks stream.</returns>
+    public abstract Task<Stream> GetStreamAsync(
+        DownloadableTrack track,
+        CancellationToken cancellationToken = default);
 }

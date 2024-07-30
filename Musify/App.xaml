@@ -33,7 +33,7 @@
 
 
             <!--  Converters  -->
-            <conv:EnumIntConverter x:Key="EnumIntConverter" />
+            <conv:EnumIndexConverter x:Key="EnumIndexConverter" />
             <conv:TimeSpanStringConverter x:Key="TimeSpanStringConverter" />
             <conv:TimeSpanLongStringConverter x:Key="TimeSpanLongStringConverter" />
             <conv:IntOverZeroVisibilityConverter x:Key="IntOverZeroVisibilityConverter" />

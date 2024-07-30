@@ -3,12 +3,13 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
+using Musify.Enums;
 using Musify.Helpers;
 using Musify.Models;
+using Musify.Plugins.Abstract;
 using Musify.Plugins.Enums;
 using Musify.Plugins.Models;
 using Musify.Views;
-using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 using Windows.System;
 
@@ -35,19 +36,19 @@ public partial class DownloadsViewModel : ObservableObject
             KeySelector = Config.Downloads.Sorting switch
             {
                 Sorting.Default => null,
-                Sorting.Title => track => track.Title,
-                Sorting.Artist => track => track.Artists,
-                Sorting.Duration => track => track.Duration,
+                Sorting.Title => download => download.Track.Title,
+                Sorting.Artist => download => download.Track.Artists,
+                Sorting.Duration => download => download.Track.Duration,
                 _ => null
             },
             Descending = Config.Downloads.SortDescending,
-            Filter = track =>
+            Filter = download =>
                 (
-                    track.Title.Contains(Query, StringComparison.InvariantCultureIgnoreCase) ||
-                    track.Artists.Contains(Query, StringComparison.InvariantCultureIgnoreCase) ||
-                    (track.Album?.Contains(Query, StringComparison.InvariantCultureIgnoreCase) ?? false)
+                    download.Track.Title.Contains(Query, StringComparison.InvariantCultureIgnoreCase) ||
+                    download.Track.Artists.Contains(Query, StringComparison.InvariantCultureIgnoreCase) ||
+                    (download.Track.Album?.Contains(Query, StringComparison.InvariantCultureIgnoreCase) ?? false)
                 ) &&
-                ShowTracksFrom.Any(pair => track.Plugin.Name == pair.Key && pair.Value)
+                ShowTracksFrom.Any(pair => download.Track.Plugin.Name == pair.Key && pair.Value)
         };
 
         Config.Downloads.PropertyChanged += OnConfigPropertyChanged;
@@ -64,9 +65,9 @@ public partial class DownloadsViewModel : ObservableObject
                 Downloads.KeySelector = Config.Downloads.Sorting switch
                 {
                     Sorting.Default => null,
-                    Sorting.Title => track => track.Title,
-                    Sorting.Artist => track => track.Artists,
-                    Sorting.Duration => track => track.Duration,
+                    Sorting.Title => download => download.Track.Title,
+                    Sorting.Artist => download => download.Track.Artists,
+                    Sorting.Duration => download => download.Track.Duration,
                     _ => null
                 };
                 break;
@@ -78,60 +79,27 @@ public partial class DownloadsViewModel : ObservableObject
     }
 
 
-    public ObservableRangeCollection<DownloadableTrack> Downloads { get; }
+    public ObservableRangeCollection<DownloadContainer> Downloads { get; }
 
 
     public Dictionary<string, bool> ShowTracksFrom { get; } = [];
 
 
-    public async Task StartDownloadAsync(
-        DownloadableTrack download)
-    {
-        await Task.Delay(1000);
-        logger.LogInformation("[DownloadsViewModel-StartDownloadAsync] Started download of track");
-    }
-
-    public async Task ShowDownloadInfoAsync(
-        DownloadableTrack download)
+    public async Task ShowTrackInfoAsync(
+        DownloadContainer download)
     {
         DownloadableTrackInfoViewModel viewModel = App.Provider.GetRequiredService<DownloadableTrackInfoViewModel>();
-        viewModel.Track = download;
+        viewModel.Track = download.Track;
 
         await mainView.AlertAsync(new DownloadableTrackInfoView(viewModel));
-        logger.LogInformation("[DownloadsViewModel-ShowDownloadInfo] Showed download track info");
+        logger.LogInformation("[DownloadsViewModel-ShowTrackInfoAsync] Showed download track info");
     }
 
-    public async Task OpenDownloadSourceAsync(
-        DownloadableTrack download)
+    public async Task OpenTrackSourceAsync(
+        DownloadContainer download)
     {
-        await Launcher.LaunchUriAsync(new(download.Url));
-        logger.LogInformation("[DownloadsViewModel-OpenDownloadSourceAsync] Browser was opened with track source url");
-    }
-    
-    public void RemoveDownload(
-        DownloadableTrack download)
-    {
-        Downloads.Remove(download);
-        logger.LogInformation("[DownloadsViewModel-RemoveDownload] Removed track from downloads");
-    }
-
-
-    [RelayCommand]
-    async Task ClearAsync()
-    {
-        if (await mainView.AlertAsync("By clearing all your downloads your queue will be emptied and all running downloads will be stopped.", "Are you sure?", "No", "Yes") != ContentDialogResult.Primary)
-            return;
-
-        Downloads.Clear();
-        logger.LogInformation("[DownloadsViewModel-ClearAsync] Cleared all tracks from downloads");
-    }
-
-    [RelayCommand]
-    async Task DownloadAsync()
-    {
-        await Task.Delay(1000);
-
-        logger.LogInformation("[DownloadsViewModel-DownloadAsync] Downloaded all tracks");
+        await Launcher.LaunchUriAsync(new(download.Track.Url));
+        logger.LogInformation("[DownloadsViewModel-OpenTrackSourceAsync] Browser was opened with track source url");
     }
 
 
@@ -145,4 +113,69 @@ public partial class DownloadsViewModel : ObservableObject
         logger.LogInformation("[DownloadsViewModel-OnPropertyChanged] Refreshed downloads");
     }
 
+
+    public async Task DownloadAsync(
+        DownloadContainer download)
+    {
+        logger.LogInformation("[DownloadsViewModel-DownloadAsync] Starting download of track");
+        try
+        {
+            download.IsProcessing = true;
+            Stream stream = await download.Track.Plugin.GetStreamAsync(download.Track);
+
+            download.IsProcessing = false;
+            for (int i = 0; i < 100; i += 10) // Simulate download...
+            {
+                await Task.Delay(500);
+                download.Progress = i;
+            }
+
+            download.IsProcessing = true;
+            await Task.Delay(1000); // Simulate after download progress, e.g. writing metadata...
+
+            Remove(download);
+            logger.LogInformation("[DownloadsViewModel-DownloadAsync] Finished download of track");
+        }
+        catch (OperationCanceledException)
+        {
+            download.IsProcessing = false;
+            download.Progress = 0;
+
+            logger.LogInformation("[DownloadsViewModel-DownloadAsync] Cancelled download of track {trackTitle}", download.Track.Title);
+        }
+        catch (Exception ex)
+        {
+            download.IsProcessing = false;
+            download.Progress = 0;
+
+            mainView.ShowNotification("Something went wrong!", $"Failed to download track {download.Track.Title}.", NotificationLevel.Error, ex.ToFormattedString());
+            logger.LogError("[DownloadsViewModel-DownloadAsync] Failed to download track {trackTitle}: {exception}", download.Track.Title, ex.Message);
+        }
+    }
+
+    public void Remove(
+        DownloadContainer download)
+    {
+        Downloads.Remove(download);
+        logger.LogInformation("[DownloadsViewModel-RemoveDownload] Removed track from downloads");
+    }
+
+
+    [RelayCommand]
+    async Task DownloadAllAsync()
+    {
+        await Task.Delay(1000);
+
+        logger.LogInformation("[DownloadsViewModel-DownloadAsync] Downloaded all tracks");
+    }
+
+    [RelayCommand]
+    async Task RemoveAllAsync()
+    {
+        if (await mainView.AlertAsync("By clearing all your downloads your queue will be emptied and all running downloads will be stopped.", "Are you sure?", "No", "Yes") != ContentDialogResult.Primary)
+            return;
+
+        Downloads.Clear();
+        logger.LogInformation("[DownloadsViewModel-ClearAsync] Cleared all tracks from downloads");
+    }
 }

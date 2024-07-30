@@ -8,30 +8,30 @@ public enum Quality
     /// <summary>
     /// 32 kilobyte per second.
     /// </summary>
-    _32kbps,
+    _32kbps = 32,
 
     /// <summary>
     /// 64 kilobyte per second.
     /// </summary>
-    _64kbps,
+    _64kbps = 64,
 
     /// <summary>
     /// 128 kilobyte per second.
     /// </summary>
-    _128kbps,
+    _128kbps = 128,
 
     /// <summary>
     /// 160 kilobyte per second.
     /// </summary>
-    _160kbps,
+    _160kbps = 160,
 
     /// <summary>
     /// 256 kilobyte per second.
     /// </summary>
-    _256kbps,
+    _256kbps = 256,
 
     /// <summary>
     /// 320 kilobyte per second.
     /// </summary>
-    _320kbps
+    _320kbps = 320
 }
