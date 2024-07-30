@@ -5,6 +5,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using YoutubeExplode;
 using YoutubeExplode.Channels;
+using YoutubeExplode.Common;
 using YoutubeExplode.Playlists;
 using YoutubeExplode.Search;
 using YoutubeExplode.Videos;
@@ -69,6 +70,15 @@ internal partial class YouTubeWrapper
     }
 
 
+    public static string? GetLowResThumbnailUrl(
+        IEnumerable<Thumbnail> thumbnails) =>
+        thumbnails.MinBy(thumbnail => (double)thumbnail.Resolution.Height / thumbnail.Resolution.Width == 0.75 ? int.MaxValue - thumbnail.Resolution.Area : thumbnail.Resolution.Area)?.Url;
+
+    public static string? GetHighResThumbnailUrl(
+        IEnumerable<Thumbnail> thumbnails) =>
+        thumbnails.MaxBy(thumbnail => (double)thumbnail.Resolution.Height / thumbnail.Resolution.Width == 0.75 ? int.MinValue + thumbnail.Resolution.Area : thumbnail.Resolution.Area)?.Url;
+
+
     readonly PlatformSupportPluginConfig config;
     readonly ILogger<PlatformSupportPlugin>? logger;
 
@@ -107,7 +117,7 @@ internal partial class YouTubeWrapper
             title: video.Title,
             artists: video.Author.ChannelTitle,
             duration: video.Duration.GetValueOrDefault(TimeSpan.Zero),
-            imageUrl: video.Thumbnails.MinBy(thumbnail => thumbnail.Resolution.Area)?.Url,
+            imageUrl: GetLowResThumbnailUrl(video.Thumbnails),
             id: video.Id,
             items: new()
             {
@@ -145,7 +155,7 @@ internal partial class YouTubeWrapper
                     title: video.Title,
                     artists: video.Author.ChannelTitle,
                     duration: video.Duration.GetValueOrDefault(TimeSpan.Zero),
-                    imageUrl: video.Thumbnails.MinBy(thumbnail => thumbnail.Resolution.Area)?.Url,
+                    imageUrl: GetLowResThumbnailUrl(video.Thumbnails),
                     id: video.Id,
                     items: new()
                     {
@@ -184,7 +194,7 @@ internal partial class YouTubeWrapper
                     title: video.Title,
                     artists: video.Author.ChannelTitle,
                     duration: video.Duration.GetValueOrDefault(TimeSpan.Zero),
-                    imageUrl: video.Thumbnails.MinBy(thumbnail => thumbnail.Resolution.Area)?.Url,
+                    imageUrl: GetLowResThumbnailUrl(video.Thumbnails),
                     id: video.Id,
                     items: new()
                     {
@@ -220,7 +230,7 @@ internal partial class YouTubeWrapper
                     title: video.Title,
                     artists: video.Author.ChannelTitle,
                     duration: video.Duration.GetValueOrDefault(TimeSpan.Zero),
-                    imageUrl: video.Thumbnails.MinBy(thumbnail => thumbnail.Resolution.Area)?.Url,
+                    imageUrl: GetLowResThumbnailUrl(video.Thumbnails),
                     id: video.Id,
                     items: new()
                     {
@@ -247,7 +257,7 @@ internal partial class YouTubeWrapper
             title: searchResult.Title,
             artists: searchResult.Artists,
             duration: searchResult.Duration,
-            artworkUrl: saveThumbnail ? video.Thumbnails.MaxBy(thumbnail => thumbnail.Resolution.Area)?.Url : null,
+            artworkUrl: saveThumbnail ? GetHighResThumbnailUrl(video.Thumbnails) : null,
             isExplicit: false,
             releasedAt: video.UploadDate.DateTime,
             album: searchResult.GetItem<string?>("PlaylistName"),

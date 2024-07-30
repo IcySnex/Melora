@@ -58,6 +58,16 @@ internal partial class SpotifyWrapper
     }
 
 
+    public static string? GetLowResArtworkUrl(
+        IEnumerable<Image> artworks) =>
+        artworks.MinBy(artwork => artwork.Width * artwork.Height)?.Url;
+
+
+    public static string? GetHighResArtworklUrl(
+        IEnumerable<Image> artworks) =>
+        artworks.MaxBy(artwork => artwork.Width * artwork.Height)?.Url;
+
+
     readonly PlatformSupportPluginConfig config;
     readonly ILogger<PlatformSupportPlugin>? logger;
 
@@ -117,7 +127,7 @@ internal partial class SpotifyWrapper
             title: track.Name,
             artists: string.Join(", ", track.Artists.Select(artist => artist.Name)),
             duration: TimeSpan.FromMilliseconds(track.DurationMs),
-            imageUrl: track.Album.Images.MinBy(image => image.Width * image.Height)?.Url,
+            imageUrl: GetLowResArtworkUrl(track.Album.Images),
             id: track.Id,
             items: new()
             {
@@ -128,7 +138,7 @@ internal partial class SpotifyWrapper
                 { "AlbumName", track.Album.Name },
                 { "AlbumTotalTracks", track.Album.TotalTracks },
                 { "TrackNumber", track.TrackNumber },
-                { "FullArtwork", track.Album.Images.MaxBy(image => image.Width * image.Height)?.Url }
+                { "FullArtwork", GetHighResArtworklUrl(track.Album.Images) }
             });
         return result;
     }
@@ -147,8 +157,8 @@ internal partial class SpotifyWrapper
         int totalTracksToBuffer = Math.Min(config.SearchResultsLimit.GetValueOrDefault(int.MaxValue), album.Tracks.Total.GetValueOrDefault(0));
         string leftTracksToBuffer = totalTracksToBuffer != 0 ? $"/{totalTracksToBuffer}" : string.Empty;
 
-        string? albumArtwork = album.Images.MinBy(image => image.Width * image.Height)?.Url;
-        string? albumFullArtwork = album.Images.MaxBy(image => image.Width * image.Height)?.Url;
+        string? albumArtwork = GetLowResArtworkUrl(album.Images);
+        string? albumFullArtwork = GetHighResArtworklUrl(album.Images);
 
         return await SearchResult.BufferAsync(
             tracks,
@@ -207,7 +217,7 @@ internal partial class SpotifyWrapper
                     title: track.Name,
                     artists: string.Join(", ", track.Artists.Select(artist => artist.Name)),
                     duration: TimeSpan.FromMilliseconds(track.DurationMs),
-                    imageUrl: track.Album.Images.MinBy(image => image.Width * image.Height)?.Url,
+                    imageUrl: GetLowResArtworkUrl(track.Album.Images),
                     id: track.Id,
                     items: new()
                     {
@@ -218,7 +228,7 @@ internal partial class SpotifyWrapper
                         { "AlbumName", config.GetItem<bool>("Playlist As Album") ? playlist.Name : track.Album.Name },
                         { "AlbumTotalTracks", track.Album.TotalTracks },
                         { "TrackNumber", track.TrackNumber },
-                        { "FullArtwork", track.Album.Images.MaxBy(image => image.Width * image.Height)?.Url }
+                        { "FullArtwork", GetHighResArtworklUrl(track.Album.Images) }
                     });
             },
             cancellationToken);
@@ -241,7 +251,7 @@ internal partial class SpotifyWrapper
             title: track.Name,
             artists: string.Join(", ", track.Artists.Select(artist => artist.Name)),
             duration: TimeSpan.FromMilliseconds(track.DurationMs),
-            imageUrl: track.Album.Images.MinBy(image => image.Width * image.Height)?.Url,
+            imageUrl: GetLowResArtworkUrl(track.Album.Images),
             id: track.Id,
             items: new()
             {
@@ -252,7 +262,7 @@ internal partial class SpotifyWrapper
                 { "AlbumName", config.GetItem<bool>("Playlist As Album") ? albumName : track.Album.Name },
                 { "AlbumTotalTracks", track.Album.TotalTracks },
                 { "TrackNumber", track.TrackNumber },
-                { "FullArtwork", track.Album.Images.MaxBy(image => image.Width * image.Height)?.Url }
+                { "FullArtwork", GetHighResArtworklUrl(track.Album.Images) }
             }));
         return config.SearchResultsLimit.HasValue ? results.Take(config.SearchResultsLimit.Value) : results;
     }
@@ -278,7 +288,7 @@ internal partial class SpotifyWrapper
             title: track.Name,
             artists: string.Join(", ", track.Artists.Select(artist => artist.Name)),
             duration: TimeSpan.FromMilliseconds(track.DurationMs),
-            imageUrl: track.Album.Images.MinBy(image => image.Width * image.Height)?.Url,
+            imageUrl: GetLowResArtworkUrl(track.Album.Images),
             id: track.Id,
             items: new()
             {
@@ -289,7 +299,7 @@ internal partial class SpotifyWrapper
                 { "AlbumName", track.Album.Name },
                 { "AlbumTotalTracks", track.Album.TotalTracks },
                 { "TrackNumber", track.TrackNumber },
-                { "FullArtwork", track.Album.Images.MaxBy(image => image.Width * image.Height)?.Url }
+                { "FullArtwork", GetHighResArtworklUrl(track.Album.Images) }
             }));
         return results;
     }

@@ -60,6 +60,16 @@ internal partial class YouTubeMusicWrapper
     }
 
 
+    public static string? GetLowResThumbnailUrl(
+        IEnumerable<Thumbnail> thumbnails) =>
+        thumbnails.MinBy(thumbnail => thumbnail.Width * thumbnail.Height)?.Url;
+
+
+    public static string? GetHighResThumbnailUrl(
+        IEnumerable<Thumbnail> thumbnails) =>
+        thumbnails.MaxBy(thumbnail => thumbnail.Width * thumbnail.Height)?.Url;
+
+
     readonly PlatformSupportPluginConfig config;
     readonly ILogger<PlatformSupportPlugin>? logger;
 
@@ -116,7 +126,7 @@ internal partial class YouTubeMusicWrapper
             title: songVideo.Name,
             artists: string.Join(", ", songVideo.Artists.Select(artist => artist.Name)),
             duration: songVideo.Duration,
-            imageUrl: songVideo.Thumbnails.MinBy(thumbnail => thumbnail.Width * thumbnail.Height)?.Url,
+            imageUrl: GetLowResThumbnailUrl(songVideo.Thumbnails),
             id: songVideo.Id,
             items: new()
             {
@@ -140,7 +150,7 @@ internal partial class YouTubeMusicWrapper
         AlbumInfo album = await client.GetAlbumInfoAsync(browseId, cancellationToken);
 
         string albumArtists = string.Join(", ", album.Artists.Select(artist => artist.Name));
-        string? albumThumbnail = album.Thumbnails.MinBy(thumbnail => thumbnail.Width * thumbnail.Height)?.Url;
+        string? albumThumbnail = GetLowResThumbnailUrl(album.Thumbnails);
 
         IEnumerable<SearchResult> results = album.Songs
             .Where(song => song.Id is not null)
@@ -179,7 +189,7 @@ internal partial class YouTubeMusicWrapper
                 title: song.Name,
                 artists: string.Join(", ", song.Artists.Select(artist => artist.Name)),
                 duration: song.Duration,
-                imageUrl: song.Thumbnails.MinBy(thumbnail => thumbnail.Width * thumbnail.Height)?.Url,
+                imageUrl: GetLowResThumbnailUrl(song.Thumbnails),
                 id: song.Id!,
                 items: new()
                 {
@@ -214,7 +224,7 @@ internal partial class YouTubeMusicWrapper
                 title: song.Name,
                 artists: string.Join(", ", song.Artists.Select(artist => artist.Name)),
                 duration: song.Duration,
-                imageUrl: song.Thumbnails.MinBy(thumbnail => thumbnail.Width * thumbnail.Height)?.Url,
+                imageUrl: GetLowResThumbnailUrl(song.Thumbnails),
                 id: song.Id!,
                 items: new()
                 {
@@ -240,7 +250,7 @@ internal partial class YouTubeMusicWrapper
             title: song.Name,
             artists: string.Join(", ", song.Artists.Select(artist => artist.Name)),
             duration: song.Duration,
-            imageUrl: song.Thumbnails.MinBy(thumbnail => thumbnail.Width * thumbnail.Height)?.Url,
+            imageUrl: GetLowResThumbnailUrl(song.Thumbnails),
             id: song.Id,
             items: new()
             {
@@ -272,7 +282,7 @@ internal partial class YouTubeMusicWrapper
             title: searchResult.Title,
             artists: searchResult.Artists,
             duration: searchResult.Duration,
-            artworkUrl: saveArtwork ? songVideo.Thumbnails.MaxBy(thumbnail => thumbnail.Width * thumbnail.Height)?.Url : null,
+            artworkUrl: saveArtwork ? GetHighResThumbnailUrl(songVideo.Thumbnails) : null,
             isExplicit: searchResult.GetItem<bool>("Explicit"),
             releasedAt: songVideo.UploadedAt,
             album: searchResult.GetItem<string?>("AlbumName"),
