@@ -50,6 +50,7 @@ public partial class App : Application
                 services.AddSingleton<PluginManager<PlatformSupportPlugin>>();
                 services.AddSingleton<Navigation>();
                 services.AddSingleton<JsonConverter>();
+                services.AddSingleton<MediaEncoder>();
                 services.AddSingleton(provider => new GeniusClient(
                     provider.GetRequiredService<Config>().Lyrics.GeniusAccessToken,
                     provider.GetRequiredService<ILogger<GeniusClient>>()));

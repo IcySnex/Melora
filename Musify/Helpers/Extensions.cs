@@ -35,4 +35,14 @@ public static class Extensions
         if (ex.InnerException is not null)
             FormatException(builder, ex.InnerException, level + 1);
     }
+
+
+    public static string ToLegitFileName(
+        this string input)
+    {
+        foreach (char c in Path.GetInvalidFileNameChars())
+            input = input.Replace(c, '_');
+
+        return input;
+    }
 }

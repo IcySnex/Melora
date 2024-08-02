@@ -49,27 +49,35 @@ public sealed partial class DownloadsView : Page
     }
 
 
-    async void OnDownloadClick(object sender, RoutedEventArgs _)
+    void OnCancelClick(object sender, RoutedEventArgs _)
     {
         DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
-        await viewModel.DownloadAsync(download);
+        download.CancellationSource.Cancel();
     }
 
-    async void OnTrackInfoClick(object sender, RoutedEventArgs _)
+
+    void OnDownloadClick(object sender, RoutedEventArgs _)
     {
         DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
-        await viewModel.ShowTrackInfoAsync(download);
+        viewModel.DownloadCommand.Execute(download);
+    }
+    
+    void OnTrackInfoClick(object sender, RoutedEventArgs _)
+    {
+        DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
+        viewModel.ShowTrackInfoCommand.Execute(download);
     }
 
-    async void OnOpenSourceClick(object sender, RoutedEventArgs _)
+
+    void OnOpenSourceClick(object sender, RoutedEventArgs _)
     {
         DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
-        await viewModel.OpenTrackSourceAsync(download);
+        viewModel.OpenTrackSourceCommand.Execute(download);
     }
 
     void OnRemoveClick(object sender, RoutedEventArgs _)
     {
         DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
-        viewModel.Remove(download);
+        viewModel.RemoveCommand.Execute(download);
     }
 }

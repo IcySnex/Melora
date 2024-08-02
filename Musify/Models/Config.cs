@@ -50,7 +50,7 @@ public partial class ConfigPaths : ObservableObject
     string downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 
     [ObservableProperty]
-    string filename = "{artist} - {title}";
+    string filename = "{artists} - {title}";
 
     [ObservableProperty]
     string fFMPEGLocation = "FFMPEG.exe";

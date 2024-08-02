@@ -223,30 +223,6 @@
                         </ComboBox>
                     </ContentControl>
 
-                    <!--  Show Spotify tracks  -->
-                    <ContentControl
-                        hlp:Attributes.Description="Whether to show Spotify tracks in the download queue"
-                        hlp:Attributes.Title="Show Spotify tracks"
-                        Template="{StaticResource SettingsCard}">
-                        <ToggleSwitch />
-                    </ContentControl>
-
-                    <!--  Show YouTube tracks  -->
-                    <ContentControl
-                        hlp:Attributes.Description="Whether to show YouTube tracks in the download queue"
-                        hlp:Attributes.Title="Show YouTube tracks"
-                        Template="{StaticResource SettingsCard}">
-                        <ToggleSwitch />
-                    </ContentControl>
-
-                    <!--  Show YouTube Music tracks  -->
-                    <ContentControl
-                        hlp:Attributes.Description="Whether to show YouTube Music tracks in the download queue"
-                        hlp:Attributes.Title="Show YouTube Music tracks"
-                        Template="{StaticResource SettingsCard}">
-                        <ToggleSwitch />
-                    </ContentControl>
-
                     <!--  Sorting  -->
                     <ContentControl
                         hlp:Attributes.Description="The sorting of downloads"
@@ -289,14 +265,14 @@
                                 Height="32"
                                 Padding="0"
                                 Command="{x:Bind viewModel.SelectPathsDownloadLocationCommand}">
-                                <FontIcon Glyph="&#xe8a7;" />
+                                <FontIcon FontSize="17" Glyph="&#xe8a7;" />
                             </Button>
                         </StackPanel>
                     </ContentControl>
 
                     <!--  Filename  -->
                     <ContentControl
-                        hlp:Attributes.Description="Replacements: {title}, {artist}, {album}, {release} - Use '\' to create a Folder"
+                        hlp:Attributes.Description="Replacements: {title}, {artists}, {album}, {release} - Use '\' to create a Folder"
                         hlp:Attributes.Title="Filename"
                         Template="{StaticResource SettingsCard}">
                         <TextBox Width="300" Text="{x:Bind viewModel.Config.Paths.Filename, Mode=TwoWay}" />
@@ -314,7 +290,7 @@
                                 Height="32"
                                 Padding="0"
                                 Command="{x:Bind viewModel.SelectPathsFFMPEGLocationCommand}">
-                                <FontIcon Glyph="&#xe8a7;" />
+                                <FontIcon FontSize="17" Glyph="&#xe8a7;" />
                             </Button>
                         </StackPanel>
                     </ContentControl>

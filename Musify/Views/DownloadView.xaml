@@ -90,9 +90,20 @@
                             <Button.Flyout>
                                 <MenuFlyout>
                                     <MenuFlyoutItem
+                                        Click="OnCancelClick"
+                                        Text="Cancel"
+                                        ToolTipService.ToolTip="Cancel download"
+                                        Visibility="{x:Bind IsIdle, Mode=OneWay, Converter={StaticResource InverseBoolVisibilityConverter}}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xe711;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+
+                                    <MenuFlyoutItem
                                         Click="OnDownloadClick"
                                         Text="Download"
-                                        ToolTipService.ToolTip="Download now">
+                                        ToolTipService.ToolTip="Download now"
+                                        Visibility="{x:Bind IsIdle, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xe896;" />
                                         </MenuFlyoutItem.Icon>
@@ -100,25 +111,32 @@
                                     <MenuFlyoutItem
                                         Click="OnTrackInfoClick"
                                         Text="Track Info"
-                                        ToolTipService.ToolTip="View &amp; edit track info">
+                                        ToolTipService.ToolTip="View &amp; edit track info"
+                                        Visibility="{x:Bind IsIdle, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xe90b;" />
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
-                                    <MenuFlyoutItem
-                                        Click="OnOpenSourceClick"
-                                        Text="Open source"
-                                        ToolTipService.ToolTip="Open on source platform">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="&#xe71b;" />
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
+
+                                    <MenuFlyoutSeparator />
+
                                     <MenuFlyoutItem
                                         Click="OnRemoveClick"
                                         Text="Remove"
                                         ToolTipService.ToolTip="Remove from downloads">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xe74d;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+
+                                    <MenuFlyoutSeparator />
+
+                                    <MenuFlyoutItem
+                                        Click="OnOpenSourceClick"
+                                        Text="Open source"
+                                        ToolTipService.ToolTip="Open on source platform">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xe71b;" />
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem IsEnabled="False" Text="{x:Bind Track.Plugin.Name}">
@@ -223,13 +241,25 @@
                 <FontIcon FontSize="17" Glyph="&#xe896;" />
             </Button>
             <Button
+                Grid.Column="8"
+                Width="32"
+                Height="32"
+                Padding="4"
+                Command="{x:Bind viewModel.DownloadAllCancelCommand}"
+                Style="{StaticResource AccentButtonStyle}"
+                ToolTipService.ToolTip="Cancel all downloads"
+                Visibility="{x:Bind viewModel.DownloadAllCommand.CanBeCanceled, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+                <FontIcon FontSize="17" Glyph="&#xe711;" />
+            </Button>
+
+            <Button
                 Grid.Column="10"
                 Width="32"
                 Height="32"
                 Padding="4"
                 Command="{x:Bind viewModel.RemoveAllCommand}"
                 Style="{StaticResource AccentButtonStyle}"
-                ToolTipService.ToolTip="Remove all">
+                ToolTipService.ToolTip="Remove all downloads">
                 <FontIcon FontSize="17" Glyph="&#xe74d;" />
             </Button>
         </Grid>
