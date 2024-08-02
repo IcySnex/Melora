@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using YouTubeMusicAPI.Client;
 using YouTubeMusicAPI.Models;
 using YouTubeMusicAPI.Models.Info;
+using YoutubeExplode.Videos.Streams;
+using YoutubeExplode;
 
 namespace Musify.Plugins.YouTube.Internal;
 
@@ -74,6 +76,7 @@ internal partial class YouTubeMusicWrapper
     readonly ILogger<PlatformSupportPlugin>? logger;
 
     YouTubeMusicClient client = default!;
+    YoutubeClient youTubeClient = default!;
     GeniusClient geniusClient = default!;
 
     public YouTubeMusicWrapper(
@@ -85,6 +88,7 @@ internal partial class YouTubeMusicWrapper
 
         AuthenticateClient();
         AuthenticateGeniusClient();
+        AuthenticateYouTubeClient();
 
         logger?.LogInformation("[YouTubeMusicWrapper-.ctor] YouTubeMusicWrapper has been initialized");
     }
@@ -96,7 +100,7 @@ internal partial class YouTubeMusicWrapper
 
         client = logger is null ? new(geographicalLocation) : new(logger, geographicalLocation);
 
-        logger?.LogInformation("[YouTubeMusicWrapper-LoadClient] Client has been loaded.");
+        logger?.LogInformation("[YouTubeMusicWrapper-AuthenticateClient] Client has been authenticated.");
     }
 
     public void AuthenticateGeniusClient()
@@ -109,6 +113,13 @@ internal partial class YouTubeMusicWrapper
             geniusClient.AccessToken = geniusAccessToken;
 
         logger?.LogInformation("[SpotifyWrapper-AuthenticateGeniusClient] Genius client has been authenticated.");
+    }
+
+    public void AuthenticateYouTubeClient()
+    {
+        youTubeClient = new();
+
+        logger?.LogInformation("[SpotifyWrapper-AuthenticateYouTubeClient] YouTube client has been authenticated.");
     }
 
 
@@ -295,7 +306,6 @@ internal partial class YouTubeMusicWrapper
             plugin: responsiblePlugin);
     }
 
-
     async Task<(string? lyrics, string? genre)> GetGeniusTrackInfoAsync(
         string title,
         string artist,
@@ -311,5 +321,25 @@ internal partial class YouTubeMusicWrapper
             return (null, null);
 
         return (saveLyrics ? trackInfo.Lyrics : null, fetchGenre ? trackInfo.Genres?.FirstOrDefault() : null);
+    }
+
+
+    public async Task<Stream> GetStreamAsync(
+        string id,
+        CancellationToken cancellationToken = default)
+    {
+        logger?.LogInformation("[YouTubeMusicWrapper-GetStreamAsync] Getting songVideo stream...");
+        StreamManifest manifest = await youTubeClient.Videos.Streams.GetManifestAsync(id, cancellationToken);
+
+        AudioOnlyStreamInfo? stream = manifest
+            .GetAudioOnlyStreams()
+            .MinBy(streamInfo => Math.Abs((int)config.Quality - streamInfo.Bitrate.KiloBitsPerSecond));
+        if (stream is null)
+        {
+            logger?.LogError("[YouTubeMusicWrapper-GetStreamAsync] Could not find any suitable audio only streams in the streams manifest");
+            throw new Exception("Could not find any suitable audio only streams in the streams manifest.");
+        }
+
+        return await youTubeClient.Videos.Streams.GetAsync(stream, cancellationToken);
     }
 }
