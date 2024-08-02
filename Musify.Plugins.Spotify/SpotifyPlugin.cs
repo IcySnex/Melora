@@ -126,8 +126,6 @@ public class SpotifyPlugin : PlatformSupportPlugin
 
     public override Task<Stream> GetStreamAsync(
         DownloadableTrack track,
-        CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
+        CancellationToken cancellationToken = default) =>
+        wrapper.GetStreamAsync(track.Id, cancellationToken);
 }

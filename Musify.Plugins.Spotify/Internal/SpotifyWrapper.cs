@@ -3,6 +3,7 @@ using GeniusAPI.Models;
 using Microsoft.Extensions.Logging;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Models;
+using Newtonsoft.Json;
 using SpotifyAPI.Web;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -73,6 +74,7 @@ internal partial class SpotifyWrapper
 
     SpotifyClient client = default!;
     GeniusClient geniusClient = default!;
+    HttpClient httpClient = default!;
 
     public SpotifyWrapper(
         PlatformSupportPluginConfig config,
@@ -83,6 +85,7 @@ internal partial class SpotifyWrapper
 
         AuthenticateClient();
         AuthenticateGeniusClient();
+        AuthenticatsHttpClient();
 
         logger?.LogInformation("[SpotifyWrapper-.ctor] SpotifyWrapper has been initialized");
     }
@@ -110,6 +113,15 @@ internal partial class SpotifyWrapper
             geniusClient.AccessToken = geniusAccessToken;
 
         logger?.LogInformation("[SpotifyWrapper-AuthenticateGeniusClient] Genius client has been authenticated.");
+    }
+
+    public void AuthenticatsHttpClient()
+    {
+        httpClient = new();
+        httpClient.DefaultRequestHeaders.Add("Origin", "https://spotifydown.com");
+        httpClient.DefaultRequestHeaders.Add("Referer", "https://spotifydown.com/");
+
+        logger?.LogInformation("[SpotifyWrapper-AuthenticatsHttpClient] HTTP client has been authenticated.");
     }
 
 
@@ -337,7 +349,6 @@ internal partial class SpotifyWrapper
             plugin: responsiblePlugin);
     }
 
-
     readonly Dictionary<string, string?> artistGenreCache = [];
 
     async Task<string?> GetArtistGenreAsync(
@@ -371,5 +382,24 @@ internal partial class SpotifyWrapper
             return (null, null);
 
         return (saveLyrics ? trackInfo.Lyrics : null, preferGeniusGenre ? trackInfo.Genres?.FirstOrDefault() : null);
+    }
+
+
+    public async Task<Stream> GetStreamAsync(
+        string id,
+        CancellationToken cancellationToken = default)
+    {
+        logger?.LogInformation("[SpotifyWrapper-GetStreamAsync] Getting track stream...");
+        string url = $"https://api.spotifydown.com/download/{id}";
+
+        string response = await httpClient.GetStringAsync(url, cancellationToken);
+        SpotifyDownDownload downloadInfo = JsonConvert.DeserializeObject<SpotifyDownDownload>(response) ?? throw new Exception("Deserialized SpotifyDown response was null.");
+
+        if (!downloadInfo.IsSuccessful)
+            throw new Exception($"SpotifyDown returned unsuccessful status. Error message: {downloadInfo.ErrorMessage}.");
+        if (!downloadInfo.MetaData.IsSuccessful)
+            throw new Exception($"SpotifyDown returned unsuccessful meta data status.");
+
+        return await httpClient.GetStreamAsync(downloadInfo.StreamUrl, cancellationToken);
     }
 }
