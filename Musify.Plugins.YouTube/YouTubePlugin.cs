@@ -100,8 +100,6 @@ public class YouTubePlugin : PlatformSupportPlugin
 
     public override Task<Stream> GetStreamAsync(
         DownloadableTrack track,
-        CancellationToken cancellationToken = default)
-    {
-        return wrapper.GetStreamAsync(track.Id, cancellationToken);
-    }
+        CancellationToken cancellationToken = default) =>
+        wrapper.GetStreamAsync(track.Id, cancellationToken);
 }

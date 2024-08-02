@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Musify.Plugins.Abstract;
-using Musify.Plugins.Enums;
 using Musify.Plugins.Models;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -102,6 +101,8 @@ internal partial class YouTubeWrapper
     public void AuthenticateClient()
     {
         client = new();
+
+        logger?.LogInformation("[YouTubeWrapper-AuthenticateClient] Client has been authenticated.");
     }
 
 
