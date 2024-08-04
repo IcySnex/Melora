@@ -4,6 +4,7 @@ using Musify.Models;
 using Musify.Plugins;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Exceptions;
+using Musify.Plugins.Models;
 using System.Collections.ObjectModel;
 using System.Reflection;
 
@@ -45,16 +46,23 @@ public class PluginManager<T> where T : IPlugin
             if (!typeof(T).IsAssignableFrom(type))
                 continue;
 
-            bool configSaved = config.PluginConfigs.TryGetValue(type.Name, out IPluginConfig? pluginConfig);
+            Type configType = type switch
+            {
+                _ when typeof(PlatformSupportPlugin).IsAssignableFrom(type) => typeof(PlatformSupportPluginConfig),
+                _ when typeof(MetadataPlugin).IsAssignableFrom(type) => typeof(MetadataPluginConfig),
+                _ => typeof(IPluginConfig)
+            };
+            bool isConfigSaved = config.PluginConfigs.TryGetValue(type.Name, out IPluginConfig? pluginConfig) && pluginConfig.GetType() == configType;
+
             ConstructorInfo? constructor = null;
             object?[]? constructorArgs = null;
 
-            if (configSaved && type.GetConstructor([typeof(IPluginConfig), typeof(ILogger<T>)]) is ConstructorInfo configLoggerContructor)
+            if (isConfigSaved && type.GetConstructor([configType, typeof(ILogger<T>)]) is ConstructorInfo configLoggerContructor)
             {
                 constructor = configLoggerContructor;
                 constructorArgs = [pluginConfig, App.Provider.GetRequiredService<ILogger<T>>()];
             }
-            else if (configSaved && type.GetConstructor([typeof(IPluginConfig)]) is ConstructorInfo configContructor)
+            else if (isConfigSaved && type.GetConstructor([configType]) is ConstructorInfo configContructor)
             {
                 constructor = configContructor;
                 constructorArgs = [pluginConfig];

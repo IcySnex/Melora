@@ -6,57 +6,36 @@ namespace Musify.Plugins.Abstract;
 /// <summary>
 /// Represents a plugin for additional platform support.
 /// </summary>
-public abstract class PlatformSupportPlugin : IPlugin
+/// <remarks>
+/// Creates a new PlatformSupportPlugin.
+/// </remarks>
+/// <param name="name">The name of the plugin.</param>
+/// <param name="iconPathData">The path date for the plugin icon.</param>
+/// <param name="config">The config the plugin gets initialized with.</param>
+/// <param name="defaultConfig">The function to create a default config.</param>
+/// <param name="logger">An optional logger.</param>
+public abstract class PlatformSupportPlugin(
+    string name,
+    string iconPathData,
+    PlatformSupportPluginConfig? config,
+    Func<PlatformSupportPluginConfig> defaultConfig,
+    ILogger<PlatformSupportPlugin>? logger = null) : IPlugin
 {
-    /// <summary>
-    /// Creates a new PlatformSupportPlugin.
-    /// </summary>
-    /// <param name="name">The name of the plugin.</param>
-    /// <param name="iconPathData">The path date for the plugin icon.</param>
-    /// <param name="config">The config the plugin gets initialized with.</param>
-    /// <param name="defaultConfig">The function to create a default config.</param>
-    /// <param name="logger">An optional logger.</param>
-    public PlatformSupportPlugin(
-        string name,
-        string iconPathData,
-        IPluginConfig? config,
-        Func<PlatformSupportPluginConfig> defaultConfig,
-        ILogger<PlatformSupportPlugin>? logger = null)
-    {
-        this.Name = name;
-        this.IconPathData = iconPathData;
-        this.defaultConfig = defaultConfig;
-        this.logger = logger;
-
-
-        if (config is PlatformSupportPluginConfig platformSupportConfig)
-        {
-            Config = platformSupportConfig;
-            return;
-        }
-        PlatformSupportPluginConfig defaultPlatformSupportConfig = defaultConfig.Invoke();
-        if (config is not null)
-            defaultPlatformSupportConfig.Items = config.Items;
-
-        Config = defaultPlatformSupportConfig;
-    }
-
-
     /// <summary>
     /// Generic logger used to log stuff lol.
     /// </summary>
-    readonly protected ILogger<PlatformSupportPlugin>? logger;
+    readonly protected ILogger<PlatformSupportPlugin>? logger = logger;
 
 
     /// <summary>
     /// The name of the plugin.
     /// </summary>
-    public string Name { get; }
+    public string Name { get; } = name;
 
     /// <summary>
     /// The path date for the plugin icon.
     /// </summary>
-    public string IconPathData { get; }
+    public string IconPathData { get; } = iconPathData;
 
 
     /// <summary>
@@ -70,12 +49,12 @@ public abstract class PlatformSupportPlugin : IPlugin
         GetDefaultConfig();
 
 
-    readonly Func<PlatformSupportPluginConfig> defaultConfig;
+    readonly Func<PlatformSupportPluginConfig> defaultConfig = defaultConfig;
 
     /// <summary>
     /// The config for the plugin.
     /// </summary>
-    public PlatformSupportPluginConfig Config { get; }
+    public PlatformSupportPluginConfig Config { get; } = config ?? defaultConfig.Invoke();
 
     IPluginConfig IPlugin.Config => Config;
 
