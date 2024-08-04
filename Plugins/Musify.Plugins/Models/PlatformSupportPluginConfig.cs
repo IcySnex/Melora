@@ -7,11 +7,11 @@ namespace Musify.Plugins.Models;
 /// <summary>
 /// Describes a configuration for a platfrom support plugin
 /// </summary>
-/// <remarks>
-/// Creates a new PlatformSupportPluginConfig
-/// </remarks>
 public partial class PlatformSupportPluginConfig : ObservableObject, IPluginConfig
 {
+    /// <summary>
+    /// Creates a new PlatformSupportPluginConfig
+    /// </summary>
     /// <param name="items">Additional config items for the plugin.</param>
     /// <param name="quality">The quality in which tracks get downloaded.</param>
     /// <param name="format">The format in which tracks get downloaded.</param>

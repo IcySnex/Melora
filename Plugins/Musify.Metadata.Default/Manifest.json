@@ -1,0 +1,8 @@
+{
+  "Name": "Default",
+  "Description": "Writes the default metadata for any downloaded track.",
+  "Author": "IcySnex",
+  "Version": "1.0.0",
+  "EntryPoint": "Musify.Metadata.Default.dll",
+  "Dependencies": []
+}
