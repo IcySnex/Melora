@@ -6,21 +6,21 @@ namespace Musify.Plugins.Abstract;
 /// <summary>
 /// Represents a plugin which writes track metadata after downloading.
 /// </summary>
-public abstract class MetadatePlugin : IPlugin
+public abstract class MetadataPlugin : IPlugin
 {
     /// <summary>
-    /// Creates a new MetadatePlugin.
+    /// Creates a new MetadataPlugin.
     /// </summary>
     /// <param name="name">The name of the plugin.</param>
     /// <param name="iconPathData">The path date for the plugin icon.</param>
     /// <param name="config">The config the plugin gets initialized with.</param>
     /// <param name="defaultConfig">The function to create a default config.</param>
     /// <param name="logger">An optional logger.</param>
-    public MetadatePlugin(
+    public MetadataPlugin(
         string name,
         string iconPathData,
         IPluginConfig? config,
-        Func<MetadatePluginConfig> defaultConfig,
+        Func<MetadataPluginConfig> defaultConfig,
         ILogger<PlatformSupportPlugin>? logger = null)
     {
         this.Name = name;
@@ -29,12 +29,12 @@ public abstract class MetadatePlugin : IPlugin
         this.logger = logger;
 
 
-        if (config is MetadatePluginConfig metadataConfig)
+        if (config is MetadataPluginConfig metadataConfig)
         {
             Config = metadataConfig;
             return;
         }
-        MetadatePluginConfig defaultMetdataConfig = defaultConfig.Invoke();
+        MetadataPluginConfig defaultMetdataConfig = defaultConfig.Invoke();
         if (config is not null)
             defaultMetdataConfig.Items = config.Items;
 
@@ -63,19 +63,19 @@ public abstract class MetadatePlugin : IPlugin
     /// Gets the default config of the plugin.
     /// </summary>
     /// <returns>A new PlatformSupportPluginConfig</returns>
-    public MetadatePluginConfig GetDefaultConfig() =>
+    public MetadataPluginConfig GetDefaultConfig() =>
         defaultConfig.Invoke();
 
     IPluginConfig IPlugin.GetDefaultConfig() =>
         GetDefaultConfig();
 
 
-    readonly Func<MetadatePluginConfig> defaultConfig;
+    readonly Func<MetadataPluginConfig> defaultConfig;
 
     /// <summary>
     /// The config for the plugin.
     /// </summary>
-    public MetadatePluginConfig Config { get; }
+    public MetadataPluginConfig Config { get; }
 
     IPluginConfig IPlugin.Config => Config;
 }
