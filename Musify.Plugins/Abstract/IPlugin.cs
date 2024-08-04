@@ -1,6 +1,4 @@
-﻿using Musify.Plugins.Enums;
-
-namespace Musify.Plugins.Abstract;
+﻿namespace Musify.Plugins.Abstract;
 
 /// <summary>
 /// Represents a plugin.
@@ -11,11 +9,6 @@ public interface IPlugin
     /// The name the plugin.
     /// </summary>
     string Name { get; }
-
-    /// <summary>
-    /// The kind of the plugin.
-    /// </summary>
-    PluginKind Kind { get; }
 
     /// <summary>
     /// The path date for the plugin icon.

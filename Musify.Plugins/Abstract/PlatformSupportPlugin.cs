@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Musify.Plugins.Enums;
 using Musify.Plugins.Models;
 
 namespace Musify.Plugins.Abstract;
@@ -53,11 +52,6 @@ public abstract class PlatformSupportPlugin : IPlugin
     /// The name of the plugin.
     /// </summary>
     public string Name { get; }
-
-    /// <summary>
-    /// The kind of the plugin.
-    /// </summary>
-    public PluginKind Kind { get; } = PluginKind.PlatformSupport;
 
     /// <summary>
     /// The path date for the plugin icon.
