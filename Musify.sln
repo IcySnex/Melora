@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Musify.PlatformSupport.Spot
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Musify.PlatformSupport.YouTube", "Plugins\Musify.PlatformSupport.YouTube\Musify.PlatformSupport.YouTube.csproj", "{1BCC00C4-70C3-4A0A-BB85-A6DE8343186B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Musify.MetaData.Default", "Plugins\Musify.MetaData.Default\Musify.MetaData.Default.csproj", "{7F5E2C60-5C91-40AB-8754-5B18E84E076B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Musify.Metadata.Default", "Plugins\Musify.Metadata.Default\Musify.Metadata.Default.csproj", "{7F5E2C60-5C91-40AB-8754-5B18E84E076B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
