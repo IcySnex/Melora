@@ -1,6 +1,5 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Musify.Plugins.Models;
 using Musify.ViewModels;
 
 namespace Musify.Views;

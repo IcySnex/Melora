@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Musify.Models;
 using Musify.Plugins.Abstract;
-using Musify.Plugins.Models;
 using Musify.Services;
 using Musify.ViewModels;
 
@@ -61,7 +60,7 @@ public sealed partial class DownloadsView : Page
         DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
         viewModel.DownloadCommand.Execute(download);
     }
-    
+
     void OnTrackInfoClick(object sender, RoutedEventArgs _)
     {
         DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;

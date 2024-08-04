@@ -81,7 +81,7 @@ public sealed class Notification : Control
 
     public static readonly DependencyProperty MessageProperty = DependencyProperty.Register(
         "Message", typeof(string), typeof(Notification), new PropertyMetadata("This is the message of a notification."));
-    
+
 
     public NotificationLevel Level
     {
@@ -91,7 +91,7 @@ public sealed class Notification : Control
 
     public static readonly DependencyProperty LevelProperty = DependencyProperty.Register(
         "Level", typeof(NotificationLevel), typeof(Notification), new PropertyMetadata(NotificationLevel.Information, OnLevelChanged));
-    
+
 
     public TimeSpan? CloseAfter
     {

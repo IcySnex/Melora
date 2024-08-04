@@ -4,7 +4,6 @@ using Musify.Models;
 using Musify.Plugins;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Exceptions;
-using Newtonsoft.Json.Linq;
 using System.Collections.ObjectModel;
 using System.Reflection;
 

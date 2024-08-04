@@ -24,7 +24,7 @@ public class Navigation
         {
             if (e.SelectedItemContainer.Tag is PlatformSupportPlugin plugin)
             {
-                Navigate(plugin.Name, () => 
+                Navigate(plugin.Name, () =>
                 {
                     PlatformViewModel viewModel = App.Provider.GetRequiredService<PlatformViewModel>();
                     viewModel.Plugin = plugin;

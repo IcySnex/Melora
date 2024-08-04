@@ -4,19 +4,19 @@ using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
+using Musify.Controls;
+using Musify.Enums;
 using Musify.Helpers;
+using Musify.Models;
+using Musify.Plugins.Abstract;
+using Musify.Services;
 using Windows.Foundation;
 using WinRT.Interop;
-using Musify.Models;
-using Musify.Services;
-using Microsoft.UI.Xaml.Input;
-using Musify.Enums;
-using Musify.Controls;
-using Musify.Plugins.Abstract;
-using Microsoft.UI.Xaml.Markup;
 
 namespace Musify.Views;
 

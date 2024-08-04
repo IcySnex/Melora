@@ -271,7 +271,7 @@ public class ObservableRangeCollection<T> : Collection<T>, INotifyCollectionChan
             Refresh();
         }
     }
-    
+
 
     private bool descending = false;
 

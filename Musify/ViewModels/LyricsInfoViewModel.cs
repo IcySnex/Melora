@@ -1,13 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using GeniusAPI.Models;
 using Microsoft.Extensions.Logging;
-using Musify.Views;
-using Windows.Storage.Pickers;
-using Windows.Storage;
-using Windows.ApplicationModel.DataTransfer;
 using Musify.Enums;
 using Musify.Helpers;
-using GeniusAPI.Models;
+using Musify.Views;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 
 namespace Musify.ViewModels;
 
