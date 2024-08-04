@@ -89,6 +89,8 @@ public sealed partial class MainView : Window
         string jsonConfig = jsonConverter.ToString(config);
         File.WriteAllText("Config.json", jsonConfig);
 
+        LoggerView?.Close();
+
         logger.LogInformation("[MainView-Closed] Closed main window.");
     }
 
@@ -250,13 +252,16 @@ public sealed partial class MainView : Window
 
         LoggerView = new();
 
-        void handler(object? s, string e) =>
+        void OnNewLog(object? s, string e)
+        {
             LoggerView.ContentBlock.Text += e;
+            LoggerView.ScrollContainer.ScrollToVerticalOffset(LoggerView.ScrollContainer.ScrollableHeight);
+        }
 
-        App.Sink.OnNewLog += handler;
+        App.Sink.OnNewLog += OnNewLog;
         LoggerView.Closed += (s, e) =>
         {
-            App.Sink.OnNewLog -= handler;
+            App.Sink.OnNewLog -= OnNewLog;
             LoggerView = null;
         };
 

@@ -9,10 +9,14 @@
     Title="Musify - Logger"
     mc:Ignorable="d">
 
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <ScrollViewer
+        x:Name="ScrollContainer"
+        Padding="4"
+        x:FieldModifier="public"
+        HorizontalScrollBarVisibility="Auto"
+        VerticalScrollBarVisibility="Auto">
         <TextBlock
-            Name="ContentBlock"
-            Margin="4"
+            x:Name="ContentBlock"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             x:FieldModifier="public" />
