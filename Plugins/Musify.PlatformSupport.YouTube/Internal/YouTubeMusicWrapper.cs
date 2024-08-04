@@ -1,15 +1,15 @@
-﻿using GeniusAPI.Models;
-using GeniusAPI;
+﻿using GeniusAPI;
+using GeniusAPI.Models;
 using Microsoft.Extensions.Logging;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Models;
 using System.Net;
 using System.Text.RegularExpressions;
+using YoutubeExplode;
+using YoutubeExplode.Videos.Streams;
 using YouTubeMusicAPI.Client;
 using YouTubeMusicAPI.Models;
 using YouTubeMusicAPI.Models.Info;
-using YoutubeExplode.Videos.Streams;
-using YoutubeExplode;
 
 namespace Musify.PlatformSupport.YouTube.Internal;
 
@@ -72,6 +72,7 @@ internal partial class YouTubeMusicWrapper
         thumbnails.MaxBy(thumbnail => thumbnail.Width * thumbnail.Height)?.Url;
 
 
+    readonly int pluginHash;
     readonly PlatformSupportPluginConfig config;
     readonly ILogger<PlatformSupportPlugin>? logger;
 
@@ -80,9 +81,11 @@ internal partial class YouTubeMusicWrapper
     GeniusClient geniusClient = default!;
 
     public YouTubeMusicWrapper(
+        int pluginHash,
         PlatformSupportPluginConfig config,
         ILogger<PlatformSupportPlugin>? logger = null)
     {
+        this.pluginHash = pluginHash;
         this.config = config;
         this.logger = logger;
 
@@ -276,7 +279,6 @@ internal partial class YouTubeMusicWrapper
 
     public async Task<DownloadableTrack> PrepareDownloadAsync(
         SearchResult searchResult,
-        PlatformSupportPlugin responsiblePlugin,
         CancellationToken cancellationToken = default)
     {
         bool saveLyrics = config.GetItem<bool>("Save Lyrics");
@@ -303,7 +305,7 @@ internal partial class YouTubeMusicWrapper
             trackNumber: searchResult.GetItem<int>("TrackNumber"),
             totalTracks: searchResult.GetItem<int>("TotalTracks"),
             id: searchResult.Id,
-            plugin: responsiblePlugin);
+            pluginHash: pluginHash);
     }
 
     async Task<(string? lyrics, string? genre)> GetGeniusTrackInfoAsync(

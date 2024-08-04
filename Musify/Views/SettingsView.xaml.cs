@@ -13,10 +13,19 @@ public sealed partial class SettingsView : Page
     public SettingsView()
     {
         InitializeComponent();
+
+        viewModel.PluginManager.PluginLoaded += (s, plugin) =>
+        {
+            PlatformSupportPluginsContainer.Items.Add(plugin);
+        };
+        viewModel.PluginManager.PluginUnloaded += (s, plugin) =>
+        {
+            PlatformSupportPluginsContainer.Items.Remove(plugin);
+        };
     }
 
 
-    private async void OnResetPluginConfigClick(object sender, RoutedEventArgs _)
+    async void OnResetPluginConfigClick(object sender, RoutedEventArgs _)
     {
         PlatformSupportPlugin plugin = (PlatformSupportPlugin)((Button)sender).DataContext;
         await viewModel.ResetPluginConfigAsync(plugin);

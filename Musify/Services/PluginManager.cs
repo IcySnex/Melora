@@ -5,7 +5,6 @@ using Musify.Plugins;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Exceptions;
 using Musify.Plugins.Models;
-using System.Collections.ObjectModel;
 using System.Reflection;
 
 namespace Musify.Services;
@@ -13,7 +12,6 @@ namespace Musify.Services;
 public class PluginManager<T> where T : IPlugin
 {
     public static readonly string PluginsDirectory = Path.Combine(Environment.CurrentDirectory, "Plugins");
-
 
     readonly ILogger<PluginManager<T>> logger;
     readonly Config config;
@@ -32,13 +30,21 @@ public class PluginManager<T> where T : IPlugin
     }
 
 
-    public ObservableCollection<T> LoadedPlugins { get; } = [];
+    readonly Dictionary<T, PluginLoadContext> loadedPluginsLoadContexts = [];
+
+    public IReadOnlyCollection<T> LoadedPlugins => loadedPluginsLoadContexts.Keys;
+
+
+    public event EventHandler<T>? PluginLoaded;
+
+    public event EventHandler<T>? PluginUnloaded;
+
 
     public async Task LoadPluginAsync(
         string path,
         CancellationToken cancellationToken = default)
     {
-        logger.LogInformation("[PluginManager-LoadPluginAsync] Starting loading plugin: [{path}]...", path);
+        logger.LogInformation("[PluginManager-LoadPluginAsync] Starting to load plugin: [{path}]...", path);
         PluginLoadContext loadContext = await PluginLoadContext.FromPluginArchiveAsync(path, cancellationToken);
 
         foreach (Type type in loadContext.EntryPointAssembly.GetExportedTypes())
@@ -81,13 +87,31 @@ public class PluginManager<T> where T : IPlugin
             {
                 T? plugin = (T?)constructor?.Invoke(constructorArgs) ?? throw new Exception("Could not find suitable constructors to create plugin instance.");
 
-                logger.LogInformation("[PluginManager-LoadPluginAsync] Loaded plugin: [{name}]...", plugin.Name);
-                LoadedPlugins.Add(plugin);
+                loadedPluginsLoadContexts[plugin] = loadContext;
+                PluginLoaded?.Invoke(this, plugin);
+
+                logger.LogInformation("[PluginManager-LoadPluginAsync] Loaded plugin: [{name}]", plugin.Name);
             }
             catch (Exception ex)
             {
                 throw new PluginNotLoadedException(path, type, loadContext.Manifest, ex);
             }
         }
+    }
+
+    public void UnloadPlugin(
+        T plugin)
+    {
+        logger.LogInformation("[PluginManager-UnloadPlugin] Starting to unload plugin: [{name}]...", plugin.Name);
+        bool result = loadedPluginsLoadContexts.TryGetValue(plugin, out PluginLoadContext? context);
+        if (!result)
+            throw new Exception("Could not find plugin. Are you sure the plugin was loaded?");
+
+        context!.Unload();
+
+        loadedPluginsLoadContexts.Remove(plugin);
+        PluginUnloaded?.Invoke(this, plugin);
+
+        logger.LogInformation("[PluginManager-UnloadPlugin] Unloaded plugin: [{name}]", plugin.Name);
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
+using Musify.PlatformSupport.YouTube.Internal;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Enums;
 using Musify.Plugins.Models;
-using Musify.PlatformSupport.YouTube.Internal;
 
 namespace Musify.PlatformSupport.YouTube;
 
@@ -30,7 +30,7 @@ public class YouTubePlugin : PlatformSupportPlugin
                 searchResultsSortDescending: false),
             logger)
     {
-        wrapper = new(Config, logger);
+        wrapper = new(GetHashCode(), Config, logger);
     }
 
     public YouTubePlugin(
@@ -92,7 +92,7 @@ public class YouTubePlugin : PlatformSupportPlugin
 
             progress.Report($"Preparing downloads [{item.index}/{indexableSearchResults.Length}]...");
 
-            DownloadableTrack track = await wrapper.PrepareDownloadAsync(item.searchRresult, this, token);
+            DownloadableTrack track = await wrapper.PrepareDownloadAsync(item.searchRresult, token);
             results[item.index] = track;
         });
         return results;

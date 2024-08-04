@@ -20,7 +20,7 @@ public partial class PluginConfigItem(
     /// The name of the property.
     /// </summary>
     public string Name { get; } = name;
-    
+
     /// <summary>
     /// The description of the property.
     /// </summary>

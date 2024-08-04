@@ -80,15 +80,18 @@ internal partial class YouTubeWrapper
         thumbnails.MaxBy(thumbnail => (double)thumbnail.Resolution.Height / thumbnail.Resolution.Width == 0.75 ? int.MinValue + thumbnail.Resolution.Area : thumbnail.Resolution.Area)?.Url;
 
 
+    readonly int pluginHash;
     readonly PlatformSupportPluginConfig config;
     readonly ILogger<PlatformSupportPlugin>? logger;
 
     YoutubeClient client = default!;
 
     public YouTubeWrapper(
+        int pluginHash,
         PlatformSupportPluginConfig config,
         ILogger<PlatformSupportPlugin>? logger = null)
     {
+        this.pluginHash = pluginHash;
         this.config = config;
         this.logger = logger;
 
@@ -208,7 +211,7 @@ internal partial class YouTubeWrapper
             },
             cancellationToken);
     }
-    
+
     public async Task<IEnumerable<SearchResult>> SearchQueryAsync(
         string query,
         IProgress<string> progress,
@@ -248,7 +251,6 @@ internal partial class YouTubeWrapper
 
     public async Task<DownloadableTrack> PrepareDownloadAsync(
         SearchResult searchResult,
-        PlatformSupportPlugin responsiblePlugin,
         CancellationToken cancellationToken = default)
     {
         bool saveDescription = config.GetItem<bool>("Save Description");
@@ -271,7 +273,7 @@ internal partial class YouTubeWrapper
             trackNumber: searchResult.GetItem<int>("VideoNumber"),
             totalTracks: searchResult.GetItem<int>("PlaylistTotalVideos"),
             id: searchResult.Id,
-            plugin: responsiblePlugin);
+            pluginHash: pluginHash);
     }
 
 

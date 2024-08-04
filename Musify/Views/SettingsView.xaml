@@ -61,7 +61,7 @@
             <TextBlock Style="{StaticResource PageTitleTextBlockStyle}" Text="Settings" />
 
             <!--  Platform Support Plugins  -->
-            <ItemsControl ItemsSource="{x:Bind viewModel.PluginManager.LoadedPlugins}">
+            <ItemsControl x:Name="PlatformSupportPluginsContainer">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Spacing="8" />

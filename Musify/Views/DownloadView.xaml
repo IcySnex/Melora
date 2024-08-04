@@ -118,7 +118,14 @@
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
 
-                                    <MenuFlyoutSeparator />
+                                    <MenuFlyoutItem
+                                        Click="OnOpenSourceClick"
+                                        Text="Open source"
+                                        ToolTipService.ToolTip="Open on source platform">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xe71b;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
 
                                     <MenuFlyoutItem
                                         Click="OnRemoveClick"
@@ -129,21 +136,6 @@
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
 
-                                    <MenuFlyoutSeparator />
-
-                                    <MenuFlyoutItem
-                                        Click="OnOpenSourceClick"
-                                        Text="Open source"
-                                        ToolTipService.ToolTip="Open on source platform">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="&#xe71b;" />
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
-                                    <MenuFlyoutItem IsEnabled="False" Text="{x:Bind Track.Plugin.Name}">
-                                        <MenuFlyoutItem.Icon>
-                                            <FontIcon Glyph="&#xe946;" />
-                                        </MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
                                 </MenuFlyout>
                             </Button.Flyout>
 

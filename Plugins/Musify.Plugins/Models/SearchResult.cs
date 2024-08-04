@@ -1,5 +1,4 @@
-﻿using Musify.Plugins.Abstract;
-using Musify.Plugins.Exceptions;
+﻿using Musify.Plugins.Exceptions;
 
 namespace Musify.Plugins.Models;
 

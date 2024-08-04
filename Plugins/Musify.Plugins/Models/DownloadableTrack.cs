@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Musify.Plugins.Abstract;
 
 namespace Musify.Plugins.Models;
 
@@ -19,7 +18,7 @@ namespace Musify.Plugins.Models;
 /// <param name="trackNumber">The track number of the downloadable track.</param>
 /// <param name="totalTracks">The total tracks of the downloadable tracks album.</param>
 /// <param name="id">The Id of the downloadable track.</param>
-/// <param name="plugin">The plugin responsible for this downloadable track.</param>
+/// <param name="pluginHash">The hash code for the plugin responsible for this downloadable track.</param>
 /// <remarks>
 /// Creates a new DownloadableTrack.
 /// </remarks>
@@ -37,7 +36,7 @@ public partial class DownloadableTrack(
     int trackNumber,
     int totalTracks,
     string id,
-    PlatformSupportPlugin plugin) : ObservableObject
+    int pluginHash) : ObservableObject
 {
     /// <summary>
     /// The title of the downloadable track.
@@ -115,7 +114,7 @@ public partial class DownloadableTrack(
     public string Id { get; } = id;
 
     /// <summary>
-    /// The plugin responsible for this downloadable track.
+    /// The hash code for the plugin responsible for this downloadable track.
     /// </summary>
-    public PlatformSupportPlugin Plugin { get; } = plugin;
+    public int PluginHash { get; } = pluginHash;
 }

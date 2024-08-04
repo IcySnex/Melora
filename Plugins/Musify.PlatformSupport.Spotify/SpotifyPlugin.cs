@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
+using Musify.PlatformSupport.Spotify.Internal;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Enums;
 using Musify.Plugins.Models;
-using Musify.PlatformSupport.Spotify.Internal;
 using System.ComponentModel;
 
 namespace Musify.PlatformSupport.Spotify;
@@ -36,7 +36,7 @@ public class SpotifyPlugin : PlatformSupportPlugin
                 searchResultsSortDescending: false),
             logger)
     {
-        wrapper = new(Config, logger);
+        wrapper = new(GetHashCode(), Config, logger);
 
         Config.PropertyChanged += OnConfigPropertyChanged;
     }
@@ -80,22 +80,22 @@ public class SpotifyPlugin : PlatformSupportPlugin
         switch (type)
         {
             case SpotifySearchType.Track:
-                    SearchResult trackResult = await wrapper.SearchTrackAsync(id!, progress, cancellationToken);
-                    return [trackResult];
+                SearchResult trackResult = await wrapper.SearchTrackAsync(id!, progress, cancellationToken);
+                return [trackResult];
             case SpotifySearchType.Album:
-                    IEnumerable<SearchResult> albumResults = await wrapper.SearchAlbumAsync(id!, progress, cancellationToken);
-                    return albumResults;
+                IEnumerable<SearchResult> albumResults = await wrapper.SearchAlbumAsync(id!, progress, cancellationToken);
+                return albumResults;
             case SpotifySearchType.Playlist:
-                    IEnumerable<SearchResult> playlistResults = await wrapper.SearchPlaylistAsync(id!, progress, cancellationToken);
-                    return playlistResults;
+                IEnumerable<SearchResult> playlistResults = await wrapper.SearchPlaylistAsync(id!, progress, cancellationToken);
+                return playlistResults;
             case SpotifySearchType.Artist:
-                    IEnumerable<SearchResult> artistResults = await wrapper.SearchArtistAsync(id!, progress, cancellationToken);
-                    return artistResults;
+                IEnumerable<SearchResult> artistResults = await wrapper.SearchArtistAsync(id!, progress, cancellationToken);
+                return artistResults;
             case SpotifySearchType.Query:
-                    IEnumerable<SearchResult> querytResults = await wrapper.SearchQueryAsync(query, progress, cancellationToken);
-                    return querytResults;
+                IEnumerable<SearchResult> querytResults = await wrapper.SearchQueryAsync(query, progress, cancellationToken);
+                return querytResults;
         }
-        
+
         return [];
     }
 
@@ -109,6 +109,8 @@ public class SpotifyPlugin : PlatformSupportPlugin
         SearchResult[] indexableSearchResults = searchResults.ToArray();
         DownloadableTrack[] results = new DownloadableTrack[indexableSearchResults.Length];
 
+        Type responsiblePlugin = GetType();
+
         await Parallel.ForEachAsync(
             indexableSearchResults.Select((searchRresult, index) => new { searchRresult, index }),
             cancellationToken,
@@ -118,7 +120,7 @@ public class SpotifyPlugin : PlatformSupportPlugin
 
                 progress.Report($"Preparing downloads [{item.index}/{indexableSearchResults.Length}]...");
 
-                DownloadableTrack track = await wrapper.PrepareDownloadAsync(item.searchRresult, this, token);
+                DownloadableTrack track = await wrapper.PrepareDownloadAsync(item.searchRresult, token);
                 results[item.index] = track;
             });
         return results;

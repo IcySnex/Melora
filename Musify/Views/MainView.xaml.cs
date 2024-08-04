@@ -38,26 +38,20 @@ public sealed partial class MainView : Window
         this.pluginManager = pluginManager;
         this.jsonConverter = jsonConverter;
 
-        pluginManager.LoadedPlugins.CollectionChanged += (s, e) =>
+        pluginManager.PluginLoaded += (s, plugin) =>
         {
-            if (e.NewItems is not null)
-                foreach (PlatformSupportPlugin plugin in e.NewItems.Cast<PlatformSupportPlugin>())
-                {
-                    NavigationViewItem pluginItem = new()
-                    {
-                        Content = plugin.Name,
-                        Icon = new PathIcon() { Data = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), plugin.IconPathData) },
-                        Tag = plugin
-                    };
-                    NavigationView.MenuItems.Insert(NavigationView.MenuItems.Count - 4, pluginItem);
-                }
-
-            if (e.OldItems is not null)
-                foreach (PlatformSupportPlugin plugin in e.OldItems.Cast<PlatformSupportPlugin>())
-                {
-                    NavigationViewItem? pluginItem = NavigationView.MenuItems.OfType<NavigationViewItem>().FirstOrDefault(item => (string)item.Content == plugin.Name);
-                    NavigationView.MenuItems.Remove(pluginItem);
-                }
+            NavigationViewItem pluginItem = new()
+            {
+                Content = plugin.Name,
+                Icon = new PathIcon() { Data = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), plugin.IconPathData) },
+                Tag = plugin
+            };
+            NavigationView.MenuItems.Insert(NavigationView.MenuItems.Count - 4, pluginItem);
+        };
+        pluginManager.PluginUnloaded += (s, plugin) =>
+        {
+            NavigationViewItem? pluginItem = NavigationView.MenuItems.OfType<NavigationViewItem>().FirstOrDefault(item => (string)item.Content == plugin.Name);
+            NavigationView.MenuItems.Remove(pluginItem);
         };
 
         hWnd = WindowNative.GetWindowHandle(this);
@@ -83,8 +77,8 @@ public sealed partial class MainView : Window
 
     void OnClosed(object _, WindowEventArgs _1)
     {
-        foreach (PlatformSupportPlugin plugin in pluginManager.LoadedPlugins)
-            config.PluginConfigs[plugin.GetType().Name] = plugin.Config;
+        foreach (PlatformSupportPlugin platformSupportPlugin in pluginManager.LoadedPlugins)
+            config.PluginConfigs[platformSupportPlugin.GetType().Name] = platformSupportPlugin.Config;
 
         string jsonConfig = jsonConverter.ToString(config);
         File.WriteAllText("Config.json", jsonConfig);

@@ -21,7 +21,7 @@ public class PluginLoadContext : AssemblyLoadContext
     /// </summary>
     /// <param name="manifest">The plugin manifest corresponding to this load context.</param>
     private PluginLoadContext(
-        Manifest manifest)
+        Manifest manifest) : base(true)
     {
         this.Manifest = manifest;
     }
@@ -46,7 +46,7 @@ public class PluginLoadContext : AssemblyLoadContext
     {
         using ZipArchive pluginArchive = ZipFile.OpenRead(path);
 
-        Manifest manifest = await Manifest.FromPluginArchivetAsync(pluginArchive, cancellationToken)?? throw new PluginNotLoadedException(path, null, null, new("Plugin archive does not contain a manifest or is badly formatted."));
+        Manifest manifest = await Manifest.FromPluginArchivetAsync(pluginArchive, cancellationToken) ?? throw new PluginNotLoadedException(path, null, null, new("Plugin archive does not contain a manifest or is badly formatted."));
         PluginLoadContext loadContext = new(manifest);
 
         loadContext.EntryPointAssembly = await loadContext.LoadFromArchiveAsync(pluginArchive, manifest.EntryPoint, cancellationToken) ?? throw new PluginNotLoadedException(path, null, manifest, new($"Entry point assembly could not be loaded: [{manifest.EntryPoint}]."));

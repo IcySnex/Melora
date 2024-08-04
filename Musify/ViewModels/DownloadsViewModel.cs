@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Controls;
 using Musify.Enums;
 using Musify.Helpers;
 using Musify.Models;
+using Musify.Plugins.Abstract;
 using Musify.Plugins.Enums;
 using Musify.Services;
 using Musify.Views;
@@ -21,15 +22,18 @@ public partial class DownloadsViewModel : ObservableObject
     readonly MediaEncoder encoder;
 
     public Config Config { get; }
+    public PluginManager<PlatformSupportPlugin> PluginManager { get; }
 
     public DownloadsViewModel(
         ILogger<DownloadsViewModel> logger,
         Config config,
+        PluginManager<PlatformSupportPlugin> pluginManager,
         MainView mainView,
         MediaEncoder encoder)
     {
         this.logger = logger;
         this.Config = config;
+        this.PluginManager = pluginManager;
         this.mainView = mainView;
         this.encoder = encoder;
 
@@ -50,7 +54,7 @@ public partial class DownloadsViewModel : ObservableObject
                     download.Track.Artists.Contains(Query, StringComparison.InvariantCultureIgnoreCase) ||
                     (download.Track.Album?.Contains(Query, StringComparison.InvariantCultureIgnoreCase) ?? false)
                 ) &&
-                ShowTracksFrom.Any(pair => download.Track.Plugin.Name == pair.Key && pair.Value)
+                ShowTracksFrom.Any(pair => download.Track.PluginHash == pair.Key && pair.Value)
         };
 
         Config.Downloads.PropertyChanged += OnConfigPropertyChanged;
@@ -84,7 +88,7 @@ public partial class DownloadsViewModel : ObservableObject
     public ObservableRangeCollection<DownloadContainer> Downloads { get; }
 
 
-    public Dictionary<string, bool> ShowTracksFrom { get; } = [];
+    public Dictionary<int, bool> ShowTracksFrom { get; } = [];
 
 
     [RelayCommand]
@@ -126,9 +130,11 @@ public partial class DownloadsViewModel : ObservableObject
         logger.LogInformation("[DownloadsViewModel-DownloadAsync] Starting download of track");
         try
         {
+            PlatformSupportPlugin plugin = PluginManager.LoadedPlugins.FirstOrDefault(loadedPlugin => loadedPlugin.GetHashCode() == download.Track.PluginHash) ?? throw new Exception("Could not find plugin responsible for downloading this track. Are you sure the plugin is still loaded?");
+
             download.Progress = 0;
             download.IsProcessing = true;
-            Stream stream = await download.Track.Plugin.GetStreamAsync(download.Track, download.CancellationSource.Token);
+            Stream stream = await plugin.GetStreamAsync(download.Track, download.CancellationSource.Token);
 
             download.IsProcessing = false;
             string fileName = Config.Paths.Filename
@@ -141,8 +147,8 @@ public partial class DownloadsViewModel : ObservableObject
             await encoder.WriteAsync(
                 fileName,
                 stream,
-                download.Track.Plugin.Config.Quality,
-                download.Track.Plugin.Config.Format,
+                plugin.Config.Quality,
+                plugin.Config.Format,
                 progress,
                 download.CancellationSource.Token);
 

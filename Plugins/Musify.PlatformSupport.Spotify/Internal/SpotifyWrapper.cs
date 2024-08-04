@@ -69,6 +69,7 @@ internal partial class SpotifyWrapper
         artworks.MaxBy(artwork => artwork.Width * artwork.Height)?.Url;
 
 
+    readonly int pluginHash;
     readonly PlatformSupportPluginConfig config;
     readonly ILogger<PlatformSupportPlugin>? logger;
 
@@ -77,9 +78,11 @@ internal partial class SpotifyWrapper
     HttpClient httpClient = default!;
 
     public SpotifyWrapper(
+        int pluginHash,
         PlatformSupportPluginConfig config,
         ILogger<PlatformSupportPlugin>? logger = null)
     {
+        this.pluginHash = pluginHash;
         this.config = config;
         this.logger = logger;
 
@@ -245,7 +248,7 @@ internal partial class SpotifyWrapper
             },
             cancellationToken);
     }
-    
+
     public async Task<IEnumerable<SearchResult>> SearchArtistAsync(
         string id,
         IProgress<string> progress,
@@ -319,7 +322,6 @@ internal partial class SpotifyWrapper
 
     public async Task<DownloadableTrack> PrepareDownloadAsync(
         SearchResult searchResult,
-        PlatformSupportPlugin responsiblePlugin,
         CancellationToken cancellationToken = default)
     {
         bool saveLyrics = config.GetItem<bool>("Save Lyrics");
@@ -346,7 +348,7 @@ internal partial class SpotifyWrapper
             trackNumber: searchResult.GetItem<int>("TrackNumber"),
             totalTracks: searchResult.GetItem<int>("AlbumTotalTracks"),
             id: searchResult.Id,
-            plugin: responsiblePlugin);
+            pluginHash: pluginHash);
     }
 
     readonly Dictionary<string, string?> artistGenreCache = [];

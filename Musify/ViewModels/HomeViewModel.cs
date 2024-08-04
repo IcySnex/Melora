@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Musify.Enums;
+using Musify.Plugins.Abstract;
 using Musify.Services;
 using Musify.Views;
 using Windows.ApplicationModel.DataTransfer;
@@ -16,12 +17,16 @@ public partial class HomeViewModel : ObservableObject
     readonly MainView mainView;
     readonly Navigation navigation;
 
+    public PluginManager<PlatformSupportPlugin> PluginManager { get; }
+
     public HomeViewModel(
         ILogger<HomeViewModel> logger,
+        PluginManager<PlatformSupportPlugin> pluginManager,
         MainView mainView,
         Navigation navigation)
     {
         this.logger = logger;
+        this.PluginManager = pluginManager;
         this.mainView = mainView;
         this.navigation = navigation;
 
@@ -64,6 +69,9 @@ public partial class HomeViewModel : ObservableObject
     void Search(
         string page)
     {
+        PlatformSupportPlugin plugin = PluginManager.LoadedPlugins.First(pl => pl.Name == page);
+        PluginManager.UnloadPlugin(plugin);
+
         App.Parameter = Query;
         navigation.SetCurrentItem(page);
     }

@@ -1,5 +1,4 @@
-﻿using Musify.Plugins.Enums;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Text.Json;
 
 namespace Musify.Plugins.Models;
