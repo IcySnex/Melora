@@ -8,7 +8,7 @@ using SpotifyAPI.Web;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace Musify.Plugins.Spotify.Internal;
+namespace Musify.PlatformSupport.Spotify.Internal;
 
 internal partial class SpotifyWrapper
 {

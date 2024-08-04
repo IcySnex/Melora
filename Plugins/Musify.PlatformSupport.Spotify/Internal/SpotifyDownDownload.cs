@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Musify.Plugins.Spotify.Internal;
+namespace Musify.PlatformSupport.Spotify.Internal;
 
 internal class SpotifyDownDownload
 {

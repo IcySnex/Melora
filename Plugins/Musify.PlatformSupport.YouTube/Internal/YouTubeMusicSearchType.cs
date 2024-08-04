@@ -1,4 +1,4 @@
-﻿namespace Musify.Plugins.YouTube.Internal;
+﻿namespace Musify.PlatformSupport.YouTube.Internal;
 
 internal enum YouTubeMusicSearchType
 {

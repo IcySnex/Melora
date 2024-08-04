@@ -11,7 +11,7 @@ using YouTubeMusicAPI.Models.Info;
 using YoutubeExplode.Videos.Streams;
 using YoutubeExplode;
 
-namespace Musify.Plugins.YouTube.Internal;
+namespace Musify.PlatformSupport.YouTube.Internal;
 
 internal partial class YouTubeMusicWrapper
 {

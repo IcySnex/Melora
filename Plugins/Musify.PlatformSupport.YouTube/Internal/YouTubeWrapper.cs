@@ -11,7 +11,7 @@ using YoutubeExplode.Search;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
 
-namespace Musify.Plugins.YouTube.Internal;
+namespace Musify.PlatformSupport.YouTube.Internal;
 
 internal partial class YouTubeWrapper
 {

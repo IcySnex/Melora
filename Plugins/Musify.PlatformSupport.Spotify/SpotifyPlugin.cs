@@ -2,10 +2,10 @@
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Enums;
 using Musify.Plugins.Models;
-using Musify.Plugins.Spotify.Internal;
+using Musify.PlatformSupport.Spotify.Internal;
 using System.ComponentModel;
 
-namespace Musify.Plugins.Spotify;
+namespace Musify.PlatformSupport.Spotify;
 
 public class SpotifyPlugin : PlatformSupportPlugin
 {

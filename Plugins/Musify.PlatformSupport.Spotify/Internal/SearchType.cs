@@ -1,4 +1,4 @@
-﻿namespace Musify.Plugins.Spotify.Internal;
+﻿namespace Musify.PlatformSupport.Spotify.Internal;
 
 internal enum SpotifySearchType
 {

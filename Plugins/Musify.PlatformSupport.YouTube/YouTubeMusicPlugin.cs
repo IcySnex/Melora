@@ -2,10 +2,10 @@
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Enums;
 using Musify.Plugins.Models;
-using Musify.Plugins.YouTube.Internal;
+using Musify.PlatformSupport.YouTube.Internal;
 using System.ComponentModel;
 
-namespace Musify.Plugins.YouTube;
+namespace Musify.PlatformSupport.YouTube;
 
 public class YouTubeMusicPlugin : PlatformSupportPlugin
 {

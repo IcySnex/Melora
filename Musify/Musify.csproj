@@ -64,7 +64,7 @@
 		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
 	</PropertyGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\Musify.Plugins\Musify.Plugins.csproj" />
+	  <ProjectReference Include="..\Plugins\Musify.Plugins\Musify.Plugins.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Page Update="Views\LoggerView.xaml">

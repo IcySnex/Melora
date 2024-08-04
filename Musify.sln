@@ -3,17 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34526.213
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{70E78548-0067-4B44-85C4-2E4073F07560}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Musify", "Musify\Musify.csproj", "{1296EDAC-6B31-4CCD-B9E4-DB61B32643CB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{1BCC00C4-70C3-4A0A-BB85-A6DE8343186B} = {1BCC00C4-70C3-4A0A-BB85-A6DE8343186B}
 		{D138382D-A843-421C-9293-9A259265410E} = {D138382D-A843-421C-9293-9A259265410E}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Musify.Plugins", "Musify.Plugins\Musify.Plugins.csproj", "{9032EE8D-987F-4753-ABE5-4A2F62A822E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Musify.Plugins", "Plugins\Musify.Plugins\Musify.Plugins.csproj", "{9032EE8D-987F-4753-ABE5-4A2F62A822E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Musify.Plugins.Spotify", "Musify.Plugins.Spotify\Musify.Plugins.Spotify.csproj", "{D138382D-A843-421C-9293-9A259265410E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Musify.PlatformSupport.Spotify", "Plugins\Musify.PlatformSupport.Spotify\Musify.PlatformSupport.Spotify.csproj", "{D138382D-A843-421C-9293-9A259265410E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Musify.Plugins.YouTube", "Musify.Plugins.YouTube\Musify.Plugins.YouTube.csproj", "{1BCC00C4-70C3-4A0A-BB85-A6DE8343186B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Musify.PlatformSupport.YouTube", "Plugins\Musify.PlatformSupport.YouTube\Musify.PlatformSupport.YouTube.csproj", "{1BCC00C4-70C3-4A0A-BB85-A6DE8343186B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Musify.MetaData.Default", "Plugins\Musify.MetaData.Default\Musify.MetaData.Default.csproj", "{7F5E2C60-5C91-40AB-8754-5B18E84E076B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,9 +101,31 @@ Global
 		{1BCC00C4-70C3-4A0A-BB85-A6DE8343186B}.Release|x64.Build.0 = Release|Any CPU
 		{1BCC00C4-70C3-4A0A-BB85-A6DE8343186B}.Release|x86.ActiveCfg = Release|Any CPU
 		{1BCC00C4-70C3-4A0A-BB85-A6DE8343186B}.Release|x86.Build.0 = Release|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Debug|x64.Build.0 = Debug|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Debug|x86.Build.0 = Debug|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Release|ARM64.Build.0 = Release|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Release|x64.ActiveCfg = Release|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Release|x64.Build.0 = Release|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Release|x86.ActiveCfg = Release|Any CPU
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9032EE8D-987F-4753-ABE5-4A2F62A822E4} = {70E78548-0067-4B44-85C4-2E4073F07560}
+		{D138382D-A843-421C-9293-9A259265410E} = {70E78548-0067-4B44-85C4-2E4073F07560}
+		{1BCC00C4-70C3-4A0A-BB85-A6DE8343186B} = {70E78548-0067-4B44-85C4-2E4073F07560}
+		{7F5E2C60-5C91-40AB-8754-5B18E84E076B} = {70E78548-0067-4B44-85C4-2E4073F07560}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7BEBFC7C-FC29-47E5-B49B-76662A18855C}
