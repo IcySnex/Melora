@@ -21,7 +21,7 @@ public abstract class MetadataPlugin : IPlugin
         string iconPathData,
         IPluginConfig? config,
         Func<MetadataPluginConfig> defaultConfig,
-        ILogger<PlatformSupportPlugin>? logger = null)
+        ILogger<IPlugin>? logger = null)
     {
         this.Name = name;
         this.IconPathData = iconPathData;
@@ -45,7 +45,7 @@ public abstract class MetadataPlugin : IPlugin
     /// <summary>
     /// Generic logger used to log stuff lol.
     /// </summary>
-    readonly protected ILogger<PlatformSupportPlugin>? logger;
+    readonly protected ILogger<IPlugin>? logger;
 
 
     /// <summary>
@@ -78,4 +78,16 @@ public abstract class MetadataPlugin : IPlugin
     public MetadataPluginConfig Config { get; }
 
     IPluginConfig IPlugin.Config => Config;
+
+
+    /// <summary>
+    /// Writes the metadate from the downloadable track to the file.
+    /// </summary>
+    /// <param name="filePath">The path to the audio file.</param>
+    /// <param name="track">The downloadable track containing the metadata.</param>
+    /// <param name="cancellationToken">The token to cancel this action.</param>
+    public abstract Task WriteAsync(
+        string filePath,
+        DownloadableTrack track,
+        CancellationToken cancellationToken = default);
 }

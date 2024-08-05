@@ -47,7 +47,7 @@ public partial class App : Application
 
                 // Add services
                 services.AddSingleton<AppStartupHandler>();
-                services.AddSingleton<PluginManager<PlatformSupportPlugin>>();
+                services.AddSingleton<PluginManager>();
                 services.AddSingleton<Navigation>();
                 services.AddSingleton<JsonConverter>();
                 services.AddSingleton<MediaEncoder>();

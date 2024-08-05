@@ -82,14 +82,14 @@ internal partial class YouTubeWrapper
 
     readonly int pluginHash;
     readonly PlatformSupportPluginConfig config;
-    readonly ILogger<PlatformSupportPlugin>? logger;
+    readonly ILogger<IPlugin>? logger;
 
     YoutubeClient client = default!;
 
     public YouTubeWrapper(
         int pluginHash,
         PlatformSupportPluginConfig config,
-        ILogger<PlatformSupportPlugin>? logger = null)
+        ILogger<IPlugin>? logger = null)
     {
         this.pluginHash = pluginHash;
         this.config = config;

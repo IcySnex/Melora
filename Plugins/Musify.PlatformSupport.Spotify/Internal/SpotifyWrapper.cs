@@ -71,7 +71,7 @@ internal partial class SpotifyWrapper
 
     readonly int pluginHash;
     readonly PlatformSupportPluginConfig config;
-    readonly ILogger<PlatformSupportPlugin>? logger;
+    readonly ILogger<IPlugin>? logger;
 
     SpotifyClient client = default!;
     GeniusClient geniusClient = default!;
@@ -80,7 +80,7 @@ internal partial class SpotifyWrapper
     public SpotifyWrapper(
         int pluginHash,
         PlatformSupportPluginConfig config,
-        ILogger<PlatformSupportPlugin>? logger = null)
+        ILogger<IPlugin>? logger = null)
     {
         this.pluginHash = pluginHash;
         this.config = config;

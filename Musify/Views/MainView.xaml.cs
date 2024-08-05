@@ -24,13 +24,13 @@ public sealed partial class MainView : Window
 {
     readonly ILogger<MainView> logger;
     readonly Config config;
-    readonly PluginManager<PlatformSupportPlugin> pluginManager;
+    readonly PluginManager pluginManager;
     readonly JsonConverter jsonConverter;
 
     public MainView(
         ILogger<MainView> logger,
         Config config,
-        PluginManager<PlatformSupportPlugin> pluginManager,
+        PluginManager pluginManager,
         JsonConverter jsonConverter)
     {
         this.logger = logger;
@@ -38,21 +38,22 @@ public sealed partial class MainView : Window
         this.pluginManager = pluginManager;
         this.jsonConverter = jsonConverter;
 
-        pluginManager.PluginLoaded += (s, plugin) =>
-        {
-            NavigationViewItem pluginItem = new()
+        pluginManager.Subscribe<PlatformSupportPlugin>(
+            plugin =>
             {
-                Content = plugin.Name,
-                Icon = new PathIcon() { Data = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), plugin.IconPathData) },
-                Tag = plugin
-            };
-            NavigationView.MenuItems.Insert(NavigationView.MenuItems.Count - 4, pluginItem);
-        };
-        pluginManager.PluginUnloaded += (s, plugin) =>
-        {
-            NavigationViewItem? pluginItem = NavigationView.MenuItems.OfType<NavigationViewItem>().FirstOrDefault(item => (string)item.Content == plugin.Name);
-            NavigationView.MenuItems.Remove(pluginItem);
-        };
+                NavigationViewItem pluginItem = new()
+                {
+                    Content = plugin.Name,
+                    Icon = new PathIcon() { Data = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), plugin.IconPathData) },
+                    Tag = plugin
+                };
+                NavigationView.MenuItems.Insert(NavigationView.MenuItems.Count - 4, pluginItem);
+            },
+            plugin =>
+            {
+                NavigationViewItem? pluginItem = NavigationView.MenuItems.OfType<NavigationViewItem>().FirstOrDefault(item => (string)item.Content == plugin.Name);
+                NavigationView.MenuItems.Remove(pluginItem);
+            });
 
         hWnd = WindowNative.GetWindowHandle(this);
         id = Win32Interop.GetWindowIdFromWindow(hWnd);
@@ -77,8 +78,8 @@ public sealed partial class MainView : Window
 
     void OnClosed(object _, WindowEventArgs _1)
     {
-        foreach (PlatformSupportPlugin platformSupportPlugin in pluginManager.LoadedPlugins)
-            config.PluginConfigs[platformSupportPlugin.GetType().Name] = platformSupportPlugin.Config;
+        foreach (IPlugin plugin in pluginManager.LoadedPlugins)
+            config.PluginConfigs[plugin.GetType().Name] = plugin.Config;
 
         string jsonConfig = jsonConverter.ToString(config);
         File.WriteAllText("Config.json", jsonConfig);

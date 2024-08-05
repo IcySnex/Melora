@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Musify.Models;
+using Musify.Plugins.Abstract;
 using Musify.ViewModels;
 
 namespace Musify.Views;
@@ -14,34 +15,35 @@ public sealed partial class DownloadsView : Page
     {
         InitializeComponent();
 
-        viewModel.PluginManager.PluginLoaded += (s, plugin) =>
-        {
-            int pluginHash = plugin.GetHashCode();
-
-            ToggleMenuFlyoutItem pluginFlyoutItem = new()
+        viewModel.PluginManager.Subscribe<PlatformSupportPlugin>(
+            plugin =>
             {
-                IsChecked = true,
-                Tag = pluginHash,
-                Text = plugin.Name,
-            };
-            pluginFlyoutItem.Click += (s, e) =>
+                int pluginHash = plugin.GetHashCode();
+
+                ToggleMenuFlyoutItem pluginFlyoutItem = new()
+                {
+                    IsChecked = true,
+                    Tag = pluginHash,
+                    Text = plugin.Name,
+                };
+                pluginFlyoutItem.Click += (s, e) =>
+                {
+                    viewModel.ShowTracksFrom[pluginHash] = ((ToggleMenuFlyoutItem)s).IsChecked;
+                    viewModel.Downloads.Refresh();
+                };
+
+                ToolTipService.SetToolTip(pluginFlyoutItem, $"Show tracks from {plugin.Name}");
+                ShowTracksFromFlyout.Items.Add(pluginFlyoutItem);
+
+                viewModel.ShowTracksFrom[pluginHash] = true;
+            },
+            plugin =>
             {
-                viewModel.ShowTracksFrom[pluginHash] = ((ToggleMenuFlyoutItem)s).IsChecked;
-                viewModel.Downloads.Refresh();
-            };
+                ToggleMenuFlyoutItem? pluginFlyoutItem = ShowTracksFromFlyout.Items.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(item => item.Text == plugin.Name);
+                ShowTracksFromFlyout.Items.Remove(pluginFlyoutItem);
 
-            ToolTipService.SetToolTip(pluginFlyoutItem, $"Show tracks from {plugin.Name}");
-            ShowTracksFromFlyout.Items.Add(pluginFlyoutItem);
-
-            viewModel.ShowTracksFrom[pluginHash] = true;
-        };
-        viewModel.PluginManager.PluginUnloaded += (s, plugin) =>
-        {
-            ToggleMenuFlyoutItem? pluginFlyoutItem = ShowTracksFromFlyout.Items.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(item => item.Text == plugin.Name);
-            ShowTracksFromFlyout.Items.Remove(pluginFlyoutItem);
-
-            viewModel.ShowTracksFrom.Remove(plugin.GetHashCode());
-        };
+                viewModel.ShowTracksFrom.Remove(plugin.GetHashCode());
+            });
     }
 
 

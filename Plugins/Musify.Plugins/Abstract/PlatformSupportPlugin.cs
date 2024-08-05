@@ -19,12 +19,12 @@ public abstract class PlatformSupportPlugin(
     string iconPathData,
     PlatformSupportPluginConfig? config,
     Func<PlatformSupportPluginConfig> defaultConfig,
-    ILogger<PlatformSupportPlugin>? logger = null) : IPlugin
+    ILogger<IPlugin>? logger = null) : IPlugin
 {
     /// <summary>
     /// Generic logger used to log stuff lol.
     /// </summary>
-    readonly protected ILogger<PlatformSupportPlugin>? logger = logger;
+    readonly protected ILogger<IPlugin>? logger = logger;
 
 
     /// <summary>

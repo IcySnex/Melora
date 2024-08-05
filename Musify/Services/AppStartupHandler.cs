@@ -4,7 +4,6 @@ using Microsoft.Windows.AppLifecycle;
 using Musify.Enums;
 using Musify.Helpers;
 using Musify.Models;
-using Musify.Plugins.Abstract;
 using Musify.Plugins.Exceptions;
 using Musify.Views;
 
@@ -15,7 +14,7 @@ public class AppStartupHandler
     public AppStartupHandler(
         ILogger<AppStartupHandler> logger,
         Config config,
-        PluginManager<PlatformSupportPlugin> pluginManager,
+        PluginManager pluginManager,
         MainView mainView,
         Navigation navigation)
     {
@@ -28,7 +27,7 @@ public class AppStartupHandler
 
         async void LoadPlugins()
         {
-            foreach (string path in Directory.GetFiles(PluginManager<PlatformSupportPlugin>.PluginsDirectory, "*.mfy"))
+            foreach (string path in Directory.GetFiles(PluginManager.PluginsDirectory, "*.mfy"))
             {
                 string pluginFileName = Path.GetFileNameWithoutExtension(path);
                 try

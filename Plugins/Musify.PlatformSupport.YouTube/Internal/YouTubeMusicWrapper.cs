@@ -74,7 +74,7 @@ internal partial class YouTubeMusicWrapper
 
     readonly int pluginHash;
     readonly PlatformSupportPluginConfig config;
-    readonly ILogger<PlatformSupportPlugin>? logger;
+    readonly ILogger<IPlugin>? logger;
 
     YouTubeMusicClient client = default!;
     YoutubeClient youTubeClient = default!;
@@ -83,7 +83,7 @@ internal partial class YouTubeMusicWrapper
     public YouTubeMusicWrapper(
         int pluginHash,
         PlatformSupportPluginConfig config,
-        ILogger<PlatformSupportPlugin>? logger = null)
+        ILogger<IPlugin>? logger = null)
     {
         this.pluginHash = pluginHash;
         this.config = config;

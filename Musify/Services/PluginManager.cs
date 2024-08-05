@@ -9,15 +9,15 @@ using System.Reflection;
 
 namespace Musify.Services;
 
-public class PluginManager<T> where T : IPlugin
+public class PluginManager
 {
     public static readonly string PluginsDirectory = Path.Combine(Environment.CurrentDirectory, "Plugins");
 
-    readonly ILogger<PluginManager<T>> logger;
+    readonly ILogger<PluginManager> logger;
     readonly Config config;
 
     public PluginManager(
-        ILogger<PluginManager<T>> logger,
+        ILogger<PluginManager> logger,
         Config config)
     {
         this.logger = logger;
@@ -30,14 +30,67 @@ public class PluginManager<T> where T : IPlugin
     }
 
 
-    readonly Dictionary<T, PluginLoadContext> loadedPluginsLoadContexts = [];
+    readonly Dictionary<IPlugin, PluginLoadContext> loadedPluginsLoadContexts = [];
 
-    public IReadOnlyCollection<T> LoadedPlugins => loadedPluginsLoadContexts.Keys;
+    public IReadOnlyCollection<IPlugin> LoadedPlugins => loadedPluginsLoadContexts.Keys;
+
+    public T GetLoaded<T>(
+        string name) where T : IPlugin
+    {
+        IPlugin plugin = LoadedPlugins.FirstOrDefault(loadedPlugin => loadedPlugin.Name == name) ?? throw new Exception("Could not get plugin with specified name. Make sure the plugin hasn't been unloaded.");
+        if (plugin is not T result)
+            throw new Exception("Requested plugin does not match requested plugin type.");
+    
+        return result;
+    }
+
+    public T GetLoaded<T>(
+        int hash) where T : IPlugin
+    {
+        IPlugin plugin = LoadedPlugins.FirstOrDefault(loadedPlugin => loadedPlugin.GetHashCode() == hash) ?? throw new Exception("Could not get plugin with specified hash. Make sure the plugin hasn't been unloaded.");
+        if (plugin is not T result)
+            throw new Exception("Requested plugin does not match requested plugin type.");
+    
+        return result;
+    }
 
 
-    public event EventHandler<T>? PluginLoaded;
+    readonly Dictionary<Type, HashSet<(Delegate? onLoad, Delegate? onUnload)>> subscriptions = [];
 
-    public event EventHandler<T>? PluginUnloaded;
+    public void Subscribe<T>(
+        Action<T>? onLoad,
+        Action<T>? onUnload) where T : IPlugin
+    {
+        Type pluginType = typeof(T);
+        if (!subscriptions.TryGetValue(pluginType, out HashSet<(Delegate? onLoad, Delegate? onUnload)>? handlers))
+            subscriptions[pluginType] = [(onLoad, onUnload)];
+        else
+            handlers.Add((onLoad, onUnload));
+
+        logger.LogInformation("[PluginManager-SubscribeToLoad] Subscribed to plugin loading");
+    }
+
+    void OnPluginLoaded(
+        Type pluginType,
+        IPlugin plugin)
+    {
+        if (!subscriptions.TryGetValue(pluginType, out HashSet<(Delegate? onLoad, Delegate? onUnload)>? handlers))
+            return;
+
+        foreach ((Delegate? onLoad, _) in handlers)
+            onLoad?.DynamicInvoke(plugin);
+    }
+
+    void OnPluginUnloaded(
+        Type pluginType,
+        IPlugin plugin)
+    {
+        if (!subscriptions.TryGetValue(pluginType, out HashSet<(Delegate? onLoad, Delegate? onUnload)>? handlers))
+            return;
+
+        foreach ((_, Delegate? onUnload) in handlers)
+            onUnload?.DynamicInvoke(plugin);
+    }
 
 
     public async Task LoadPluginAsync(
@@ -49,34 +102,44 @@ public class PluginManager<T> where T : IPlugin
 
         foreach (Type type in loadContext.EntryPointAssembly.GetExportedTypes())
         {
-            if (!typeof(T).IsAssignableFrom(type))
-                continue;
-
-            Type configType = type switch
+            Type pluginType, configType;
+            switch (type)
             {
-                _ when typeof(PlatformSupportPlugin).IsAssignableFrom(type) => typeof(PlatformSupportPluginConfig),
-                _ when typeof(MetadataPlugin).IsAssignableFrom(type) => typeof(MetadataPluginConfig),
-                _ => typeof(IPluginConfig)
-            };
-            bool isConfigSaved = config.PluginConfigs.TryGetValue(type.Name, out IPluginConfig? pluginConfig) && pluginConfig.GetType() == configType;
+                case var _ when !typeof(IPlugin).IsAssignableFrom(type):
+                    continue;
+
+                case var _ when typeof(PlatformSupportPlugin).IsAssignableFrom(type):
+                    pluginType = typeof(PlatformSupportPlugin);
+                    configType = typeof(PlatformSupportPluginConfig);
+                    break;
+                case var _ when typeof(MetadataPlugin).IsAssignableFrom(type):
+                    pluginType = typeof(MetadataPlugin);;
+                    configType = typeof(MetadataPluginConfig);
+                    break;
+                default:
+                    pluginType = typeof(IPlugin);
+                    configType = typeof(IPluginConfig);
+                    break;
+            }
 
             ConstructorInfo? constructor = null;
             object?[]? constructorArgs = null;
 
-            if (isConfigSaved && type.GetConstructor([configType, typeof(ILogger<T>)]) is ConstructorInfo configLoggerContructor)
+            bool isConfigSaved = config.PluginConfigs.TryGetValue(type.Name, out IPluginConfig? pluginConfig) && pluginConfig.GetType() == configType;
+            if (isConfigSaved && type.GetConstructor([configType, typeof(ILogger<IPlugin>)]) is ConstructorInfo configLoggerContructor)
             {
                 constructor = configLoggerContructor;
-                constructorArgs = [pluginConfig, App.Provider.GetRequiredService<ILogger<T>>()];
+                constructorArgs = [pluginConfig, App.Provider.GetRequiredService<ILogger<IPlugin>>()];
             }
             else if (isConfigSaved && type.GetConstructor([configType]) is ConstructorInfo configContructor)
             {
                 constructor = configContructor;
                 constructorArgs = [pluginConfig];
             }
-            else if (type.GetConstructor([typeof(ILogger<T>)]) is ConstructorInfo loggerContructor)
+            else if (type.GetConstructor([typeof(ILogger<IPlugin>)]) is ConstructorInfo loggerContructor)
             {
                 constructor = loggerContructor;
-                constructorArgs = [App.Provider.GetRequiredService<ILogger<T>>()];
+                constructorArgs = [App.Provider.GetRequiredService<ILogger<IPlugin>>()];
             }
             else if (type.GetConstructor(Type.EmptyTypes) is ConstructorInfo defaultConstructor)
             {
@@ -85,10 +148,10 @@ public class PluginManager<T> where T : IPlugin
 
             try
             {
-                T? plugin = (T?)constructor?.Invoke(constructorArgs) ?? throw new Exception("Could not find suitable constructors to create plugin instance.");
+                IPlugin plugin = (IPlugin?)constructor?.Invoke(constructorArgs) ?? throw new Exception("Could not find suitable constructors to create plugin instance.");
 
                 loadedPluginsLoadContexts[plugin] = loadContext;
-                PluginLoaded?.Invoke(this, plugin);
+                OnPluginLoaded(pluginType, plugin);
 
                 logger.LogInformation("[PluginManager-LoadPluginAsync] Loaded plugin: [{name}]", plugin.Name);
             }
@@ -100,7 +163,7 @@ public class PluginManager<T> where T : IPlugin
     }
 
     public void UnloadPlugin(
-        T plugin)
+        IPlugin plugin)
     {
         logger.LogInformation("[PluginManager-UnloadPlugin] Starting to unload plugin: [{name}]...", plugin.Name);
         bool result = loadedPluginsLoadContexts.TryGetValue(plugin, out PluginLoadContext? context);
@@ -109,8 +172,11 @@ public class PluginManager<T> where T : IPlugin
 
         context!.Unload();
 
+        Type pluginType = plugin.GetType();
+        OnPluginUnloaded(pluginType, plugin);
+
         loadedPluginsLoadContexts.Remove(plugin);
-        PluginUnloaded?.Invoke(this, plugin);
+        subscriptions.Remove(pluginType);
 
         logger.LogInformation("[PluginManager-UnloadPlugin] Unloaded plugin: [{name}]", plugin.Name);
     }
