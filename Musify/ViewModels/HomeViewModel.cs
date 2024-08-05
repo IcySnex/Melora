@@ -17,16 +17,16 @@ public partial class HomeViewModel : ObservableObject
     readonly MainView mainView;
     readonly Navigation navigation;
 
-    public PluginManager<PlatformSupportPlugin> PlatformSupportManager { get; }
+    public PluginManager<PlatformSupportPlugin> PluginManager { get; }
 
     public HomeViewModel(
         ILogger<HomeViewModel> logger,
-        PluginManager<PlatformSupportPlugin> platformSupportManager,
+        PluginManager<PlatformSupportPlugin> pluginManager,
         MainView mainView,
         Navigation navigation)
     {
         this.logger = logger;
-        this.PlatformSupportManager = platformSupportManager;
+        this.PluginManager = pluginManager;
         this.mainView = mainView;
         this.navigation = navigation;
 
@@ -69,6 +69,9 @@ public partial class HomeViewModel : ObservableObject
     void Search(
         string page)
     {
+        PlatformSupportPlugin plugin = PluginManager.LoadedPlugins.First(pl => pl.Name == page);
+        PluginManager.UnloadPlugin(plugin);
+
         App.Parameter = Query;
         navigation.SetCurrentItem(page);
     }

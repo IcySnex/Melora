@@ -19,16 +19,16 @@ public partial class SettingsViewModel : ObservableObject
     readonly MainView mainView;
 
     public Config Config { get; }
-    public PluginManager<PlatformSupportPlugin> PlatformSupportManager { get; }
+    public PluginManager<PlatformSupportPlugin> PluginManager { get; }
 
     public SettingsViewModel(
         ILogger<SettingsViewModel> logger,
         Config config,
-        PluginManager<PlatformSupportPlugin> platformSupportManager,
+        PluginManager<PlatformSupportPlugin> pluginManager,
         MainView mainView)
     {
         this.logger = logger;
-        this.PlatformSupportManager = platformSupportManager;
+        this.PluginManager = pluginManager;
         this.Config = config;
         this.mainView = mainView;
 

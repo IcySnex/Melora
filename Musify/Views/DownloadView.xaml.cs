@@ -14,7 +14,7 @@ public sealed partial class DownloadsView : Page
     {
         InitializeComponent();
 
-        viewModel.PlatformSupportManager.PluginLoaded += (s, plugin) =>
+        viewModel.PluginManager.PluginLoaded += (s, plugin) =>
         {
             int pluginHash = plugin.GetHashCode();
 
@@ -35,7 +35,7 @@ public sealed partial class DownloadsView : Page
 
             viewModel.ShowTracksFrom[pluginHash] = true;
         };
-        viewModel.PlatformSupportManager.PluginUnloaded += (s, plugin) =>
+        viewModel.PluginManager.PluginUnloaded += (s, plugin) =>
         {
             ToggleMenuFlyoutItem? pluginFlyoutItem = ShowTracksFromFlyout.Items.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(item => item.Text == plugin.Name);
             ShowTracksFromFlyout.Items.Remove(pluginFlyoutItem);

@@ -15,7 +15,7 @@ public class AppStartupHandler
     public AppStartupHandler(
         ILogger<AppStartupHandler> logger,
         Config config,
-        PluginManager<PlatformSupportPlugin> platformSupportManager,
+        PluginManager<PlatformSupportPlugin> pluginManager,
         MainView mainView,
         Navigation navigation)
     {
@@ -33,7 +33,7 @@ public class AppStartupHandler
                 string pluginFileName = Path.GetFileNameWithoutExtension(path);
                 try
                 {
-                    await platformSupportManager.LoadPluginAsync(path);
+                    await pluginManager.LoadPluginAsync(path);
 
                     mainView.ShowNotification("Success!", $"Loaded plugin: {pluginFileName}.", NotificationLevel.Success);
                 }

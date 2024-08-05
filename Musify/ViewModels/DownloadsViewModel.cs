@@ -22,18 +22,18 @@ public partial class DownloadsViewModel : ObservableObject
     readonly MediaEncoder encoder;
 
     public Config Config { get; }
-    public PluginManager<PlatformSupportPlugin> PlatformSupportManager { get; }
+    public PluginManager<PlatformSupportPlugin> PluginManager { get; }
 
     public DownloadsViewModel(
         ILogger<DownloadsViewModel> logger,
         Config config,
-        PluginManager<PlatformSupportPlugin> platformSupportManager,
+        PluginManager<PlatformSupportPlugin> pluginManager,
         MainView mainView,
         MediaEncoder encoder)
     {
         this.logger = logger;
         this.Config = config;
-        this.PlatformSupportManager = platformSupportManager;
+        this.PluginManager = pluginManager;
         this.mainView = mainView;
         this.encoder = encoder;
 
@@ -130,7 +130,7 @@ public partial class DownloadsViewModel : ObservableObject
         logger.LogInformation("[DownloadsViewModel-DownloadAsync] Starting download of track");
         try
         {
-            PlatformSupportPlugin plugin = PlatformSupportManager.LoadedPlugins.FirstOrDefault(loadedPlugin => loadedPlugin.GetHashCode() == download.Track.PluginHash) ?? throw new Exception("Could not find plugin responsible for downloading this track. Are you sure the plugin is still loaded?");
+            PlatformSupportPlugin plugin = PluginManager.LoadedPlugins.FirstOrDefault(loadedPlugin => loadedPlugin.GetHashCode() == download.Track.PluginHash) ?? throw new Exception("Could not find plugin responsible for downloading this track. Are you sure the plugin is still loaded?");
 
             download.Progress = 0;
             download.IsProcessing = true;

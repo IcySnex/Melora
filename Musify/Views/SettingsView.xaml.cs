@@ -14,11 +14,11 @@ public sealed partial class SettingsView : Page
     {
         InitializeComponent();
 
-        viewModel.PlatformSupportManager.PluginLoaded += (s, plugin) =>
+        viewModel.PluginManager.PluginLoaded += (s, plugin) =>
         {
             PlatformSupportPluginsContainer.Items.Add(plugin);
         };
-        viewModel.PlatformSupportManager.PluginUnloaded += (s, plugin) =>
+        viewModel.PluginManager.PluginUnloaded += (s, plugin) =>
         {
             PlatformSupportPluginsContainer.Items.Remove(plugin);
         };
