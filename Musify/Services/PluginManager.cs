@@ -102,30 +102,20 @@ public class PluginManager
 
         foreach (Type type in loadContext.EntryPointAssembly.GetExportedTypes())
         {
-            Type pluginType, configType;
-            switch (type)
-            {
-                case var _ when !typeof(IPlugin).IsAssignableFrom(type):
-                    continue;
+            if (!typeof(IPlugin).IsAssignableFrom(type))
+                continue;
 
-                case var _ when typeof(PlatformSupportPlugin).IsAssignableFrom(type):
-                    pluginType = typeof(PlatformSupportPlugin);
-                    configType = typeof(PlatformSupportPluginConfig);
-                    break;
-                case var _ when typeof(MetadataPlugin).IsAssignableFrom(type):
-                    pluginType = typeof(MetadataPlugin); ;
-                    configType = typeof(MetadataPluginConfig);
-                    break;
-                default:
-                    pluginType = typeof(IPlugin);
-                    configType = typeof(IPluginConfig);
-                    break;
-            }
+            Type configType = type switch
+            {
+                var t when typeof(PlatformSupportPlugin).IsAssignableFrom(t) => typeof(PlatformSupportPluginConfig),
+                var t when typeof(MetadataPlugin).IsAssignableFrom(t) => typeof(MetadataPluginConfig),
+                _ => typeof(IPluginConfig)
+            };
+            bool isConfigSaved = config.PluginConfigs.TryGetValue(type.Name, out IPluginConfig? pluginConfig) && pluginConfig.GetType() == configType;
 
             ConstructorInfo? constructor = null;
             object?[]? constructorArgs = null;
 
-            bool isConfigSaved = config.PluginConfigs.TryGetValue(type.Name, out IPluginConfig? pluginConfig) && pluginConfig.GetType() == configType;
             if (isConfigSaved && type.GetConstructor([configType, typeof(ILogger<IPlugin>)]) is ConstructorInfo configLoggerContructor)
             {
                 constructor = configLoggerContructor;
@@ -151,7 +141,7 @@ public class PluginManager
                 IPlugin plugin = (IPlugin?)constructor?.Invoke(constructorArgs) ?? throw new Exception("Could not find suitable constructors to create plugin instance.");
 
                 loadedPluginsLoadContexts[plugin] = loadContext;
-                OnPluginLoaded(pluginType, plugin);
+                OnPluginLoaded(type.BaseType!, plugin);
 
                 logger.LogInformation("[PluginManager-LoadPluginAsync] Loaded plugin: [{name}]", plugin.Name);
             }
@@ -172,7 +162,7 @@ public class PluginManager
 
         context!.Unload();
 
-        Type pluginType = plugin.GetType();
+        Type pluginType = plugin.GetType().BaseType!;
         OnPluginUnloaded(pluginType, plugin);
 
         loadedPluginsLoadContexts.Remove(plugin);
