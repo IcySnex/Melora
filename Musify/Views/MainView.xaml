@@ -121,21 +121,22 @@
             </ContentPresenter>
         </NavigationView>
 
-        <StackPanel
+        <ctr:BottomAlignedStackPanel
             x:Name="NotificationsContainer"
             Grid.Row="1"
+            Height="516"
             Margin="12"
             HorizontalAlignment="Right"
-            VerticalAlignment="Top"
+            VerticalAlignment="Bottom"
             x:FieldModifier="public"
             ScrollViewer.VerticalScrollBarVisibility="Disabled"
             Spacing="8">
-            <StackPanel.ChildrenTransitions>
+            <ctr:BottomAlignedStackPanel.ChildrenTransitions>
                 <TransitionCollection>
                     <AddDeleteThemeTransition />
                 </TransitionCollection>
-            </StackPanel.ChildrenTransitions>
-        </StackPanel>
+            </ctr:BottomAlignedStackPanel.ChildrenTransitions>
+        </ctr:BottomAlignedStackPanel>
 
         <ContentPresenter
             Name="LoadingPopupRootLayout"

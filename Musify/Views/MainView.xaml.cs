@@ -200,7 +200,7 @@ public sealed partial class MainView : Window
             CloseAfter = level switch
             {
                 NotificationLevel.Information => TimeSpan.FromSeconds(3),
-                NotificationLevel.Warning => TimeSpan.FromSeconds(10),
+                NotificationLevel.Warning => TimeSpan.FromSeconds(5),
                 NotificationLevel.Error => TimeSpan.FromSeconds(10),
                 NotificationLevel.Success => TimeSpan.FromSeconds(3),
                 _ => null
