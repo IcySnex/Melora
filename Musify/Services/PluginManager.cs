@@ -161,12 +161,13 @@ public class PluginManager
             throw new Exception("Could not find plugin. Are you sure the plugin was loaded?");
 
         context!.Unload();
+        loadedPluginsLoadContexts.Remove(plugin);
 
         Type pluginType = plugin.GetType().BaseType!;
         OnPluginUnloaded(pluginType, plugin);
 
-        loadedPluginsLoadContexts.Remove(plugin);
-        subscriptions.Remove(pluginType);
+        if (subscriptions.TryGetValue(pluginType, out HashSet<(Delegate?, Delegate?)>? handlers) && handlers.Count == 0)
+            subscriptions.Remove(pluginType);
 
         logger.LogInformation("[PluginManager-UnloadPlugin] Unloaded plugin: [{name}]", plugin.Name);
     }

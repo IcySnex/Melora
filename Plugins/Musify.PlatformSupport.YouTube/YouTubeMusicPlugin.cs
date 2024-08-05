@@ -20,7 +20,6 @@ public class YouTubeMusicPlugin : PlatformSupportPlugin
                 defaultItems:
                 [
                     new("Save Lyrics", "Whether to search & save lyrics from Genius automatically", true),
-                    new("Save Artwork", "Whether to download & save the artwork", true),
                     new("Fetch Genre", "Whether to fetch the track genre from Genius", true),
                     new("Playlist As Album", "Whether to set the playlist name as the album if possible", false),
                     new("Geographical Location", "The region for the YouTube Music search payload", "US"),

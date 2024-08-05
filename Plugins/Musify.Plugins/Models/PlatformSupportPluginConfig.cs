@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Enums;
+using Musify.Plugins.Exceptions;
 using System.ComponentModel;
 
 namespace Musify.Plugins.Models;
@@ -48,6 +49,9 @@ public partial class PlatformSupportPluginConfig : ObservableObject, IPluginConf
             Reset();
             return;
         }
+
+        if (initialConfig.Items.Length != defaultItems.Length || !initialConfig.Items.All(item => defaultItems.Any(defaultItem => item.Name == defaultItem.Name)))
+            throw new PluginConfigInvalidException(this, new("Passed initial config does not match additional items requiered for the plugin."));
 
         Items = initialConfig.Items.Select(item => (PluginConfigItem)item.Clone()).ToArray();
         Quality = initialConfig.Quality;

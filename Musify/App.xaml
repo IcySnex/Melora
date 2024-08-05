@@ -36,7 +36,7 @@
             <conv:EnumIndexConverter x:Key="EnumIndexConverter" />
             <conv:TimeSpanStringConverter x:Key="TimeSpanStringConverter" />
             <conv:TimeSpanLongStringConverter x:Key="TimeSpanLongStringConverter" />
-            <conv:IntOverZeroVisibilityConverter x:Key="IntOverZeroVisibilityConverter" />
+            <conv:IntIsZeroVisibilityConverter x:Key="IntIsZeroVisibilityConverter" />
             <conv:BoolFontIconChevronConverter x:Key="BoolFontIconChevronConverter" />
             <conv:PluginConfigDescriptionConverter x:Key="PluginConfigDescriptionConverter" />
             <conv:NullableIntDoubleConverter x:Key="NullableIntDoubleConverter" />
@@ -282,7 +282,7 @@
             </Style>
 
 
-            <!--  Controls  -->
+            <!--  Templates  -->
             <ControlTemplate x:Key="PluginSettingsExpander" TargetType="ContentControl">
                 <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                     <Expander.Header>
@@ -301,7 +301,7 @@
                                 TextTrimming="CharacterEllipsis" />
                             <TextBlock
                                 Margin="46,20,0,0"
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Opacity="0.7"
                                 Text="{TemplateBinding hlp:Attributes.Description}"
                                 TextTrimming="CharacterEllipsis" />
                         </Grid>
@@ -327,7 +327,7 @@
                                 TextTrimming="CharacterEllipsis" />
                             <TextBlock
                                 Margin="46,20,0,0"
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Opacity="0.7"
                                 Text="{TemplateBinding hlp:Attributes.Description}"
                                 TextTrimming="CharacterEllipsis" />
                         </Grid>
@@ -335,6 +335,32 @@
 
                     <ContentPresenter />
                 </Expander>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="SettingsExpanderPlaceholder" TargetType="ContentControl">
+                <Grid
+                    Padding="26,16"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Opacity="0.35">
+                    <FontIcon
+                        HorizontalAlignment="Left"
+                        FontSize="25"
+                        Glyph="{TemplateBinding hlp:Attributes.Glyph}" />
+
+                    <TextBlock
+                        Margin="46,0,0,0"
+                        Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
+                        Text="{TemplateBinding hlp:Attributes.Title}"
+                        TextTrimming="CharacterEllipsis" />
+                    <TextBlock
+                        Margin="46,20,0,0"
+                        Opacity="0.7"
+                        Text="{TemplateBinding hlp:Attributes.Description}"
+                        TextTrimming="CharacterEllipsis" />
+                </Grid>
             </ControlTemplate>
 
             <ControlTemplate x:Key="SettingsCard" TargetType="ContentControl">
@@ -357,7 +383,7 @@
                         TextTrimming="CharacterEllipsis" />
                     <TextBlock
                         Margin="0,18,0,0"
-                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Opacity="0.7"
                         Text="{TemplateBinding hlp:Attributes.Description}"
                         TextTrimming="CharacterEllipsis" />
 
@@ -390,7 +416,7 @@
             </ControlTemplate>
 
 
-            <!--  Overriden  -->
+            <!--  Controls  -->
             <Style x:Key="DefaultContentDialogStyle" TargetType="ContentDialog">
                 <Setter Property="Foreground" Value="{ThemeResource ContentDialogForeground}" />
                 <Setter Property="Background" Value="{ThemeResource ContentDialogBackground}" />

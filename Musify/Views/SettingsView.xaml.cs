@@ -15,14 +15,33 @@ public sealed partial class SettingsView : Page
         InitializeComponent();
 
         viewModel.PluginManager.Subscribe<PlatformSupportPlugin>(
-            PlatformSupportPluginsContainer.Items.Add,
-            plugin => PlatformSupportPluginsContainer.Items.Remove(plugin));
+            plugin =>
+            {
+                PlatformSupportPluginsContainer.Items.Add(plugin);
+                (PlatformSupportPluginsContainer.Visibility, PlatformSupportPluginsPlaceholder.Visibility) = PlatformSupportPluginsContainer.Items.Count == 0 ? (Visibility.Collapsed, Visibility.Visible) : (Visibility.Visible, Visibility.Collapsed);
+            },
+            plugin =>
+            {
+                PlatformSupportPluginsContainer.Items.Remove(plugin);
+                (PlatformSupportPluginsContainer.Visibility, PlatformSupportPluginsPlaceholder.Visibility) = PlatformSupportPluginsContainer.Items.Count == 0 ? (Visibility.Collapsed, Visibility.Visible) : (Visibility.Visible, Visibility.Collapsed);
+            });
+        viewModel.PluginManager.Subscribe<MetadataPlugin>(
+            plugin =>
+            {
+                MetadataPluginsContainer.Items.Add(plugin);
+                (MetadataPluginsContainer.Visibility, MetadataPluginsPlaceholder.Visibility) = MetadataPluginsContainer.Items.Count == 0 ? (Visibility.Collapsed, Visibility.Visible) : (Visibility.Visible, Visibility.Collapsed);
+            },
+            plugin =>
+            {
+                MetadataPluginsContainer.Items.Remove(plugin);
+                (MetadataPluginsContainer.Visibility, MetadataPluginsPlaceholder.Visibility) = MetadataPluginsContainer.Items.Count == 0 ? (Visibility.Collapsed, Visibility.Visible) : (Visibility.Visible, Visibility.Collapsed);
+            });
     }
 
 
     async void OnResetPluginConfigClick(object sender, RoutedEventArgs _)
     {
-        PlatformSupportPlugin plugin = (PlatformSupportPlugin)((Button)sender).DataContext;
+        IPlugin plugin = (IPlugin)((Button)sender).DataContext;
         await viewModel.ResetPluginConfigAsync(plugin);
     }
 }

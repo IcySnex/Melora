@@ -20,7 +20,6 @@ public class SpotifyPlugin : PlatformSupportPlugin
                 defaultItems:
                 [
                     new("Save Lyrics", "Whether to search & save lyrics from Genius automatically", true),
-                    new("Save Artwork", "Whether to download & save the artwork", true),
                     new("Prefer Genius-Genre", "Whether to prefer fetching the track genre from Genius instead of what Spotify provides", false),
                     new("Playlist As Album", "Whether to set the playlist name as the album if possible", false),
                     new("Search Market", "The region code for the Spotify search market", "US"),

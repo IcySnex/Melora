@@ -282,7 +282,6 @@ internal partial class YouTubeMusicWrapper
         CancellationToken cancellationToken = default)
     {
         bool saveLyrics = config.GetItem<bool>("Save Lyrics");
-        bool saveArtwork = config.GetItem<bool>("Save Artwork");
         bool fetchGenre = config.GetItem<bool>("Fetch Genre");
 
         (string? lyrics, string? genre) = (null, null);
@@ -295,7 +294,7 @@ internal partial class YouTubeMusicWrapper
             title: searchResult.Title,
             artists: searchResult.Artists,
             duration: searchResult.Duration,
-            artworkUrl: saveArtwork ? GetHighResThumbnailUrl(songVideo.Thumbnails) : null,
+            artworkUrl: GetHighResThumbnailUrl(songVideo.Thumbnails),
             isExplicit: searchResult.GetItem<bool>("Explicit"),
             releasedAt: songVideo.UploadedAt,
             album: searchResult.GetItem<string?>("AlbumName"),

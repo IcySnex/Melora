@@ -60,7 +60,17 @@
         <StackPanel Margin="24" Spacing="8">
             <TextBlock Style="{StaticResource PageTitleTextBlockStyle}" Text="Settings" />
 
-            <!--  Platform Support Plugins  -->
+
+            <!--  Platform Support  -->
+            <TextBlock Style="{StaticResource FlyoutPickerTitleTextBlockStyle}" Text="Platform Support" />
+
+            <ContentControl
+                x:Name="PlatformSupportPluginsPlaceholder"
+                hlp:Attributes.Description="There are currently no Plattform Support Plugins loaded."
+                hlp:Attributes.Glyph="&#xea80;"
+                hlp:Attributes.Title="No Plugins"
+                Template="{StaticResource SettingsExpanderPlaceholder}" />
+
             <ItemsControl x:Name="PlatformSupportPluginsContainer">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -76,7 +86,6 @@
                             hlp:Attributes.Title="{x:Bind Name}"
                             Template="{StaticResource PluginSettingsExpander}">
                             <StackPanel Spacing="8">
-
                                 <!--  Config  -->
                                 <ItemsControl ItemTemplateSelector="{StaticResource ConfigItemTemplateSelector}" ItemsSource="{x:Bind Config.Items, Mode=OneWay}">
                                     <ItemsControl.ItemsPanel>
@@ -152,20 +161,76 @@
                                     <ToggleSwitch IsOn="{x:Bind Config.SearchResultsSortDescending, Mode=TwoWay}" />
                                 </ContentControl>
 
-                                <Rectangle Margin="-5,4" Style="{StaticResource HorizontalDivider}" />
-
                                 <!--  Reset  -->
                                 <ContentControl
-                                    hlp:Attributes.Description="Resets the plugin config to the default."
+                                    hlp:Attributes.Description="Resets the plugin config."
                                     hlp:Attributes.Title="Reset Config"
                                     Template="{StaticResource SettingsCard}">
-                                    <Button Click="OnResetPluginConfigClick" Content="Reset Config" />
+                                    <Button Click="OnResetPluginConfigClick" Content="Reset Plugin Config" />
                                 </ContentControl>
                             </StackPanel>
                         </ContentControl>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+
+
+            <!--  Metadata  -->
+            <TextBlock
+                Margin="0,8,0,0"
+                Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
+                Text="Metadata" />
+
+            <ContentControl
+                x:Name="MetadataPluginsPlaceholder"
+                hlp:Attributes.Description="There are currently no Metadata Plugins loaded."
+                hlp:Attributes.Glyph="&#xea80;"
+                hlp:Attributes.Title="No Plugins"
+                Template="{StaticResource SettingsExpanderPlaceholder}" />
+
+            <ItemsControl x:Name="MetadataPluginsContainer">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Spacing="8" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="plga:MetadataPlugin">
+                        <ContentControl
+                            hlp:Attributes.Description="{x:Bind Config, Mode=OneWay, Converter={StaticResource PluginConfigDescriptionConverter}}"
+                            hlp:Attributes.IconPathData="{x:Bind IconPathData}"
+                            hlp:Attributes.Title="{x:Bind Name}"
+                            Template="{StaticResource PluginSettingsExpander}">
+                            <StackPanel Spacing="8">
+                                <!--  Config  -->
+                                <ItemsControl ItemTemplateSelector="{StaticResource ConfigItemTemplateSelector}" ItemsSource="{x:Bind Config.Items, Mode=OneWay}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Spacing="8" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+
+                                <!--  Reset  -->
+                                <ContentControl
+                                    hlp:Attributes.Description="Resets the plugin config."
+                                    hlp:Attributes.Title="Reset Config"
+                                    Template="{StaticResource SettingsCard}">
+                                    <Button Click="OnResetPluginConfigClick" Content="Reset Plugin Config" />
+                                </ContentControl>
+                            </StackPanel>
+                        </ContentControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+
+            <!--  General  -->
+            <TextBlock
+                Margin="0,8,0,0"
+                Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
+                Text="General" />
 
             <!--  Lyrics  -->
             <ContentControl
@@ -297,20 +362,29 @@
                 </StackPanel>
             </ContentControl>
 
-            <Rectangle Margin="-5,4" Style="{StaticResource HorizontalDivider}" />
-
             <!--  Advanced  -->
             <ContentControl
-                hlp:Attributes.Description="Resets the config to the default."
-                hlp:Attributes.Title="Reset Config"
-                Template="{StaticResource SettingsCard}">
-                <Button Command="{x:Bind viewModel.ResetConfigCommand}" Content="Reset Config" />
-            </ContentControl>
-            <ContentControl
-                hlp:Attributes.Description="View incoming logger events"
-                hlp:Attributes.Title="Logger"
-                Template="{StaticResource SettingsCard}">
-                <Button Command="{x:Bind viewModel.CreateLoggerViewCommand}" Content="Create Logger" />
+                hlp:Attributes.Description="Reset Config, Create Logger..."
+                hlp:Attributes.Glyph="&#xec7a;"
+                hlp:Attributes.Title="Advanced"
+                Template="{StaticResource SettingsExpander}">
+                <StackPanel Spacing="8">
+                    <!--  Create logger  -->
+                    <ContentControl
+                        hlp:Attributes.Description="View incoming logger events"
+                        hlp:Attributes.Title="Logger"
+                        Template="{StaticResource SettingsCard}">
+                        <Button Command="{x:Bind viewModel.CreateLoggerViewCommand}" Content="Create Logger" />
+                    </ContentControl>
+
+                    <!--  Reset config  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Resets the config."
+                        hlp:Attributes.Title="Reset Config"
+                        Template="{StaticResource SettingsCard}">
+                        <Button Command="{x:Bind viewModel.ResetConfigCommand}" Content="Reset Config" />
+                    </ContentControl>
+                </StackPanel>
             </ContentControl>
         </StackPanel>
     </ScrollViewer>

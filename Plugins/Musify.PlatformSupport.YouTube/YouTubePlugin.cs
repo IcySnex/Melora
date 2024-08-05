@@ -19,7 +19,6 @@ public class YouTubePlugin : PlatformSupportPlugin
                 defaultItems:
                 [
                     new("Save Description", "Whether to save the video description", false),
-                    new("Save Thumbnail", "Whether to download & save the thumbnail", true),
                     new("Playlist As Album", "Whether to set the playlist name as the album if possible", true)
                 ],
                 defaultQuality: Quality._160kbps,

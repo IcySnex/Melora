@@ -325,7 +325,6 @@ internal partial class SpotifyWrapper
         CancellationToken cancellationToken = default)
     {
         bool saveLyrics = config.GetItem<bool>("Save Lyrics");
-        bool saveArtwork = config.GetItem<bool>("Save Artwork");
         bool preferGeniusGenre = config.GetItem<bool>("Prefer Genius-Genre");
 
         (string? lyrics, string? genre) = (null, null);
@@ -338,7 +337,7 @@ internal partial class SpotifyWrapper
             title: searchResult.Title,
             artists: searchResult.Artists,
             duration: searchResult.Duration,
-            artworkUrl: saveArtwork ? searchResult.GetItem<string?>("FullArtwork") : null,
+            artworkUrl: searchResult.GetItem<string?>("FullArtwork"),
             isExplicit: searchResult.GetItem<bool>("Explicit"),
             releasedAt: GetDateTime(searchResult.GetItem<string>("ReleaseDate"), searchResult.GetItem<string>("ReleaseDatePrecision")),
             album: searchResult.GetItem<string>("AlbumName"),

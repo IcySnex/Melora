@@ -254,7 +254,6 @@ internal partial class YouTubeWrapper
         CancellationToken cancellationToken = default)
     {
         bool saveDescription = config.GetItem<bool>("Save Description");
-        bool saveThumbnail = config.GetItem<bool>("Save Thumbnail");
 
         logger?.LogInformation("[YouTubeWrapper-PrepareDownloadAsync] Getting video...");
         Video video = await client.Videos.GetAsync(searchResult.Id, cancellationToken);
@@ -263,7 +262,7 @@ internal partial class YouTubeWrapper
             title: searchResult.Title,
             artists: searchResult.Artists,
             duration: searchResult.Duration,
-            artworkUrl: saveThumbnail ? GetHighResThumbnailUrl(video.Thumbnails) : null,
+            artworkUrl: GetHighResThumbnailUrl(video.Thumbnails),
             isExplicit: false,
             releasedAt: video.UploadDate.DateTime,
             album: searchResult.GetItem<string?>("PlaylistName"),
