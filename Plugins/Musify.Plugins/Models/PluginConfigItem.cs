@@ -14,7 +14,7 @@ namespace Musify.Plugins.Models;
 public partial class PluginConfigItem(
     string name,
     string description,
-    object value) : ObservableObject
+    object value) : ObservableObject, ICloneable
 {
     /// <summary>
     /// The name of the property.
@@ -31,4 +31,12 @@ public partial class PluginConfigItem(
     /// </summary>
     [ObservableProperty]
     object value = value;
+
+
+    /// <summary>
+    /// Creates a new object that is a copy of the current instance.
+    /// </summary>
+    /// <returns>A new object that is a copy of this instance.</returns>
+    public object Clone() =>
+        new PluginConfigItem(Name, Description, Value);
 }

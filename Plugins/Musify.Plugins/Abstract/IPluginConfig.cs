@@ -12,6 +12,11 @@ public interface IPluginConfig
     /// Additional config items for the plugin.
     /// </summary>
     PluginConfigItem[] Items { get; set; }
+
+    /// <summary>
+    /// Resets the config to the plugins default.
+    /// </summary>
+    void Reset();
 }
 
 

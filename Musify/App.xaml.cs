@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Musify.Helpers;
 using Musify.Models;
-using Musify.Plugins.Abstract;
 using Musify.Services;
 using Musify.ViewModels;
 using Musify.Views;

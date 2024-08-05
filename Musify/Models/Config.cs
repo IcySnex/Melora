@@ -10,6 +10,12 @@ public class Config
     public static readonly string ConfigFilepath = Path.Combine(Environment.CurrentDirectory, "Config.json");
 
 
+    public Config()
+    {
+        Reset();
+    }
+
+
     public Dictionary<string, IPluginConfig> PluginConfigs { get; set; } = [];
 
     public ConfigDownloads Downloads { get; set; } = new();
@@ -17,41 +23,57 @@ public class Config
     public ConfigPaths Paths { get; set; } = new();
 
     public ConfigLyrics Lyrics { get; set; } = new();
+
+
+    public void Reset()
+    {
+        Lyrics.GeniusAccessToken = "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr";
+        Lyrics.SearchResultsSorting = Sorting.Default;
+        Lyrics.SearchResultsSortDescending = false;
+
+        Downloads.AlreadyExistsBehavior = AlreadyExistsBehavior.Ask;
+        Downloads.Sorting = Sorting.Default;
+        Downloads.SortDescending = false;
+
+        Paths.DownloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+        Paths.Filename = "{artists} - {title}";
+        Paths.FFMPEGLocation = "FFMPEG.exe";
+    }
 }
 
 
 public partial class ConfigLyrics : ObservableObject
 {
     [ObservableProperty]
-    string geniusAccessToken = "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr";
+    string geniusAccessToken = default!;
 
     [ObservableProperty]
-    Sorting searchResultsSorting = Sorting.Default;
+    Sorting searchResultsSorting = default!;
 
     [ObservableProperty]
-    bool searchResultsSortDescending = false;
+    bool searchResultsSortDescending = default!;
 }
 
 public partial class ConfigDownloads : ObservableObject
 {
     [ObservableProperty]
-    AlreadyExistsBehavior alreadyExistsBehavior = AlreadyExistsBehavior.Ask;
+    AlreadyExistsBehavior alreadyExistsBehavior = default!;
 
     [ObservableProperty]
-    Sorting sorting = Sorting.Default;
+    Sorting sorting = default!;
 
     [ObservableProperty]
-    bool sortDescending = false;
+    bool sortDescending = default!;
 }
 
 public partial class ConfigPaths : ObservableObject
 {
     [ObservableProperty]
-    string downloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+    string downloadLocation = default!;
 
     [ObservableProperty]
-    string filename = "{artists} - {title}";
+    string filename = default!;
 
     [ObservableProperty]
-    string fFMPEGLocation = "FFMPEG.exe";
+    string fFMPEGLocation = default!;
 }

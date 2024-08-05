@@ -17,12 +17,6 @@ public interface IPlugin
 
 
     /// <summary>
-    /// Gets the default config of the plugin.
-    /// </summary>
-    /// <returns>A new IPluginConfig</returns>
-    public IPluginConfig GetDefaultConfig();
-
-    /// <summary>
     /// The config for the plugin.
     /// </summary>
     IPluginConfig Config { get; }

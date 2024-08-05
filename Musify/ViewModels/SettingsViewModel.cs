@@ -5,7 +5,6 @@ using Microsoft.UI.Xaml.Controls;
 using Musify.Enums;
 using Musify.Models;
 using Musify.Plugins.Abstract;
-using Musify.Plugins.Models;
 using Musify.Services;
 using Musify.Views;
 using Windows.Storage;
@@ -40,43 +39,26 @@ public partial class SettingsViewModel : ObservableObject
 
 
     public async Task ResetPluginConfigAsync(
-        PlatformSupportPlugin plugin)
+        IPlugin plugin)
     {
-        if (await mainView.AlertAsync("Resetting the plugins the config to default will delete all plugin settings and preferences.", "Are you sure?", "Cancel", "Yes") != ContentDialogResult.Primary)
+        if (await mainView.AlertAsync("Resetting the plugin config will delete ALL settings and preferences.", "Are you sure?", "Cancel", "Yes") != ContentDialogResult.Primary)
             return;
 
-        PlatformSupportPluginConfig defaultPlatformSupportConfig = plugin.GetDefaultConfig();
-        plugin.Config.Items = defaultPlatformSupportConfig.Items;
-        plugin.Config.Quality = defaultPlatformSupportConfig.Quality;
-        plugin.Config.Format = defaultPlatformSupportConfig.Format;
-        plugin.Config.SearchResultsLimit = defaultPlatformSupportConfig.SearchResultsLimit;
-        plugin.Config.SearchResultsSorting = defaultPlatformSupportConfig.SearchResultsSorting;
-        plugin.Config.SearchResultsSortDescending = defaultPlatformSupportConfig.SearchResultsSortDescending;
+        plugin.Config.Reset();
 
         mainView.ShowNotification("Success!", $"Reset plugins config: {plugin.Name}", NotificationLevel.Success);
-
         logger.LogInformation("[SettingsViewModel-ResetPluginConfig] Reset plugins config to default: {pluginName}", plugin.Name);
     }
 
     [RelayCommand]
     async Task ResetConfig()
     {
-        if (await mainView.AlertAsync("Resetting the config to the default will delete all your settings and preferences.", "Are you sure?", "Cancel", "Yes") != ContentDialogResult.Primary)
+        if (await mainView.AlertAsync("Resetting the config will delete ALL your settings and preferences. Your plugin configs won't be reset.", "Are you sure?", "Cancel", "Yes") != ContentDialogResult.Primary)
             return;
 
-        Config defaultConfig = new();
-        Config.Lyrics.GeniusAccessToken = defaultConfig.Lyrics.GeniusAccessToken;
-        Config.Lyrics.SearchResultsSorting = defaultConfig.Lyrics.SearchResultsSorting;
-        Config.Lyrics.SearchResultsSortDescending = defaultConfig.Lyrics.SearchResultsSortDescending;
-        Config.Downloads.AlreadyExistsBehavior = defaultConfig.Downloads.AlreadyExistsBehavior;
-        Config.Downloads.Sorting = defaultConfig.Downloads.Sorting;
-        Config.Downloads.SortDescending = defaultConfig.Downloads.SortDescending;
-        Config.Paths.DownloadLocation = defaultConfig.Paths.DownloadLocation;
-        Config.Paths.Filename = defaultConfig.Paths.Filename;
-        Config.Paths.FFMPEGLocation = defaultConfig.Paths.FFMPEGLocation;
+        Config.Reset();
 
         mainView.ShowNotification("Success!", $"Reset config", NotificationLevel.Success);
-
         logger.LogInformation("[SettingsViewModel-ResetConfig] Reset config");
     }
 

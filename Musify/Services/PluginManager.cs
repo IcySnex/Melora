@@ -40,7 +40,7 @@ public class PluginManager
         IPlugin plugin = LoadedPlugins.FirstOrDefault(loadedPlugin => loadedPlugin.Name == name) ?? throw new Exception("Could not get plugin with specified name. Make sure the plugin hasn't been unloaded.");
         if (plugin is not T result)
             throw new Exception("Requested plugin does not match requested plugin type.");
-    
+
         return result;
     }
 
@@ -50,7 +50,7 @@ public class PluginManager
         IPlugin plugin = LoadedPlugins.FirstOrDefault(loadedPlugin => loadedPlugin.GetHashCode() == hash) ?? throw new Exception("Could not get plugin with specified hash. Make sure the plugin hasn't been unloaded.");
         if (plugin is not T result)
             throw new Exception("Requested plugin does not match requested plugin type.");
-    
+
         return result;
     }
 
@@ -113,7 +113,7 @@ public class PluginManager
                     configType = typeof(PlatformSupportPluginConfig);
                     break;
                 case var _ when typeof(MetadataPlugin).IsAssignableFrom(type):
-                    pluginType = typeof(MetadataPlugin);;
+                    pluginType = typeof(MetadataPlugin); ;
                     configType = typeof(MetadataPluginConfig);
                     break;
                 default:

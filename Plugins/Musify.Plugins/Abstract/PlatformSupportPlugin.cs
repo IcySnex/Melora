@@ -12,13 +12,11 @@ namespace Musify.Plugins.Abstract;
 /// <param name="name">The name of the plugin.</param>
 /// <param name="iconPathData">The path date for the plugin icon.</param>
 /// <param name="config">The config the plugin gets initialized with.</param>
-/// <param name="defaultConfig">The function to create a default config.</param>
 /// <param name="logger">An optional logger.</param>
 public abstract class PlatformSupportPlugin(
     string name,
     string iconPathData,
-    PlatformSupportPluginConfig? config,
-    Func<PlatformSupportPluginConfig> defaultConfig,
+    PlatformSupportPluginConfig config,
     ILogger<IPlugin>? logger = null) : IPlugin
 {
     /// <summary>
@@ -39,22 +37,9 @@ public abstract class PlatformSupportPlugin(
 
 
     /// <summary>
-    /// Gets the default config of the plugin.
-    /// </summary>
-    /// <returns>A new PlatformSupportPluginConfig</returns>
-    public PlatformSupportPluginConfig GetDefaultConfig() =>
-        defaultConfig.Invoke();
-
-    IPluginConfig IPlugin.GetDefaultConfig() =>
-        GetDefaultConfig();
-
-
-    readonly Func<PlatformSupportPluginConfig> defaultConfig = defaultConfig;
-
-    /// <summary>
     /// The config for the plugin.
     /// </summary>
-    public PlatformSupportPluginConfig Config { get; } = config ?? defaultConfig.Invoke();
+    public PlatformSupportPluginConfig Config { get; } = config;
 
     IPluginConfig IPlugin.Config => Config;
 

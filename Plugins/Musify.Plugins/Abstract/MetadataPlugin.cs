@@ -6,76 +6,40 @@ namespace Musify.Plugins.Abstract;
 /// <summary>
 /// Represents a plugin which writes track metadata after downloading.
 /// </summary>
-public abstract class MetadataPlugin : IPlugin
+/// <remarks>
+/// Creates a new MetadataPlugin.
+/// </remarks>
+/// <param name="name">The name of the plugin.</param>
+/// <param name="iconPathData">The path date for the plugin icon.</param>
+/// <param name="config">The config the plugin gets initialized with.</param>
+/// <param name="logger">An optional logger.</param>
+public abstract class MetadataPlugin(
+    string name,
+    string iconPathData,
+    MetadataPluginConfig config,
+    ILogger<IPlugin>? logger = null) : IPlugin
 {
-    /// <summary>
-    /// Creates a new MetadataPlugin.
-    /// </summary>
-    /// <param name="name">The name of the plugin.</param>
-    /// <param name="iconPathData">The path date for the plugin icon.</param>
-    /// <param name="config">The config the plugin gets initialized with.</param>
-    /// <param name="defaultConfig">The function to create a default config.</param>
-    /// <param name="logger">An optional logger.</param>
-    public MetadataPlugin(
-        string name,
-        string iconPathData,
-        IPluginConfig? config,
-        Func<MetadataPluginConfig> defaultConfig,
-        ILogger<IPlugin>? logger = null)
-    {
-        this.Name = name;
-        this.IconPathData = iconPathData;
-        this.defaultConfig = defaultConfig;
-        this.logger = logger;
-
-
-        if (config is MetadataPluginConfig metadataConfig)
-        {
-            Config = metadataConfig;
-            return;
-        }
-        MetadataPluginConfig defaultMetdataConfig = defaultConfig.Invoke();
-        if (config is not null)
-            defaultMetdataConfig.Items = config.Items;
-
-        Config = defaultMetdataConfig;
-    }
-
-
     /// <summary>
     /// Generic logger used to log stuff lol.
     /// </summary>
-    readonly protected ILogger<IPlugin>? logger;
+    readonly protected ILogger<IPlugin>? logger = logger;
 
 
     /// <summary>
     /// The name of the plugin.
     /// </summary>
-    public string Name { get; }
+    public string Name { get; } = name;
 
     /// <summary>
     /// The path date for the plugin icon.
     /// </summary>
-    public string IconPathData { get; }
+    public string IconPathData { get; } = iconPathData;
 
-
-    /// <summary>
-    /// Gets the default config of the plugin.
-    /// </summary>
-    /// <returns>A new PlatformSupportPluginConfig</returns>
-    public MetadataPluginConfig GetDefaultConfig() =>
-        defaultConfig.Invoke();
-
-    IPluginConfig IPlugin.GetDefaultConfig() =>
-        GetDefaultConfig();
-
-
-    readonly Func<MetadataPluginConfig> defaultConfig;
 
     /// <summary>
     /// The config for the plugin.
     /// </summary>
-    public MetadataPluginConfig Config { get; }
+    public MetadataPluginConfig Config { get; } = config;
 
     IPluginConfig IPlugin.Config => Config;
 
