@@ -15,7 +15,7 @@ public sealed partial class HomeView : Page
     {
         InitializeComponent();
 
-        viewModel.PluginManager.PluginLoaded += (s, plugin) =>
+        viewModel.PlatformSupportManager.PluginLoaded += (s, plugin) =>
         {
             Button pluginButton = new()
             {
@@ -27,7 +27,7 @@ public sealed partial class HomeView : Page
             ToolTipService.SetToolTip(pluginButton, $"Search on {plugin.Name}");
             SearchButtonsContainer.Children.Insert(SearchButtonsContainer.Children.Count - 1, pluginButton);
         };
-        viewModel.PluginManager.PluginUnloaded += (s, plugin) =>
+        viewModel.PlatformSupportManager.PluginUnloaded += (s, plugin) =>
         {
             Button? pluginButton = SearchButtonsContainer.Children.OfType<Button>().FirstOrDefault(item => (string)item.CommandParameter == plugin.Name);
             SearchButtonsContainer.Children.Remove(pluginButton);

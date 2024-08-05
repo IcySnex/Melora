@@ -24,21 +24,21 @@ public sealed partial class MainView : Window
 {
     readonly ILogger<MainView> logger;
     readonly Config config;
-    readonly PluginManager<PlatformSupportPlugin> pluginManager;
+    readonly PluginManager<PlatformSupportPlugin> platformSupportManager;
     readonly JsonConverter jsonConverter;
 
     public MainView(
         ILogger<MainView> logger,
         Config config,
-        PluginManager<PlatformSupportPlugin> pluginManager,
+        PluginManager<PlatformSupportPlugin> platformSupportManager,
         JsonConverter jsonConverter)
     {
         this.logger = logger;
         this.config = config;
-        this.pluginManager = pluginManager;
+        this.platformSupportManager = platformSupportManager;
         this.jsonConverter = jsonConverter;
 
-        pluginManager.PluginLoaded += (s, plugin) =>
+        platformSupportManager.PluginLoaded += (s, plugin) =>
         {
             NavigationViewItem pluginItem = new()
             {
@@ -48,7 +48,7 @@ public sealed partial class MainView : Window
             };
             NavigationView.MenuItems.Insert(NavigationView.MenuItems.Count - 4, pluginItem);
         };
-        pluginManager.PluginUnloaded += (s, plugin) =>
+        platformSupportManager.PluginUnloaded += (s, plugin) =>
         {
             NavigationViewItem? pluginItem = NavigationView.MenuItems.OfType<NavigationViewItem>().FirstOrDefault(item => (string)item.Content == plugin.Name);
             NavigationView.MenuItems.Remove(pluginItem);
@@ -77,7 +77,7 @@ public sealed partial class MainView : Window
 
     void OnClosed(object _, WindowEventArgs _1)
     {
-        foreach (PlatformSupportPlugin platformSupportPlugin in pluginManager.LoadedPlugins)
+        foreach (PlatformSupportPlugin platformSupportPlugin in platformSupportManager.LoadedPlugins)
             config.PluginConfigs[platformSupportPlugin.GetType().Name] = platformSupportPlugin.Config;
 
         string jsonConfig = jsonConverter.ToString(config);
