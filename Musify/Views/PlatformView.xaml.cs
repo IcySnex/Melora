@@ -22,7 +22,7 @@ public sealed partial class PlatformView : Page
 
     void OnPageLoaded(object _, RoutedEventArgs _1)
     {
-        if (string.IsNullOrWhiteSpace(App.Parameter))
+        if (App.Parameter is null)
             return;
 
         viewModel.Query = App.Parameter;
