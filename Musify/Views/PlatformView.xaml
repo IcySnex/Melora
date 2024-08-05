@@ -70,7 +70,7 @@
             FontSize="16"
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             HorizontalTextAlignment="Center"
-            Visibility="{x:Bind viewModel.SearchResults.Count, Mode=OneWay, Converter={StaticResource IntOverZeroVisibilityConverter}}">
+            Visibility="{x:Bind viewModel.SearchResults.Count, Mode=OneWay, Converter={StaticResource IntIsZeroVisibilityConverter}}">
             <Run Text="There are currently no search results.&#x0a;Paste in a URL or type in a query to search on" />
             <Run Text="{x:Bind viewModel.Plugin.Name}" /><Run Text="." />
         </TextBlock>

@@ -155,7 +155,7 @@
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             HorizontalTextAlignment="Center"
             Text="There are currently no downloads.&#x0a;Search for tracks on a plugin to start downloading or change the filter options..."
-            Visibility="{x:Bind viewModel.Downloads.Count, Mode=OneWay, Converter={StaticResource IntOverZeroVisibilityConverter}}" />
+            Visibility="{x:Bind viewModel.Downloads.Count, Mode=OneWay, Converter={StaticResource IntIsZeroVisibilityConverter}}" />
 
         <!--  Search bar  -->
         <Grid

@@ -57,7 +57,7 @@
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             HorizontalTextAlignment="Center"
             Text="There are currently no search results.&#x0a;Type in a track title or artist name to search on Genius..."
-            Visibility="{x:Bind viewModel.SearchResults.Count, Mode=OneWay, Converter={StaticResource IntOverZeroVisibilityConverter}}" />
+            Visibility="{x:Bind viewModel.SearchResults.Count, Mode=OneWay, Converter={StaticResource IntIsZeroVisibilityConverter}}" />
 
         <!--  Search bar  -->
         <Grid
