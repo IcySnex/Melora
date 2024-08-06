@@ -131,6 +131,7 @@ public partial class DownloadsViewModel : ObservableObject
         try
         {
             PlatformSupportPlugin plugin = PluginManager.GetLoaded<PlatformSupportPlugin>(download.Track.PluginHash);
+            MetadataPlugin metadataPlugin = PluginManager.GetLoaded<MetadataPlugin>(Config.Downloads.SelectedMetadatePlugin);
 
             download.Progress = 0;
             download.IsProcessing = true;
@@ -143,17 +144,20 @@ public partial class DownloadsViewModel : ObservableObject
                 .Replace("{album}", download.Track.Album)
                 .Replace("{release}", download.Track.ReleasedAt.ToString("MM-dd-yyyyy"))
                 .ToLegitFileName();
+            string filePath = Path.Combine(Config.Paths.DownloadLocation, Path.ChangeExtension(fileName, $".{plugin.Config.Format}"));
 
             await encoder.WriteAsync(
-                fileName,
+                filePath,
                 stream,
                 plugin.Config.Quality,
-                plugin.Config.Format,
                 progress,
                 download.CancellationSource.Token);
 
             download.IsProcessing = true;
-            await Task.Delay(1000, download.CancellationSource.Token); // Simulate after download progress, e.g. writing metadata...
+            await metadataPlugin.WriteAsync(
+                filePath,
+                download.Track,
+                download.CancellationSource.Token);
 
             Downloads.Remove(download);
             download.Dispose();
@@ -172,7 +176,7 @@ public partial class DownloadsViewModel : ObservableObject
             download.Reset();
 
             mainView.ShowNotification("Something went wrong!", $"Failed to download track: {download.Track.Title}.", NotificationLevel.Error, ex.ToFormattedString());
-            logger.LogError("[DownloadsViewModel-DownloadAsync] Failed to download track {trackTitle}: {exception}", download.Track.Title, ex.Message);
+            logger.LogError(ex, "[DownloadsViewModel-DownloadAsync] Failed to download track {trackTitle}: {exception}", download.Track.Title, ex.Message);
         }
     }
 

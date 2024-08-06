@@ -69,7 +69,8 @@
                 hlp:Attributes.Description="There are currently no Plattform Support Plugins loaded."
                 hlp:Attributes.Glyph="&#xea80;"
                 hlp:Attributes.Title="No Plugins"
-                Template="{StaticResource SettingsExpanderPlaceholder}" />
+                Opacity="0.35"
+                Template="{StaticResource SettingsExpanderHeader}" />
 
             <ItemsControl x:Name="PlatformSupportPluginsContainer">
                 <ItemsControl.ItemsPanel>
@@ -182,11 +183,24 @@
                 Text="Metadata" />
 
             <ContentControl
+                x:Name="MetadataPluginsSelected"
+                hlp:Attributes.Description="Select the Plugin used to write track metadata to a download."
+                hlp:Attributes.Glyph="&#xf45e;"
+                hlp:Attributes.Title="Selected"
+                Template="{StaticResource SettingsExpanderHeader}">
+                <ComboBox
+                    x:Name="MetadataPluginsSelectedComboBox"
+                    Width="200"
+                    SelectedItem="{x:Bind viewModel.Config.Downloads.SelectedMetadatePlugin, Mode=TwoWay}" />
+            </ContentControl>
+
+            <ContentControl
                 x:Name="MetadataPluginsPlaceholder"
                 hlp:Attributes.Description="There are currently no Metadata Plugins loaded."
                 hlp:Attributes.Glyph="&#xea80;"
                 hlp:Attributes.Title="No Plugins"
-                Template="{StaticResource SettingsExpanderPlaceholder}" />
+                Opacity="0.35"
+                Template="{StaticResource SettingsExpanderHeader}" />
 
             <ItemsControl x:Name="MetadataPluginsContainer">
                 <ItemsControl.ItemsPanel>

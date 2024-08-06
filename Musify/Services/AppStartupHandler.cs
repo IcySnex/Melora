@@ -4,9 +4,9 @@ using Microsoft.Windows.AppLifecycle;
 using Musify.Enums;
 using Musify.Helpers;
 using Musify.Models;
+using Musify.Plugins.Abstract;
 using Musify.Plugins.Exceptions;
 using Musify.Views;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Musify.Services;
 
@@ -63,6 +63,8 @@ public class AppStartupHandler
                     logger.LogError("[PluginManager-LoadAllPluginsAsync] Failed to load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
                 }
             }
+
+            config.Downloads.SelectedMetadatePlugin = pluginManager.GetLoadedOrDefault<MetadataPlugin>(config.Downloads.SelectedMetadatePlugin)?.Name;
         };
         LoadPlugins();
 

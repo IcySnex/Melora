@@ -29,12 +29,18 @@ public sealed partial class SettingsView : Page
             plugin =>
             {
                 MetadataPluginsContainer.Items.Add(plugin);
-                (MetadataPluginsContainer.Visibility, MetadataPluginsPlaceholder.Visibility) = MetadataPluginsContainer.Items.Count == 0 ? (Visibility.Collapsed, Visibility.Visible) : (Visibility.Visible, Visibility.Collapsed);
+                MetadataPluginsSelectedComboBox.Items.Add(plugin.Name);
+
+                (MetadataPluginsContainer.Visibility, MetadataPluginsPlaceholder.Visibility, MetadataPluginsSelected.Visibility) = MetadataPluginsContainer.Items.Count == 0 ? (Visibility.Collapsed, Visibility.Visible, Visibility.Collapsed) : (Visibility.Visible, Visibility.Collapsed, Visibility.Visible);
             },
             plugin =>
             {
                 MetadataPluginsContainer.Items.Remove(plugin);
-                (MetadataPluginsContainer.Visibility, MetadataPluginsPlaceholder.Visibility) = MetadataPluginsContainer.Items.Count == 0 ? (Visibility.Collapsed, Visibility.Visible) : (Visibility.Visible, Visibility.Collapsed);
+                MetadataPluginsSelectedComboBox.Items.Remove(plugin.Name);
+
+                (MetadataPluginsContainer.Visibility, MetadataPluginsPlaceholder.Visibility, MetadataPluginsSelected.Visibility) = MetadataPluginsContainer.Items.Count == 0 ? (Visibility.Collapsed, Visibility.Visible, Visibility.Collapsed) : (Visibility.Visible, Visibility.Collapsed, Visibility.Visible);
+                
+                viewModel.Config.Downloads.SelectedMetadatePlugin = viewModel.PluginManager.GetLoadedOrDefault<MetadataPlugin>(viewModel.Config.Downloads.SelectedMetadatePlugin)?.Name;
             });
     }
 

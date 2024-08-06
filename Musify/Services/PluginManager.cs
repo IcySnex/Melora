@@ -6,6 +6,7 @@ using Musify.Plugins.Abstract;
 using Musify.Plugins.Exceptions;
 using Musify.Plugins.Models;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace Musify.Services;
 
@@ -34,24 +35,65 @@ public class PluginManager
 
     public IReadOnlyCollection<IPlugin> LoadedPlugins => loadedPluginsLoadContexts.Keys;
 
-    public T GetLoaded<T>(
-        string name) where T : IPlugin
-    {
-        IPlugin plugin = LoadedPlugins.FirstOrDefault(loadedPlugin => loadedPlugin.Name == name) ?? throw new Exception("Could not get plugin with specified name. Make sure the plugin hasn't been unloaded.");
-        if (plugin is not T result)
-            throw new Exception("Requested plugin does not match requested plugin type.");
 
-        return result;
+    public bool TryGetLoaded<T>(
+        string? name,
+        out T result) where T : IPlugin
+    {
+        result = default!;
+
+        if (name is null)
+            return false;
+
+        IPlugin? plugin = LoadedPlugins.FirstOrDefault(loadedPlugin => loadedPlugin.Name == name);
+        if (plugin is not T typedPlugin)
+            return false;
+
+        result = typedPlugin;
+        return true;
+    }
+
+    public bool TryGetLoaded<T>(
+        int? hash,
+        out T result) where T : IPlugin
+    {
+        result = default!;
+
+        if (!hash.HasValue)
+            return false;
+
+        IPlugin? plugin = LoadedPlugins.FirstOrDefault(loadedPlugin => loadedPlugin.GetHashCode() == hash.Value);
+        if (plugin is not T typedPlugin)
+            return false;
+
+        result = typedPlugin;
+        return true;
     }
 
     public T GetLoaded<T>(
-        int hash) where T : IPlugin
-    {
-        IPlugin plugin = LoadedPlugins.FirstOrDefault(loadedPlugin => loadedPlugin.GetHashCode() == hash) ?? throw new Exception("Could not get plugin with specified hash. Make sure the plugin hasn't been unloaded.");
-        if (plugin is not T result)
-            throw new Exception("Requested plugin does not match requested plugin type.");
+        string? name) where T : IPlugin =>
+        TryGetLoaded(name, out T result) ? result : throw new Exception("Could not get plugin with specified name and requested type.");
+    
+    public T GetLoaded<T>(
+        int? hash) where T : IPlugin =>
+        TryGetLoaded(hash, out T result) ? result : throw new Exception("Could not get plugin with given hash and requested type.");
 
-        return result;
+    public T? GetLoadedOrDefault<T>(
+        string? name) where T : IPlugin
+    {
+        if (TryGetLoaded(name, out T result))
+            return result;
+
+        return LoadedPlugins.OfType<T>().FirstOrDefault();
+    }
+
+    public T? GetLoadedOrDefault<T>(
+        int? hash) where T : IPlugin
+    {
+        if (TryGetLoaded(hash, out T result))
+            return result;
+
+        return LoadedPlugins.OfType<T>().FirstOrDefault();
     }
 
 

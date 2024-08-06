@@ -31,6 +31,14 @@
             <wui:Color x:Key="FadeScrollColor">#2b2b2b</wui:Color>
             <wui:Color x:Key="FadeScrollTransparentColor">#002b2b2b</wui:Color>
 
+            <AcrylicBrush
+                x:Key="CardBackgroundAcrylicBrush"
+                FallbackColor="{ThemeResource ControlSolidFillColorDefault}"
+                TintColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
+                TintLuminosityOpacity="0.6"
+                TintOpacity="0.4" />
+
+
 
             <!--  Converters  -->
             <conv:EnumIndexConverter x:Key="EnumIndexConverter" />
@@ -43,15 +51,6 @@
             <conv:DateTimeDateTimeOffsetConverter x:Key="DateTimeDateTimeOffsetConverter" />
             <conv:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
             <conv:InverseBoolVisibilityConverter x:Key="InverseBoolVisibilityConverter" />
-
-
-            <!--  Colors  -->
-            <AcrylicBrush
-                x:Key="CardBackgroundAcrylicBrush"
-                FallbackColor="{ThemeResource ControlSolidFillColorDefault}"
-                TintColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
-                TintLuminosityOpacity="0.6"
-                TintOpacity="0.4" />
 
 
             <!--  Styles  -->
@@ -337,29 +336,43 @@
                 </Expander>
             </ControlTemplate>
 
-            <ControlTemplate x:Key="SettingsExpanderPlaceholder" TargetType="ContentControl">
+            <ControlTemplate x:Key="SettingsExpanderHeader" TargetType="ContentControl">
                 <Grid
                     Padding="26,16"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    CornerRadius="4"
-                    Opacity="0.35">
+                    CornerRadius="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
                     <FontIcon
                         HorizontalAlignment="Left"
                         FontSize="25"
                         Glyph="{TemplateBinding hlp:Attributes.Glyph}" />
 
                     <TextBlock
-                        Margin="46,0,0,0"
+                        Grid.Column="2"
                         Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
                         Text="{TemplateBinding hlp:Attributes.Title}"
                         TextTrimming="CharacterEllipsis" />
                     <TextBlock
-                        Margin="46,20,0,0"
+                        Grid.Column="2"
+                        Margin="0,20,0,0"
                         Opacity="0.7"
                         Text="{TemplateBinding hlp:Attributes.Description}"
                         TextTrimming="CharacterEllipsis" />
+
+                    <ContentPresenter
+                        Grid.Column="4"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        ToolTipService.ToolTip="{TemplateBinding hlp:Attributes.Title}" />
                 </Grid>
             </ControlTemplate>
 
@@ -390,6 +403,7 @@
                     <ContentPresenter
                         Grid.Column="2"
                         HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
                         ToolTipService.ToolTip="{TemplateBinding hlp:Attributes.Title}" />
                 </Grid>
             </ControlTemplate>

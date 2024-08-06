@@ -31,6 +31,7 @@ public class Config
         Lyrics.SearchResultsSorting = Sorting.Default;
         Lyrics.SearchResultsSortDescending = false;
 
+        Downloads.SelectedMetadatePlugin = null;
         Downloads.AlreadyExistsBehavior = AlreadyExistsBehavior.Ask;
         Downloads.Sorting = Sorting.Default;
         Downloads.SortDescending = false;
@@ -56,6 +57,9 @@ public partial class ConfigLyrics : ObservableObject
 
 public partial class ConfigDownloads : ObservableObject
 {
+    [ObservableProperty]
+    string? selectedMetadatePlugin = null;
+
     [ObservableProperty]
     AlreadyExistsBehavior alreadyExistsBehavior = default!;
 

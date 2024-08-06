@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Musify.Models;
 using Musify.Plugins.Enums;
+using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 
 namespace Musify.Services;
@@ -46,17 +47,15 @@ public class MediaEncoder
 
 
     public async Task WriteAsync(
-        string fileName,
+        string filePath,
         Stream stream,
         Quality quality,
-        Format format,
         IProgress<TimeSpan> progress,
         CancellationToken cancellationToken = default)
     {
         logger.LogInformation("[MediaEncoder-WriteAsync] Starting to write stream...");
 
-        string filePath = Path.Combine(config.Paths.DownloadLocation, Path.ChangeExtension(fileName, $".{format}"));
-        if (Path.GetDirectoryName(filePath) is string directory)
+        if (Path.GetDirectoryName(filePath) is string directory && directory.Length != 0)
             Directory.CreateDirectory(directory);
 
 
