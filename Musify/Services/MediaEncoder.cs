@@ -85,7 +85,7 @@ public class MediaEncoder
             }
             catch (Exception ex)
             {
-                logger.LogError("[MediaEncoder-OnCancellationTokenCanceled] Failed to kill processor and delete file: {exception}", ex.Message);
+                logger.LogError(ex, "[MediaEncoder-OnCancellationTokenCanceled] Failed to kill processor and delete file: {exception}", ex.Message);
             }
         });
 

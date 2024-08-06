@@ -334,12 +334,8 @@ internal partial class YouTubeMusicWrapper
 
         AudioOnlyStreamInfo? stream = manifest
             .GetAudioOnlyStreams()
-            .MinBy(streamInfo => Math.Abs((int)config.Quality - streamInfo.Bitrate.KiloBitsPerSecond));
-        if (stream is null)
-        {
-            logger?.LogError("[YouTubeMusicWrapper-GetStreamAsync] Could not find any suitable audio only streams in the streams manifest");
-            throw new Exception("Could not find any suitable audio only streams in the streams manifest.");
-        }
+            .MinBy(streamInfo => Math.Abs((int)config.Quality - streamInfo.Bitrate.KiloBitsPerSecond))
+            ?? throw new("Could not find any suitable audio only streams in the streams manifest.");
 
         return await youTubeClient.Videos.Streams.GetAsync(stream, cancellationToken);
     }

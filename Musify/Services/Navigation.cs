@@ -88,13 +88,13 @@ public class Navigation
         Type? pageType = Type.GetType($"Musify.Views.{key}View, Musify");
         if (pageType is null)
         {
-            logger.LogError("[Navigation-Navigate] Failed to navigate to page: Could not find page: {key}", key);
+            logger.LogError(new Exception($"Returned page type is null. Could not find specified page \"Musify.Views.{key}View, Musify\""), "[Navigation-Navigate] Failed to navigate to page: Could not find page: {key}", key);
             return;
         }
         Page? newPage = (Page?)Activator.CreateInstance(pageType);
         if (newPage is null)
         {
-            logger.LogError("[Navigation-Navigate] Failed to navigate to page: Could not create page: {key}", key);
+            logger.LogError(new Exception($"Activator could not create an instance of page \"Musify.Views.{key}View, Musify\""), "[Navigation-Navigate] Failed to navigate to page: Could not create page: {key}", key);
             return;
         }
 
@@ -109,7 +109,7 @@ public class Navigation
         object? item = mainView.NavigationView.MenuItems.FirstOrDefault(item => item is NavigationViewItem navItem && (string)navItem.Content == key);
         if (item is null)
         {
-            logger.LogError("[Navigation-SetCurrentIndex] Failed to set current navigation item: Could not find item: {key}", key);
+            logger.LogError(new Exception($"There is no navigation view item with the name \"{key}\" in the current menu items."), "[Navigation-SetCurrentIndex] Failed to set current navigation item: Could not find item: {key}", key);
             return;
         }
 
@@ -122,7 +122,7 @@ public class Navigation
     {
         if (viewsHistory.Count < 2)
         {
-            logger.LogError("[Navigation-GoBack] Failed to go back: Not possible at the time");
+            logger.LogError(new Exception("The view history is under 2. Going back is not possible at the time."), "[Navigation-GoBack] Failed to go back: Not possible at the time");
             return;
         }
 

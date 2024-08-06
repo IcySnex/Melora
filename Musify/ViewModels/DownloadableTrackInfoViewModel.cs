@@ -37,12 +37,14 @@ public partial class DownloadableTrackInfoViewModel : ObservableObject
         if (Track.ArtworkUrl is null)
         {
             mainView.ShowNotification("Warning!", "Can't save artwork.", NotificationLevel.Warning, "This track has no artwork set.");
+            logger.LogWarning("[DownloadableTrackInfoViewModel-SaveArtworkAsync] Track artwork url is null. Could not save artwork.");
             return;
         }
         Uri source = new(Track.ArtworkUrl);
         if (source.IsFile)
         {
             mainView.ShowNotification("Warning!", "Can't save artwork.", NotificationLevel.Warning, "The artwork source is a file which can not be saved.");
+            logger.LogWarning("[DownloadableTrackInfoViewModel-SaveArtworkAsync] Track artwork url is a file. Could not save artwork.");
             return;
         }
 
@@ -77,7 +79,7 @@ public partial class DownloadableTrackInfoViewModel : ObservableObject
         catch (Exception ex)
         {
             mainView.ShowNotification("Something went wrong!", "Failed to save artwork.", NotificationLevel.Error, ex.ToFormattedString());
-            logger.LogError("[DownloadableTrackInfoViewModel-SaveArtworkAsync] Failed to save artwork: {exception}", ex.Message);
+            logger.LogError(ex, "[DownloadableTrackInfoViewModel-SaveArtworkAsync] Failed to save artwork: {exception}", ex.Message);
         }
     }
 

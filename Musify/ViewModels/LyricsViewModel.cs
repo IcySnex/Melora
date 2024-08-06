@@ -113,7 +113,7 @@ public partial class LyricsViewModel : ObservableObject
         {
             SelectedSearchResult = null;
 
-            logger.LogInformation("[LyricsViewModel-OnSelectedSearchResultChanged] Cancelled getting lyrics from Genius");
+            logger.LogWarning("[LyricsViewModel-OnSelectedSearchResultChanged] Cancelled getting lyrics from Genius");
         }
         catch (Exception ex)
         {
@@ -121,7 +121,7 @@ public partial class LyricsViewModel : ObservableObject
             mainView.HideLoadingPopup();
 
             mainView.ShowNotification("Something went wrong!", "Failed to get lyrics from Genius.", NotificationLevel.Error, ex.ToFormattedString());
-            logger.LogError("[LyricsViewModel-OnSelectedSearchResultChanged] Failed to get lyrics from Genius: {exception}", ex.Message);
+            logger.LogError(ex, "[LyricsViewModel-OnSelectedSearchResultChanged] Failed to get lyrics from Genius: {exception}", ex.Message);
         }
     }
 
@@ -158,14 +158,14 @@ public partial class LyricsViewModel : ObservableObject
         }
         catch (OperationCanceledException)
         {
-            logger.LogInformation("[LyricsViewModel-SearchAsync] Cancelled search for query on Genius");
+            logger.LogWarning("[LyricsViewModel-SearchAsync] Cancelled search for query on Genius");
         }
         catch (Exception ex)
         {
             mainView.HideLoadingPopup();
 
             mainView.ShowNotification("Something went wrong!", $"Failed to search on Genius.", NotificationLevel.Error, ex.ToFormattedString());
-            logger.LogError("[LyricsViewModel-SearchAsync] Failed to search for query on Genius: {exception}", ex.Message);
+            logger.LogError(ex, "[LyricsViewModel-SearchAsync] Failed to search for query on Genius: {exception}", ex.Message);
         }
     }
 }

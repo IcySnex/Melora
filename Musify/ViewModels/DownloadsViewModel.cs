@@ -169,7 +169,7 @@ public partial class DownloadsViewModel : ObservableObject
         {
             download.Reset();
 
-            logger.LogInformation("[DownloadsViewModel-DownloadAsync] Cancelled download of track {trackTitle}", download.Track.Title);
+            logger.LogWarning("[DownloadsViewModel-DownloadAsync] Cancelled download of track {trackTitle}", download.Track.Title);
         }
         catch (Exception ex)
         {

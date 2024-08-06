@@ -6,6 +6,7 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
@@ -247,20 +248,14 @@ public sealed partial class MainView : Window
 
         LoggerView = new();
 
-        void OnNewLog(object? s, string e)
-        {
-            LoggerView.ContentBlock.Text += e;
-            LoggerView.ScrollContainer.ScrollToVerticalOffset(LoggerView.ScrollContainer.ScrollableHeight);
-        }
-
-        App.Sink.OnNewLog += OnNewLog;
+        App.Sink.OnNewLog += LoggerView.OnNewLog;
         LoggerView.Closed += (s, e) =>
         {
-            App.Sink.OnNewLog -= OnNewLog;
+            App.Sink.OnNewLog -= LoggerView.OnNewLog;
             LoggerView = null;
         };
 
-        SetSize(700, 400, LoggerView);
+        SetSize(800, 400, LoggerView);
         LoggerView.Activate();
 
         logger.LogInformation("[MainView-CreateLoggerView] Created new LoggerView and hooked handler");

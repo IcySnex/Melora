@@ -9,16 +9,24 @@
     Title="Musify - Logger"
     mc:Ignorable="d">
 
-    <ScrollViewer
-        x:Name="ScrollContainer"
-        Padding="4"
-        x:FieldModifier="public"
-        HorizontalScrollBarVisibility="Auto"
-        VerticalScrollBarVisibility="Auto">
-        <TextBlock
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <RichTextBlock
             x:Name="ContentBlock"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            x:FieldModifier="public" />
+            Margin="12"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            x:FieldModifier="public"
+            FontSize="15"
+            LineHeight="22"
+            TextWrapping="WrapWholeWords">
+            <RichTextBlock.Resources>
+                <SolidColorBrush x:Key="BracketsBrush" Color="{ThemeResource TextFillColorSecondary}" />
+                <SolidColorBrush x:Key="TimeColor" Color="{ThemeResource TextFillColorTertiary}" />
+                <SolidColorBrush x:Key="EventColor" Color="{ThemeResource SystemAccentColor}" />
+                <SolidColorBrush x:Key="SourceColor" Color="{ThemeResource SystemAccentColorLight2}" />
+                <SolidColorBrush x:Key="TextColor" Color="{ThemeResource TextFillColorPrimary}" />
+                <SolidColorBrush x:Key="ErrorTextColor" Color="{ThemeResource SystemFillColorCritical}" />
+            </RichTextBlock.Resources>
+        </RichTextBlock>
     </ScrollViewer>
 </Window>

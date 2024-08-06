@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using Microsoft.UI.Xaml.Documents;
+using Microsoft.UI.Xaml.Media;
+using Serilog.Events;
+using System.Text;
 
 namespace Musify.Helpers;
 
@@ -45,4 +48,31 @@ public static class Extensions
 
         return input;
     }
+
+
+    public static Paragraph AddHiglightedText(
+        this Paragraph paragraph,
+        string text,
+        SolidColorBrush brush)
+    {
+        paragraph.Inlines.Add(new Run()
+        {
+            Text = text,
+            Foreground = brush
+        });
+        return paragraph;
+    }
+
+
+    public static string ToAbbreviation(
+        this LogEventLevel level) => level switch
+        {
+            LogEventLevel.Verbose => "VRB",
+            LogEventLevel.Debug => "DBG",
+            LogEventLevel.Information => "INF",
+            LogEventLevel.Warning => "WRN",
+            LogEventLevel.Error => "ERR",
+            LogEventLevel.Fatal => "FTL",
+            _ => "UNK" 
+        };
 }

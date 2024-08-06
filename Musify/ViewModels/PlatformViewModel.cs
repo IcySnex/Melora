@@ -98,6 +98,7 @@ public partial class PlatformViewModel : ObservableObject
         if (string.IsNullOrWhiteSpace(Query))
         {
             mainView.ShowNotification("Warning!", "Query cannot be empty.", NotificationLevel.Warning, $"Paste in a URL or type in a query to search on {Plugin.Name}.");
+            logger.LogWarning("[PlatformViewModel-SearchAsync] Tried to search for empty query.");
             return;
         }
 
@@ -116,14 +117,14 @@ public partial class PlatformViewModel : ObservableObject
         }
         catch (OperationCanceledException)
         {
-            logger.LogInformation("[PlatformViewModel-SearchAsync] Cancelled search on {pluginName}", Plugin.Name);
+            logger.LogWarning("[PlatformViewModel-SearchAsync] Cancelled search on {pluginName}", Plugin.Name);
         }
         catch (Exception ex)
         {
             mainView.HideLoadingPopup();
 
             mainView.ShowNotification("Something went wrong!", $"Failed to search on {Plugin.Name}.", NotificationLevel.Error, ex.ToFormattedString());
-            logger.LogError("[PlatformViewModel-SearchAsync] Failed to search on {pluginName}: {exception}", Plugin.Name, ex.Message);
+            logger.LogError(ex, "[PlatformViewModel-SearchAsync] Failed to search on {pluginName}: {exception}", Plugin.Name, ex.Message);
         }
     }
 
@@ -145,14 +146,14 @@ public partial class PlatformViewModel : ObservableObject
         }
         catch (OperationCanceledException)
         {
-            logger.LogInformation("[PlatformViewModel-PrepareDownloadAsync] Cancelled prepare for downloads on {pluginName}", Plugin.Name);
+            logger.LogWarning("[PlatformViewModel-PrepareDownloadAsync] Cancelled prepare for downloads on {pluginName}", Plugin.Name);
         }
         catch (Exception ex)
         {
             mainView.HideLoadingPopup();
 
             mainView.ShowNotification("Something went wrong!", $"Failed to prepare downloads on {Plugin.Name}.", NotificationLevel.Error, ex.ToFormattedString());
-            logger.LogError("[PlatformViewModel-PrepareDownloadAsync] Failed to prepare downloads on {pluginName}: {exception}", Plugin.Name, ex.Message);
+            logger.LogError(ex, "[PlatformViewModel-PrepareDownloadAsync] Failed to prepare downloads on {pluginName}: {exception}", Plugin.Name, ex.Message);
         }
     }
 }

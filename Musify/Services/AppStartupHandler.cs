@@ -55,12 +55,12 @@ public class AppStartupHandler
                         mainView.Close();
                         AppInstance.Restart(null);
                     });
-                    logger.LogError("[PluginManager-LoadAllPluginsAsync] Failed to load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
+                    logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Failed to load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
                 }
                 catch (Exception ex)
                 {
                     mainView.ShowNotification("Warning!", $"Failed to load plugin: {pluginFileName}.", NotificationLevel.Warning, ex.ToFormattedString());
-                    logger.LogError("[PluginManager-LoadAllPluginsAsync] Failed to load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
+                    logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Failed to load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
                 }
             }
 
