@@ -24,7 +24,7 @@
                 <ToggleSwitch IsOn="{Binding Value, Mode=TwoWay}" />
             </ContentControl>
         </DataTemplate>
-        <DataTemplate x:Key="IntTemplate" x:DataType="plgm:PluginConfigItem">
+        <DataTemplate x:Key="Int64Template" x:DataType="plgm:PluginConfigItem">
             <ContentControl
                 hlp:Attributes.Description="{x:Bind Description}"
                 hlp:Attributes.Title="{x:Bind Name}"
@@ -52,7 +52,7 @@
         <hlp:ConfigItemTemplateSelector
             x:Key="ConfigItemTemplateSelector"
             BoolTemplate="{StaticResource BoolTemplate}"
-            IntTemplate="{StaticResource IntTemplate}"
+            Int64Template="{StaticResource Int64Template}"
             StringTemplate="{StaticResource StringTemplate}" />
     </Page.Resources>
 
@@ -72,7 +72,7 @@
                 Opacity="0.35"
                 Template="{StaticResource SettingsExpanderHeader}" />
 
-            <ItemsControl x:Name="PlatformSupportPluginsContainer">
+            <ItemsControl x:Name="PlatformSupportPluginsContainer" Visibility="Collapsed">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Spacing="8" />
@@ -187,7 +187,8 @@
                 hlp:Attributes.Description="Select the Plugin used to write track metadata to a download."
                 hlp:Attributes.Glyph="&#xf45e;"
                 hlp:Attributes.Title="Selected"
-                Template="{StaticResource SettingsExpanderHeader}">
+                Template="{StaticResource SettingsExpanderHeader}"
+                Visibility="Collapsed">
                 <ComboBox
                     x:Name="MetadataPluginsSelectedComboBox"
                     Width="200"
@@ -202,7 +203,7 @@
                 Opacity="0.35"
                 Template="{StaticResource SettingsExpanderHeader}" />
 
-            <ItemsControl x:Name="MetadataPluginsContainer">
+            <ItemsControl x:Name="MetadataPluginsContainer" Visibility="Collapsed">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Spacing="8" />

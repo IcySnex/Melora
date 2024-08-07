@@ -8,7 +8,7 @@ public class ConfigItemTemplateSelector : DataTemplateSelector
 {
     public DataTemplate StringTemplate { get; set; } = default!;
 
-    public DataTemplate IntTemplate { get; set; } = default!;
+    public DataTemplate Int64Template { get; set; } = default!;
 
     public DataTemplate BoolTemplate { get; set; } = default!;
 
@@ -24,8 +24,8 @@ public class ConfigItemTemplateSelector : DataTemplateSelector
         {
             case TypeCode.String:
                 return StringTemplate;
-            case TypeCode.Int32:
-                return IntTemplate;
+            case TypeCode.Int64:
+                return Int64Template;
             case TypeCode.Boolean:
                 return BoolTemplate;
             default:
