@@ -34,7 +34,7 @@ public partial class MetadataPluginConfig : ObservableObject, IPluginConfig
             return;
         }
 
-        if (initialConfig.Items.Length != defaultItems.Length || !initialConfig.Items.All(item => defaultItems.Any(defaultItem => item.Name == defaultItem.Name)))
+        if (initialConfig.Items.Length != defaultItems.Length || !initialConfig.Items.All(item => defaultItems.Any(defaultItem => item.Name == defaultItem.Name && item.Value.GetType() == defaultItem.Value.GetType())))
             throw new PluginConfigInvalidException(this, new("Passed initial config does not match additional items requiered for the plugin."));
 
         Items = initialConfig.Items.Select(item => (PluginConfigItem)item.Clone()).ToArray();
