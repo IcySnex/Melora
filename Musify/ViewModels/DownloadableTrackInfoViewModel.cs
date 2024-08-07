@@ -34,17 +34,10 @@ public partial class DownloadableTrackInfoViewModel : ObservableObject
     [RelayCommand]
     async Task SaveArtworkAsync()
     {
-        if (Track.ArtworkUrl is null)
+        if (Track.ArtworkUrl is null || Track.ArtworkUrl.StartsWith("file:///"))
         {
-            mainView.ShowNotification("Warning!", "Can't save artwork.", NotificationLevel.Warning, "This track has no artwork set.");
-            logger.LogWarning("[DownloadableTrackInfoViewModel-SaveArtworkAsync] Track artwork url is null. Could not save artwork.");
-            return;
-        }
-        Uri source = new(Track.ArtworkUrl);
-        if (source.IsFile)
-        {
-            mainView.ShowNotification("Warning!", "Can't save artwork.", NotificationLevel.Warning, "The artwork source is a file which can not be saved.");
-            logger.LogWarning("[DownloadableTrackInfoViewModel-SaveArtworkAsync] Track artwork url is a file. Could not save artwork.");
+            mainView.ShowNotification("Warning!", "Can't save artwork.", NotificationLevel.Warning, "This track has no artwork set or its source is a local file.");
+            logger.LogWarning("[DownloadableTrackInfoViewModel-SaveArtworkAsync] Track artwork url is null or a file. Could not save artwork.");
             return;
         }
 
@@ -66,7 +59,7 @@ public partial class DownloadableTrackInfoViewModel : ObservableObject
 
         try
         {
-            Stream artwork = await client.GetStreamAsync(source);
+            Stream artwork = await client.GetStreamAsync(Track.ArtworkUrl);
             logger.LogInformation("[DownloadableTrackInfoViewModel-SaveArtworkAsync] Saved stream for arwork");
 
             using Stream fileStream = await file.OpenStreamForWriteAsync();
@@ -103,7 +96,7 @@ public partial class DownloadableTrackInfoViewModel : ObservableObject
         if (file is null)
             return;
 
-        Track.ArtworkUrl = file.Path;
+        Track.ArtworkUrl = $"file:///{file.Path}";
         logger.LogInformation("[DownloadableTrackInfoViewModel-ChangeArtworkAsync] Changed track artwork");
     }
 
