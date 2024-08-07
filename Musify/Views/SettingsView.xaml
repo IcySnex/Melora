@@ -24,7 +24,7 @@
                 <ToggleSwitch IsOn="{Binding Value, Mode=TwoWay}" />
             </ContentControl>
         </DataTemplate>
-        <DataTemplate x:Key="Int64Template" x:DataType="plgm:PluginConfigItem">
+        <DataTemplate x:Key="LongTemplate" x:DataType="plgm:PluginConfigItem">
             <ContentControl
                 hlp:Attributes.Description="{x:Bind Description}"
                 hlp:Attributes.Title="{x:Bind Name}"
@@ -36,7 +36,7 @@
                     Maximum="9999"
                     Minimum="1"
                     SpinButtonPlacementMode="Compact"
-                    Value="{Binding Value, Mode=TwoWay}" />
+                    Value="{Binding Value, Mode=TwoWay, Converter={StaticResource LongDoubleConverter}}" />
             </ContentControl>
         </DataTemplate>
         <DataTemplate x:Key="StringTemplate" x:DataType="plgm:PluginConfigItem">
@@ -48,11 +48,25 @@
                 <TextBox MaxWidth="300" Text="{Binding Value, Mode=TwoWay}" />
             </ContentControl>
         </DataTemplate>
+        <DataTemplate x:Key="InvalidTemplate" x:DataType="plgm:PluginConfigItem">
+            <ContentControl
+                hlp:Attributes.Description="{x:Bind Description}"
+                hlp:Attributes.Title="{x:Bind Name}"
+                Opacity="0.35"
+                Template="{StaticResource SettingsCard}">
+
+                <TextBlock
+                    Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                    HorizontalTextAlignment="Right"
+                    Text="This config ítem type is not supported!&#x0a;Please contact the plugin developer." />
+            </ContentControl>
+        </DataTemplate>
 
         <hlp:ConfigItemTemplateSelector
             x:Key="ConfigItemTemplateSelector"
             BoolTemplate="{StaticResource BoolTemplate}"
-            Int64Template="{StaticResource Int64Template}"
+            InvalidTemplate="{StaticResource InvalidTemplate}"
+            LongTemplate="{StaticResource LongTemplate}"
             StringTemplate="{StaticResource StringTemplate}" />
     </Page.Resources>
 
@@ -138,7 +152,7 @@
                                         Minimum="1"
                                         PlaceholderText="No Limit"
                                         SpinButtonPlacementMode="Compact"
-                                        Value="{x:Bind Config.SearchResultsLimit, Mode=TwoWay, Converter={StaticResource NullableIntDoubleConverter}}" />
+                                        Value="{x:Bind Config.SearchResultsLimit, Mode=TwoWay, Converter={StaticResource IntDoubleConverter}}" />
                                 </ContentControl>
 
                                 <!--  Search Results > Sorting  -->

@@ -6,9 +6,11 @@ namespace Musify.Helpers;
 
 public class ConfigItemTemplateSelector : DataTemplateSelector
 {
+    public DataTemplate InvalidTemplate { get; set; } = default!;
+
     public DataTemplate StringTemplate { get; set; } = default!;
 
-    public DataTemplate Int64Template { get; set; } = default!;
+    public DataTemplate LongTemplate { get; set; } = default!;
 
     public DataTemplate BoolTemplate { get; set; } = default!;
 
@@ -25,11 +27,11 @@ public class ConfigItemTemplateSelector : DataTemplateSelector
             case TypeCode.String:
                 return StringTemplate;
             case TypeCode.Int64:
-                return Int64Template;
+                return LongTemplate;
             case TypeCode.Boolean:
                 return BoolTemplate;
             default:
-                return base.SelectTemplateCore(item, container);
+                return InvalidTemplate;
         }
     }
 }
