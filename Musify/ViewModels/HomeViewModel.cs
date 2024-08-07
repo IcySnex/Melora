@@ -69,9 +69,6 @@ public partial class HomeViewModel : ObservableObject
     void Search(
         string page)
     {
-        PlatformSupportPlugin plugin = PluginManager.GetLoaded<PlatformSupportPlugin>(page);
-        PluginManager.UnloadPlugin(plugin);
-
         App.Parameter = Query;
         navigation.SetCurrentItem(page);
     }
