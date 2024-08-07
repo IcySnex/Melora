@@ -110,7 +110,7 @@
                 PlaceholderText="No Limit"
                 SpinButtonPlacementMode="Compact"
                 ToolTipService.ToolTip="Search results limit"
-                Value="{x:Bind viewModel.Plugin.Config.SearchResultsLimit, Mode=TwoWay, Converter={StaticResource NullableIntDoubleConverter}}" />
+                Value="{x:Bind viewModel.Plugin.Config.SearchResultsLimit, Mode=TwoWay, Converter={StaticResource IntDoubleConverter}}" />
 
             <Button
                 Grid.Column="4"

@@ -2,7 +2,7 @@
 
 namespace Musify.Converters;
 
-public class NullableIntDoubleConverter : IValueConverter
+public class IntDoubleConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language) =>
         value is int number ? number : double.NaN;
