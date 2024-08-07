@@ -1,8 +1,12 @@
 #pragma warning disable IDE0290 // Use primary constructor
 
+using ATL;
 using Microsoft.Extensions.Logging;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Models;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.Versioning;
 
 namespace Musify.Metadata.Default;
 
@@ -17,7 +21,8 @@ public class DefaultPlugin : MetadataPlugin
                 defaultItems:
                 [
                     new("Artists Seperator", "The string used to seperate multiple artists.", ", "),
-                    new("Save Artwork", "Whether to save the artwork.", true)
+                    new("Save Artwork", "Whether to save the artwork.", true),
+                    new("Artwork Resolution", "The resolution (nXn) the artwork gets resized to before saving.", 256L)
                 ],
                 initialConfig: config),
             logger)
@@ -35,15 +40,85 @@ public class DefaultPlugin : MetadataPlugin
     { }
 
 
+    [SupportedOSPlatform("windows")]
     public override async Task WriteAsync(
         string filePath,
         DownloadableTrack track,
         CancellationToken cancellationToken = default)
     {
+        string artistsSeperator = Config.GetItem<string>("Artists Seperator");
+        bool saveArtwork = Config.GetItem<bool>("Save Artwork");
+        int artworkResolution = (int)Config.GetItem<long>("Artwork Resolution");
+
         logger?.LogInformation("[DefaultPlugin-WriteAsync] Starting to write track metadata...");
+        Track file = new(filePath);
 
-        await Task.Delay(3000, cancellationToken);
+        // Default fields
+        file.Title = track.Title;
+        file.Artist = track.Artists.Replace(", ", artistsSeperator);
+        file.Date = track.ReleasedAt;
+        file.Album = track.Album ?? string.Empty;
+        file.AlbumArtist = track.Artists.Split(", ")[0];
+        file.Genre = track.Genre ?? string.Empty;
+        file.Lyrics.UnsynchronizedLyrics = track.Lyrics ?? string.Empty;
+        file.TrackNumber = track.TrackNumber;
+        file.TrackTotal = track.TotalTracks;
+        file.Copyright = track.Copyright;
+        file.Comment = track.Comment ?? string.Empty;
+        file.AudioSourceUrl = track.Url;
 
+        // Additional fields
+        file.AdditionalFields["EXPLICIT"] = track.IsExplicit ? "1" : "0";
+
+        // Picture field
+        if (saveArtwork && track.ArtworkUrl is not null)
+        {
+            Stream pictureStream = await GetPictureStreamAsync(track.ArtworkUrl, cancellationToken);
+            byte[] pictureData = ResizePicture(pictureStream, artworkResolution);
+
+            PictureInfo picture = PictureInfo.fromBinaryData(pictureData);
+            file.EmbeddedPictures.Add(picture);
+        }
+
+        await file.SaveAsync();
         logger?.LogInformation("[DefaultPlugin-WriteAsync] Wrote track metadata");
+    }
+
+
+    readonly HttpClient client = new();
+
+    async Task<Stream> GetPictureStreamAsync(
+        string url,
+        CancellationToken cancellationToken = default)
+    {
+        logger?.LogInformation("[DefaultPlugin-WriteAsync] Getting picture stream...");
+
+        return url.StartsWith("file:///")
+            ? File.OpenRead(url[8..])
+            : await client.GetStreamAsync(url, cancellationToken);
+    }
+
+    [SupportedOSPlatform("windows")]
+    byte[] ResizePicture(Stream stream, int resolution)
+    {
+        logger?.LogInformation("Resizing picture to resolution: {resolution}...", resolution);
+        using Image image = Image.FromStream(stream);
+        using Bitmap resized = new(resolution, resolution);
+        using Graphics graphics = Graphics.FromImage(resized);
+        using MemoryStream result = new();
+
+        double scaleX = (double)resolution / image.Width;
+        double scaleY = (double)resolution / image.Height;
+        double scale = Math.Max(scaleX, scaleY);
+
+        int newWidth = (int)(image.Width * scale);
+        int newHeight = (int)(image.Height * scale);
+        int xOffset = (resolution - newWidth) / 2;
+        int yOffset = (resolution - newHeight) / 2;
+
+        graphics.DrawImage(image, xOffset, yOffset, newWidth, newHeight);
+        resized.Save(result, ImageFormat.Jpeg);
+
+        return result.ToArray();
     }
 }

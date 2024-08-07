@@ -4,5 +4,8 @@
   "Author": "IcySnex",
   "Version": "1.0.0",
   "EntryPoint": "Musify.Metadata.Default.dll",
-  "Dependencies": []
+  "Dependencies": [
+    "ATL.dll",
+    "System.Drawing.Common.dll"
+  ]
 }

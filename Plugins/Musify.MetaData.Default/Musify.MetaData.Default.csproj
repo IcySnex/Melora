@@ -21,6 +21,11 @@
 		</Content>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="System.Drawing.Common" Version="8.0.7" />
+	  <PackageReference Include="z440.atl.core" Version="5.26.0" />
+	</ItemGroup>
+
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<Exec Command="powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath '$(TargetDir)\PluginArchive.zip' -Force" />
 		<Exec Command="powershell New-Item -ItemType Directory -Path '$(SolutionDir)\Musify\bin\x64\Debug\net8.0-windows10.0.19041.0\win10-x64\Plugins' -Force" />
