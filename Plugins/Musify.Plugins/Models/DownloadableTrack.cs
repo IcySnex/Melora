@@ -14,9 +14,11 @@ namespace Musify.Plugins.Models;
 /// <param name="album">The album of the downloadable track.</param>
 /// <param name="genre">The genre of the downloadable track.</param>
 /// <param name="lyrics">The lyrics of the downloadable track.</param>
-/// <param name="url">The url of the downloadable track.</param>
 /// <param name="trackNumber">The track number of the downloadable track.</param>
 /// <param name="totalTracks">The total tracks of the downloadable tracks album.</param>
+/// <param name="copyright">The copyright of the downloadable tracks.</param>
+/// <param name="comment">An optional comment from the plugin.</param>
+/// <param name="url">The url of the downloadable track.</param>
 /// <param name="id">The Id of the downloadable track.</param>
 /// <param name="pluginHash">The hash code for the plugin responsible for this downloadable track.</param>
 /// <remarks>
@@ -32,9 +34,11 @@ public partial class DownloadableTrack(
     string? album,
     string? genre,
     string? lyrics,
-    string url,
     int trackNumber,
     int totalTracks,
+    string copyright,
+    string? comment,
+    string url,
     string id,
     int pluginHash) : ObservableObject
 {
@@ -102,7 +106,18 @@ public partial class DownloadableTrack(
     /// </summary>
     [ObservableProperty]
     int totalTracks = totalTracks;
+    
+    /// <summary>
+    /// The copyright of the downloadable track's album.
+    /// </summary>
+    [ObservableProperty]
+    string copyright = copyright;
 
+    /// <summary>
+    /// An optional comment from the plugin.
+    /// </summary>
+    public string? Comment { get; } = comment;
+    
     /// <summary>
     /// The url of the downloadable track.
     /// </summary>
