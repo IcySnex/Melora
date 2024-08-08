@@ -67,6 +67,10 @@
 	  <ProjectReference Include="..\Plugins\Musify.Plugins\Musify.Plugins.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Page Update="Views\PluginsView.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	  <Page Update="Views\LoggerView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>

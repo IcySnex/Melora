@@ -12,14 +12,16 @@ namespace Musify.Plugins.Models;
 /// <param name="name">The name of the plugin.</param>
 /// <param name="description">The description of the plugin.</param>
 /// <param name="author">The author of the plugin.</param>
-/// <param name="version">The version of the plugin.</param>
+/// <param name="kind">The kind of the plugins contained.</param>
+/// <param name="lastUpdatedAt">The date and time when the plugin was last updated..</param>
 /// <param name="entryPoint">The path to the entry point of the plugin.</param>
 /// <param name="dependencies">The paths to the dependencies of the plugin.</param>
 public class Manifest(
     string name,
     string description,
     string author,
-    Version version,
+    int[] kind,
+    DateTime lastUpdatedAt,
     string entryPoint,
     string[] dependencies)
 {
@@ -60,9 +62,14 @@ public class Manifest(
     public string Author { get; } = author;
 
     /// <summary>
-    /// The version of the plugin
+    /// The kind of the plugins contained.
     /// </summary>
-    public Version Version { get; } = version;
+    public int[] Kind { get; } = kind;
+
+    /// <summary>
+    /// The date and time when the plugin was last updated.
+    /// </summary>
+    public DateTime LastUpdatedAt { get; } = lastUpdatedAt;
 
     /// <summary>
     /// The path to the entry point of the plugin.

@@ -6,7 +6,6 @@ using Musify.Plugins.Abstract;
 using Musify.Plugins.Exceptions;
 using Musify.Plugins.Models;
 using System.Reflection;
-using System.Xml.Linq;
 
 namespace Musify.Services;
 
@@ -34,6 +33,8 @@ public class PluginManager
     readonly Dictionary<IPlugin, PluginLoadContext> loadedPluginsLoadContexts = [];
 
     public IReadOnlyCollection<IPlugin> LoadedPlugins => loadedPluginsLoadContexts.Keys;
+
+    public IReadOnlyCollection<PluginLoadContext> LoadedContexts => loadedPluginsLoadContexts.Values;
 
 
     public bool TryGetLoaded<T>(
@@ -109,7 +110,7 @@ public class PluginManager
         else
             handlers.Add((onLoad, onUnload));
 
-        logger.LogInformation("[PluginManager-SubscribeToLoad] Subscribed to plugin loading");
+        logger.LogInformation("[PluginManager-Subscribe] Subscribed to plugin loading");
     }
 
     void OnPluginLoaded(
@@ -135,6 +136,33 @@ public class PluginManager
     }
 
 
+    readonly HashSet<(Action<PluginLoadContext>? onLoad, Action<PluginLoadContext>? onUnload)> loadContextSubscriptions = [];
+
+    public void SubscribeLoadContext(
+        Action<PluginLoadContext>? onLoad,
+        Action<PluginLoadContext>? onUnload)
+    {
+        loadContextSubscriptions.Add((onLoad, onUnload));
+
+        logger.LogInformation("[PluginManager-SubscribeLoadContext] Subscribed to plugin load context loading");
+    }
+
+    void OnLoadContextLoaded(
+        PluginLoadContext context)
+    {
+        foreach ((Action<PluginLoadContext>? onLoad, _) in loadContextSubscriptions)
+            onLoad?.Invoke(context);
+    }
+
+    void OnLoadContextUnloaded(
+        PluginLoadContext context)
+    {
+        foreach ((_, Action<PluginLoadContext>? onUnload) in loadContextSubscriptions)
+            onUnload?.Invoke(context);
+    }
+
+
+
     public async Task LoadPluginAsync(
         string path,
         CancellationToken cancellationToken = default)
@@ -153,7 +181,7 @@ public class PluginManager
                 var t when typeof(MetadataPlugin).IsAssignableFrom(t) => typeof(MetadataPluginConfig),
                 _ => typeof(IPluginConfig)
             };
-            bool isConfigSaved = config.PluginConfigs.TryGetValue(type.Name, out IPluginConfig? pluginConfig) && pluginConfig.GetType() == configType;
+            bool isConfigSaved = config.Plugins.Configs.TryGetValue(type.Name, out IPluginConfig? pluginConfig) && pluginConfig.GetType() == configType;
 
             ConstructorInfo? constructor = null;
             object?[]? constructorArgs = null;
@@ -182,6 +210,9 @@ public class PluginManager
             {
                 IPlugin plugin = (IPlugin?)constructor?.Invoke(constructorArgs) ?? throw new Exception("Could not find suitable constructors to create plugin instance.");
 
+                if (!LoadedContexts.Contains(loadContext))
+                    OnLoadContextLoaded(loadContext);
+
                 loadedPluginsLoadContexts[plugin] = loadContext;
                 OnPluginLoaded(type.BaseType!, plugin);
 
@@ -202,7 +233,6 @@ public class PluginManager
         if (!result)
             throw new Exception("Could not find plugin. Are you sure the plugin was loaded?");
 
-        context!.Unload();
         loadedPluginsLoadContexts.Remove(plugin);
 
         Type pluginType = plugin.GetType().BaseType!;
@@ -210,6 +240,12 @@ public class PluginManager
 
         if (subscriptions.TryGetValue(pluginType, out HashSet<(Delegate?, Delegate?)>? handlers) && handlers.Count == 0)
             subscriptions.Remove(pluginType);
+
+        if (!LoadedContexts.Contains(context))
+        {
+            context!.Unload();
+            OnLoadContextUnloaded(context);
+        }
 
         logger.LogInformation("[PluginManager-UnloadPlugin] Unloaded plugin: [{name}]", plugin.Name);
     }

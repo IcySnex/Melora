@@ -93,10 +93,8 @@
             OpenPaneLength="200">
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Home" Icon="Home" />
-                <NavigationViewItem Content="Settings" Icon="Setting" />
 
                 <NavigationViewItemHeader Content="Search" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-
                 <NavigationViewItem Content="Lyrics">
                     <NavigationViewItem.Icon>
                         <PathIcon Data="{x:Bind vm:LyricsViewModel.IconPathData}" />
@@ -104,15 +102,18 @@
                 </NavigationViewItem>
 
                 <NavigationViewItemHeader Content="Local" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
-
                 <NavigationViewItem Content="Downloads" Icon="Download" />
-                <NavigationViewItem Content="Library" Icon="Library" />
+                <!--<NavigationViewItem Content="Library" Icon="Library" />-->
 
                 <!--<NavigationViewItemHeader Content="Syncing" />
 
                 <NavigationViewItem Content="iTunes" Icon="MusicInfo" />
                 <NavigationViewItem Content="Android" Icon="CellPhone" />-->
             </NavigationView.MenuItems>
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem Content="Plugins" Icon="ViewAll" />
+                <NavigationViewItem Content="Settings" Icon="Setting" />
+            </NavigationView.FooterMenuItems>
 
             <ContentPresenter x:Name="Presenter" x:FieldModifier="public">
                 <ContentPresenter.ContentTransitions>

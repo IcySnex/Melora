@@ -2,7 +2,10 @@
   "Name": "YouTube (+ Music)",
   "Description": "Adds support to search & download videos, playlists & channels from YouTube, as well as songs/videos, albums, community playlists & artists from YouTube Music.",
   "Author": "IcySnex",
-  "Version": "1.0.0",
+  "LastUpdatedAt": "2024-08-08T14:23:45Z",
+  "Kind": [
+    0
+  ],
   "EntryPoint": "Musify.PlatformSupport.YouTube.dll",
   "Dependencies": [
     "YoutubeExplode.dll",

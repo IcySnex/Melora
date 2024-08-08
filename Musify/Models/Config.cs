@@ -16,7 +16,7 @@ public class Config
     }
 
 
-    public Dictionary<string, IPluginConfig> PluginConfigs { get; set; } = [];
+    public ConfigPlugins Plugins { get; set; } = new();
 
     public ConfigDownloads Downloads { get; set; } = new();
 
@@ -27,14 +27,19 @@ public class Config
 
     public void Reset()
     {
-        Lyrics.GeniusAccessToken = "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr";
-        Lyrics.SearchResultsSorting = Sorting.Default;
-        Lyrics.SearchResultsSortDescending = false;
+        Plugins.ShowInstalled = true;
+        Plugins.ShowAvailable = true;
+        Plugins.Sorting = Sorting.Default;
+        Plugins.SortDescending = false;
 
         Downloads.SelectedMetadatePlugin = null;
         Downloads.AlreadyExistsBehavior = AlreadyExistsBehavior.Ask;
         Downloads.Sorting = Sorting.Default;
         Downloads.SortDescending = false;
+
+        Lyrics.GeniusAccessToken = "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr";
+        Lyrics.SearchResultsSorting = Sorting.Default;
+        Lyrics.SearchResultsSortDescending = false;
 
         Paths.DownloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         Paths.Filename = "{artists} - {title}";
@@ -80,4 +85,27 @@ public partial class ConfigPaths : ObservableObject
 
     [ObservableProperty]
     string fFMPEGLocation = default!;
+}
+
+public partial class ConfigPlugins : ObservableObject
+{
+    public Dictionary<string, IPluginConfig> Configs { get; set; } = [];
+
+    [ObservableProperty]
+    bool showOfKindPlatformSupport = default!;
+    
+    [ObservableProperty]
+    bool showOfKindMetadata = default!;
+    
+    [ObservableProperty]
+    bool showInstalled = default!;
+    
+    [ObservableProperty]
+    bool showAvailable = default!;
+
+    [ObservableProperty]
+    Sorting sorting = default!;
+
+    [ObservableProperty]
+    bool sortDescending = default!;
 }

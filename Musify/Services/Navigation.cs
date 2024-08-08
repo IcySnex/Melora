@@ -45,11 +45,23 @@ public class Navigation
 
     readonly Dictionary<string, Page> viewsCache = new()
     {
-        { "Settings", new SettingsView() },
+        { "Lyrics", new LyricsView() },
         { "Downloads", new DownloadsView() },
-        { "Lyrics", new LyricsView() }
+        { "Plugins", new PluginsView() },
+        { "Settings", new SettingsView() }
     };
     readonly Stack<Page> viewsHistory = [];
+
+
+    NavigationViewItem? GetItem(
+        string key)
+    {
+        NavigationViewItem? menuItem = (NavigationViewItem?)mainView.NavigationView.MenuItems.FirstOrDefault(item => item is NavigationViewItem navItem && (string)navItem.Content == key);
+        if (menuItem is not null)
+            return menuItem;
+
+        return (NavigationViewItem?)mainView.NavigationView.FooterMenuItems.FirstOrDefault(item => item is NavigationViewItem navItem && (string)navItem.Content == key);
+    }
 
 
     void SetPage(
@@ -106,7 +118,7 @@ public class Navigation
     public void SetCurrentItem(
         string key)
     {
-        object? item = mainView.NavigationView.MenuItems.FirstOrDefault(item => item is NavigationViewItem navItem && (string)navItem.Content == key);
+        NavigationViewItem? item = GetItem(key);
         if (item is null)
         {
             logger.LogError(new Exception($"There is no navigation view item with the name \"{key}\" in the current menu items."), "[Navigation-SetCurrentIndex] Failed to set current navigation item: Could not find item: {key}", key);

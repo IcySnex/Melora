@@ -48,7 +48,7 @@ public sealed partial class MainView : Window
                     Icon = new PathIcon() { Data = (Geometry)XamlBindingHelper.ConvertValue(typeof(Geometry), plugin.IconPathData) },
                     Tag = plugin
                 };
-                NavigationView.MenuItems.Insert(NavigationView.MenuItems.Count - 4, pluginItem);
+                NavigationView.MenuItems.Insert(NavigationView.MenuItems.Count - 3, pluginItem);
             },
             plugin =>
             {
@@ -80,7 +80,7 @@ public sealed partial class MainView : Window
     void OnClosed(object _, WindowEventArgs _1)
     {
         foreach (IPlugin plugin in pluginManager.LoadedPlugins)
-            config.PluginConfigs[plugin.GetType().Name] = plugin.Config;
+            config.Plugins.Configs[plugin.GetType().Name] = plugin.Config;
 
         string jsonConfig = jsonConverter.ToString(config);
         File.WriteAllText("Config.json", jsonConfig);

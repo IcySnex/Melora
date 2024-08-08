@@ -168,9 +168,9 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="26" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="4" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="2" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="26" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="26" />
                 <ColumnDefinition Width="32" />
@@ -183,23 +183,9 @@
 
             <Rectangle Grid.Column="1" Style="{StaticResource VerticalDivider}" />
 
-            <!--  Filter  -->
-            <Button
-                Grid.Column="2"
-                Width="32"
-                Height="32"
-                Padding="4"
-                ToolTipService.ToolTip="Show tracks from">
-                <Button.Flyout>
-                    <MenuFlyout x:Name="ShowTracksFromFlyout" />
-                </Button.Flyout>
-
-                <FontIcon FontSize="17" Glyph="&#xe71c;" />
-            </Button>
-
             <!--  View Options  -->
             <ComboBox
-                Grid.Column="4"
+                Grid.Column="2"
                 Width="105"
                 CornerRadius="4,0,0,4"
                 SelectedIndex="{x:Bind viewModel.Config.Downloads.Sorting, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}"
@@ -210,7 +196,7 @@
                 <ComboBoxItem Content="Duration" />
             </ComboBox>
             <ToggleButton
-                Grid.Column="6"
+                Grid.Column="4"
                 Width="32"
                 Height="32"
                 Padding="4"
@@ -219,6 +205,22 @@
                 ToolTipService.ToolTip="Sort tracks descending/ascending">
                 <FontIcon FontSize="17" Glyph="{x:Bind viewModel.Config.Downloads.SortDescending, Mode=OneWay, Converter={StaticResource BoolFontIconChevronConverter}}" />
             </ToggleButton>
+
+            <Rectangle Grid.Column="5" Style="{StaticResource VerticalDivider}" />
+
+            <!--  Filter  -->
+            <Button
+                Grid.Column="6"
+                Width="32"
+                Height="32"
+                Padding="4"
+                ToolTipService.ToolTip="Show tracks from">
+                <Button.Flyout>
+                    <MenuFlyout x:Name="ShowTracksFromFlyout" />
+                </Button.Flyout>
+
+                <FontIcon FontSize="17" Glyph="&#xe71c;" />
+            </Button>
 
             <Rectangle Grid.Column="7" Style="{StaticResource VerticalDivider}" />
 

@@ -2,7 +2,10 @@
   "Name": "Spotify",
   "Description": "Adds support to search & download tracks, albums, playlists & artists from Spotify.",
   "Author": "IcySnex",
-  "Version": "1.0.0",
+  "LastUpdatedAt": "2023-08-08T14:23:45Z",
+  "Kind": [
+    0
+  ],
   "EntryPoint": "Musify.PlatformSupport.Spotify.dll",
   "Dependencies": [
     "SpotifyAPI.Web.dll"

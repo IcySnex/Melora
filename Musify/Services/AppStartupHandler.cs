@@ -19,7 +19,7 @@ public class AppStartupHandler
         MainView mainView,
         Navigation navigation)
     {
-        mainView.SetSize(1100, 560);
+        mainView.SetSize(1150, 567);
         mainView.SetMinSize(700, 525);
         mainView.SetIcon("icon.ico");
         mainView.Activate();
@@ -38,7 +38,7 @@ public class AppStartupHandler
                 }
                 catch (PluginNotLoadedException ex)
                 {
-                    mainView.ShowNotification("Warning!", $"Failed to load plugin: {pluginFileName}.", NotificationLevel.Warning, async () =>
+                    mainView.ShowNotification("Warning!", $"Could not load plugin: {pluginFileName}.", NotificationLevel.Warning, async () =>
                     {
                         if (await mainView.AlertAsync(
                             new()
@@ -50,17 +50,17 @@ public class AppStartupHandler
                             }) != ContentDialogResult.Primary)
                             return;
 
-                        config.PluginConfigs.Remove(ex.PluginType!.Name);
+                        config.Plugins.Configs.Remove(ex.PluginType!.Name);
 
                         mainView.Close();
                         AppInstance.Restart(null);
                     });
-                    logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Failed to load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
+                    logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Could not load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
                 }
                 catch (Exception ex)
                 {
-                    mainView.ShowNotification("Warning!", $"Failed to load plugin: {pluginFileName}.", NotificationLevel.Warning, ex.ToFormattedString());
-                    logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Failed to load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
+                    mainView.ShowNotification("Warning!", $"Could not load plugin: {pluginFileName}.", NotificationLevel.Warning, ex.ToFormattedString());
+                    logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Could not load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
                 }
             }
 
