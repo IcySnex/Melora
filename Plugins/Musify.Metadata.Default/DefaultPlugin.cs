@@ -2,16 +2,17 @@
 
 using ATL;
 using Microsoft.Extensions.Logging;
+using Musify.Metadata.Default.Internal;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Models;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Runtime.Versioning;
 
 namespace Musify.Metadata.Default;
 
 public class DefaultPlugin : MetadataPlugin
 {
+    readonly PictureHandler pictureHandler;
+
     public DefaultPlugin(
         MetadataPluginConfig? config,
         ILogger<IPlugin>? logger) : base(
@@ -22,11 +23,13 @@ public class DefaultPlugin : MetadataPlugin
                 [
                     new("Artists Seperator", "The string used to seperate multiple artists.", ", "),
                     new("Save Artwork", "Whether to save the artwork.", true),
-                    new("Artwork Resolution", "The resolution (nXn) the artwork gets resized to before saving.", 256L)
+                    new("Artwork Resolution", "The resolution (nXn) the artwork gets resized to before saving.", 512L)
                 ],
                 initialConfig: config),
             logger)
-    { }
+    {
+        pictureHandler = new(Config, logger);
+    }
 
     public DefaultPlugin(
         MetadataPluginConfig? config) : this(config, null)
@@ -48,7 +51,6 @@ public class DefaultPlugin : MetadataPlugin
     {
         string artistsSeperator = Config.GetItem<string>("Artists Seperator");
         bool saveArtwork = Config.GetItem<bool>("Save Artwork");
-        int artworkResolution = (int)Config.GetItem<long>("Artwork Resolution");
 
         logger?.LogInformation("[DefaultPlugin-WriteAsync] Starting to write track metadata...");
         Track file = new(filePath);
@@ -73,8 +75,8 @@ public class DefaultPlugin : MetadataPlugin
         // Picture field
         if (saveArtwork && track.ArtworkUrl is not null)
         {
-            Stream pictureStream = await GetPictureStreamAsync(track.ArtworkUrl, cancellationToken);
-            byte[] pictureData = ResizePicture(pictureStream, artworkResolution);
+            Stream pictureStream = await pictureHandler.GetStreamAsync(track.ArtworkUrl, cancellationToken);
+            byte[] pictureData = pictureHandler.Resize(pictureStream);
 
             PictureInfo picture = PictureInfo.fromBinaryData(pictureData);
             file.EmbeddedPictures.Add(picture);
@@ -82,43 +84,5 @@ public class DefaultPlugin : MetadataPlugin
 
         await file.SaveAsync();
         logger?.LogInformation("[DefaultPlugin-WriteAsync] Wrote track metadata");
-    }
-
-
-    readonly HttpClient client = new();
-
-    async Task<Stream> GetPictureStreamAsync(
-        string url,
-        CancellationToken cancellationToken = default)
-    {
-        logger?.LogInformation("[DefaultPlugin-WriteAsync] Getting picture stream...");
-
-        return url.StartsWith("file:///")
-            ? File.OpenRead(url[8..])
-            : await client.GetStreamAsync(url, cancellationToken);
-    }
-
-    [SupportedOSPlatform("windows")]
-    byte[] ResizePicture(Stream stream, int resolution)
-    {
-        logger?.LogInformation("Resizing picture to resolution: {resolution}...", resolution);
-        using Image image = Image.FromStream(stream);
-        using Bitmap resized = new(resolution, resolution);
-        using Graphics graphics = Graphics.FromImage(resized);
-        using MemoryStream result = new();
-
-        double scaleX = (double)resolution / image.Width;
-        double scaleY = (double)resolution / image.Height;
-        double scale = Math.Max(scaleX, scaleY);
-
-        int newWidth = (int)(image.Width * scale);
-        int newHeight = (int)(image.Height * scale);
-        int xOffset = (resolution - newWidth) / 2;
-        int yOffset = (resolution - newHeight) / 2;
-
-        graphics.DrawImage(image, xOffset, yOffset, newWidth, newHeight);
-        resized.Save(result, ImageFormat.Jpeg);
-
-        return result.ToArray();
     }
 }
