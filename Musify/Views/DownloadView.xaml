@@ -183,7 +183,7 @@
 
             <Rectangle Grid.Column="1" Style="{StaticResource VerticalDivider}" />
 
-            <!--  Sources  -->
+            <!--  Filter  -->
             <Button
                 Grid.Column="2"
                 Width="32"
@@ -203,7 +203,7 @@
                 Width="105"
                 CornerRadius="4,0,0,4"
                 SelectedIndex="{x:Bind viewModel.Config.Downloads.Sorting, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}"
-                ToolTipService.ToolTip="Sort search results by">
+                ToolTipService.ToolTip="Sort tracks by">
                 <ComboBoxItem Content="Default" />
                 <ComboBoxItem Content="Title" />
                 <ComboBoxItem Content="Artist" />
@@ -216,7 +216,7 @@
                 Padding="4"
                 CornerRadius="0,4,4,0"
                 IsChecked="{x:Bind viewModel.Config.Downloads.SortDescending, Mode=TwoWay}"
-                ToolTipService.ToolTip="Sort search results descending/ascending">
+                ToolTipService.ToolTip="Sort tracks descending/ascending">
                 <FontIcon FontSize="17" Glyph="{x:Bind viewModel.Config.Downloads.SortDescending, Mode=OneWay, Converter={StaticResource BoolFontIconChevronConverter}}" />
             </ToggleButton>
 
