@@ -95,17 +95,18 @@ public partial class LyricsViewModel : ObservableObject
             progress.Report("Fetching track lyrics...");
             string lyricsContent = await geniusClient.FetchLyricsAsync(value.Url, cts.Token) ?? throw new Exception("Returned lyrics from GeniusClient is null.");
 
-            logger.LogInformation("[LyricsViewModel-SearchAsync] Creating LyricsInfoView...");
-            progress.Report("Creating lyrics info view...");
+            logger.LogInformation("[LyricsViewModel-OnSelectedSearchResultChanged] Creating LyricsInfoViewModel...");
+            progress.Report("Creating lyrics info viewmodel...");
 
             LyricsInfoViewModel viewModel = App.Provider.GetRequiredService<LyricsInfoViewModel>();
             viewModel.Track = value;
             viewModel.Lyrics = lyricsContent;
 
-            SelectedSearchResult = null;
             mainView.HideLoadingPopup();
 
             await mainView.AlertAsync(new LyricsInfoView(viewModel));
+            SelectedSearchResult = null;
+
             logger.LogInformation("[LyricsViewModel-OnSelectedSearchResultChanged] Got lyrics from Genius: {title}-{artists}", value.Title, value.ArtistNames);
 
         }
