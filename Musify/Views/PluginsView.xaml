@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Musify.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:penm="using:Musify.Plugins.Enums"
     xmlns:plg="using:Musify.Plugins.Abstract"
     xmlns:pmdl="using:Musify.Plugins.Models"
     xmlns:vm="using:Musify.ViewModels"
@@ -49,7 +50,7 @@
             </Grid.ColumnDefinitions>
 
             <!--  Search  -->
-            <TextBox PlaceholderText="Search for plugins..." />
+            <TextBox PlaceholderText="Search for plugin bundles..." Text="{x:Bind viewModel.Query, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
             <Rectangle Grid.Column="1" Style="{StaticResource VerticalDivider}" />
 
@@ -59,7 +60,7 @@
                 Width="105"
                 CornerRadius="4,0,0,4"
                 SelectedIndex="{x:Bind viewModel.Config.Plugins.Sorting, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}"
-                ToolTipService.ToolTip="Sort plugins results by">
+                ToolTipService.ToolTip="Sort plugin bundles by">
                 <ComboBoxItem Content="Default" />
                 <ComboBoxItem Content="Name" />
                 <ComboBoxItem Content="Author" />
@@ -72,7 +73,7 @@
                 Padding="4"
                 CornerRadius="0,4,4,0"
                 IsChecked="{x:Bind viewModel.Config.Plugins.SortDescending, Mode=TwoWay}"
-                ToolTipService.ToolTip="Sort plugins descending/ascending">
+                ToolTipService.ToolTip="Sort plugin bundles descending/ascending">
                 <FontIcon FontSize="17" Glyph="{x:Bind viewModel.Config.Plugins.SortDescending, Mode=OneWay, Converter={StaticResource BoolFontIconChevronConverter}}" />
             </ToggleButton>
 
@@ -84,7 +85,7 @@
                 Width="32"
                 Height="32"
                 Padding="4"
-                ToolTipService.ToolTip="Show of kind">
+                ToolTipService.ToolTip="Show bundles that contain">
                 <Button.Flyout>
                     <MenuFlyout>
                         <ToggleMenuFlyoutItem IsChecked="{x:Bind viewModel.Config.Plugins.ShowOfKindPlatformSupport, Mode=TwoWay}" Text="Platform Support" />
@@ -122,13 +123,14 @@
 
 
         <ctr:AdaptiveGridView
-            x:Name="PluginsContainer"
+            x:Name="PluginBundlesContainer"
             Grid.Row="4"
             Margin="-24,0"
             Padding="48,24,42,24"
             DesiredWidth="300"
-            ItemsSource="{x:Bind viewModel.Plugins}"
-            SelectionMode="None">
+            ItemsSource="{x:Bind viewModel.PluginBundles}"
+            SelectedItem="{x:Bind viewModel.SelectedPluginBundle, Mode=TwoWay}"
+            SelectionMode="Single">
             <ctr:AdaptiveGridView.ItemTemplate>
                 <DataTemplate x:DataType="pmdl:Manifest">
                     <Grid
@@ -143,28 +145,63 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <FontIcon
-                            HorizontalAlignment="Left"
-                            FontSize="32"
-                            Glyph="&#xea69;" />
-
                         <TextBlock
-                            Grid.Row="2"
                             Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
                             Text="{x:Bind Name}"
                             TextTrimming="CharacterEllipsis" />
                         <TextBlock
-                            Grid.Row="2"
                             Height="56"
                             Margin="0,21,0,0"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             Text="{x:Bind Description}"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="WrapWholeWords" />
+
+                        <ScrollViewer
+                            Grid.Row="3"
+                            Margin="-24"
+                            Padding="24"
+                            CanContentRenderOutsideBounds="True"
+                            HorizontalScrollBarVisibility="Auto"
+                            IsHitTestVisible="False"
+                            VerticalScrollMode="Disabled">
+                            <ItemsControl ItemsSource="{x:Bind PluginKinds}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="4" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="penm:PluginKind">
+                                        <Border
+                                            Padding="4"
+                                            HorizontalAlignment="Left"
+                                            Background="{ThemeResource AccentFillColorDefaultBrush}"
+                                            BorderBrush="{ThemeResource AccentFillColorTertiaryBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="4">
+                                            <TextBlock
+                                                FontSize="12"
+                                                Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                                Text="{x:Bind Converter={StaticResource PluginKindStringConverter}}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </Grid>
                 </DataTemplate>
             </ctr:AdaptiveGridView.ItemTemplate>
-
         </ctr:AdaptiveGridView>
+
+        <TextBlock
+            Grid.Row="4"
+            VerticalAlignment="Center"
+            FontSize="16"
+            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+            HorizontalTextAlignment="Center"
+            Text="There are currently no plugin bundles.&#x0a;Import new plugins or change the filter options..."
+            Visibility="{x:Bind viewModel.PluginBundles.Count, Mode=OneWay, Converter={StaticResource IntIsZeroVisibilityConverter}}" />
     </Grid>
 </Page>

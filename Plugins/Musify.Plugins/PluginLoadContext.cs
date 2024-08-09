@@ -17,13 +17,21 @@ public class PluginLoadContext : AssemblyLoadContext
     public Manifest Manifest { get; }
 
     /// <summary>
+    /// The full path of the file from which the plugin was loaded from.
+    /// </summary>
+    public string Location { get; }
+
+    /// <summary>
     /// Creates a new instance of PluginLoadContext.
     /// </summary>
     /// <param name="manifest">The plugin manifest corresponding to this load context.</param>
+    /// <param name="location">The full path of the file from which the plugin was loaded from.</param>
     private PluginLoadContext(
-        Manifest manifest) : base(true)
+        Manifest manifest,
+        string location) : base(true)
     {
         this.Manifest = manifest;
+        this.Location = location;
     }
 
 
@@ -47,7 +55,7 @@ public class PluginLoadContext : AssemblyLoadContext
         using ZipArchive pluginArchive = ZipFile.OpenRead(path);
 
         Manifest manifest = await Manifest.FromPluginArchivetAsync(pluginArchive, cancellationToken) ?? throw new PluginNotLoadedException(path, null, null, new("Plugin archive does not contain a manifest or is badly formatted."));
-        PluginLoadContext loadContext = new(manifest);
+        PluginLoadContext loadContext = new(manifest, path);
 
         loadContext.EntryPointAssembly = await loadContext.LoadFromArchiveAsync(pluginArchive, manifest.EntryPoint, cancellationToken) ?? throw new PluginNotLoadedException(path, null, manifest, new($"Entry point assembly could not be loaded: [{manifest.EntryPoint}]."));
         foreach (string dependency in manifest.Dependencies)

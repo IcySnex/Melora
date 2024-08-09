@@ -56,8 +56,6 @@ public partial class App : Application
 
                 // Add ViewModels and MainView
                 services.AddSingleton<HomeViewModel>();
-                services.AddSingleton<SettingsViewModel>();
-                services.AddSingleton<PluginsViewModel>();
 
                 services.AddTransient<PlatformViewModel>();
                 services.AddSingleton<LyricsViewModel>();
@@ -65,6 +63,10 @@ public partial class App : Application
 
                 services.AddSingleton<DownloadsViewModel>();
                 services.AddSingleton<DownloadableTrackInfoViewModel>();
+
+                services.AddSingleton<PluginsViewModel>();
+                services.AddSingleton<PluginInfoViewModel>();
+                services.AddSingleton<SettingsViewModel>();
 
                 services.AddSingleton<MainView>();
 

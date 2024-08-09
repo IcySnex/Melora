@@ -1,10 +1,17 @@
-﻿namespace Musify.Plugins.Abstract;
+﻿using Musify.Plugins.Enums;
+
+namespace Musify.Plugins.Abstract;
 
 /// <summary>
 /// Represents a plugin.
 /// </summary>
 public interface IPlugin
 {
+    /// <summary>
+    /// The kind of the plugin.
+    /// </summary>
+    PluginKind Kind { get; }
+
     /// <summary>
     /// The name the plugin.
     /// </summary>

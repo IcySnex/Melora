@@ -5,6 +5,7 @@ using Musify.Plugins;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Exceptions;
 using Musify.Plugins.Models;
+using Serilog.Context;
 using System.Reflection;
 
 namespace Musify.Services;
@@ -73,11 +74,11 @@ public class PluginManager
 
     public T GetLoaded<T>(
         string? name) where T : IPlugin =>
-        TryGetLoaded(name, out T result) ? result : throw new Exception("Could not get plugin with specified name and requested type.");
+        TryGetLoaded(name, out T result) ? result : throw new Exception($"Could not get plugin with specified name ({name}) and requested type.");
     
     public T GetLoaded<T>(
         int? hash) where T : IPlugin =>
-        TryGetLoaded(hash, out T result) ? result : throw new Exception("Could not get plugin with given hash and requested type.");
+        TryGetLoaded(hash, out T result) ? result : throw new Exception($"Could not get plugin with given hash ({hash}) and requested type.");
 
     public T? GetLoadedOrDefault<T>(
         string? name) where T : IPlugin
@@ -163,11 +164,11 @@ public class PluginManager
 
 
 
-    public async Task LoadPluginAsync(
+    public async Task LoadAsync(
         string path,
         CancellationToken cancellationToken = default)
     {
-        logger.LogInformation("[PluginManager-LoadPluginAsync] Starting to load plugin: [{path}]...", path);
+        logger.LogInformation("[PluginManager-LoadAsync] Starting to load plugin: [{path}]...", path);
         PluginLoadContext loadContext = await PluginLoadContext.FromPluginArchiveAsync(path, cancellationToken);
 
         foreach (Type type in loadContext.EntryPointAssembly.GetExportedTypes())
@@ -216,7 +217,7 @@ public class PluginManager
                 loadedPluginsLoadContexts[plugin] = loadContext;
                 OnPluginLoaded(type.BaseType!, plugin);
 
-                logger.LogInformation("[PluginManager-LoadPluginAsync] Loaded plugin: [{name}]", plugin.Name);
+                logger.LogInformation("[PluginManager-LoadAsync] Loaded plugin: [{name}]", plugin.Name);
             }
             catch (Exception ex)
             {
@@ -225,11 +226,12 @@ public class PluginManager
         }
     }
 
-    public void UnloadPlugin(
+
+    public void Unload(
         IPlugin plugin)
     {
-        logger.LogInformation("[PluginManager-UnloadPlugin] Starting to unload plugin: [{name}]...", plugin.Name);
-        bool result = loadedPluginsLoadContexts.TryGetValue(plugin, out PluginLoadContext? context);
+        logger.LogInformation("[PluginManager-Unload] Starting to unload plugin: [{name}]...", plugin.Name);
+        bool result = loadedPluginsLoadContexts.TryGetValue(plugin, out PluginLoadContext? loadContext);
         if (!result)
             throw new Exception("Could not find plugin. Are you sure the plugin was loaded?");
 
@@ -241,12 +243,35 @@ public class PluginManager
         if (subscriptions.TryGetValue(pluginType, out HashSet<(Delegate?, Delegate?)>? handlers) && handlers.Count == 0)
             subscriptions.Remove(pluginType);
 
-        if (!LoadedContexts.Contains(context))
+        if (!LoadedContexts.Contains(loadContext))
         {
-            context!.Unload();
-            OnLoadContextUnloaded(context);
+            loadContext!.Unload();
+            OnLoadContextUnloaded(loadContext);
         }
 
-        logger.LogInformation("[PluginManager-UnloadPlugin] Unloaded plugin: [{name}]", plugin.Name);
+        logger.LogInformation("[PluginManager-Unload] Unloaded plugin: [{name}]", plugin.Name);
+    }
+
+    public void Unload(
+        PluginLoadContext loadContext)
+    {
+        logger.LogInformation("[PluginManager-Unload] Starting to unload plugin load context: [{manifestName}]...", loadContext.Manifest.Name);
+        IEnumerable<IPlugin> plugins = loadedPluginsLoadContexts.Where(pair => pair.Value == loadContext).Select(pair => pair.Key);
+
+        foreach (IPlugin plugin in plugins)
+        {
+            loadedPluginsLoadContexts.Remove(plugin);
+
+            Type pluginType = plugin.GetType().BaseType!;
+            OnPluginUnloaded(pluginType, plugin);
+
+            if (subscriptions.TryGetValue(pluginType, out HashSet<(Delegate?, Delegate?)>? handlers) && handlers.Count == 0)
+                subscriptions.Remove(pluginType);
+        }
+
+        loadContext!.Unload();
+        OnLoadContextUnloaded(loadContext);
+
+        logger.LogInformation("[PluginManager-Unload] Unloaded plugin load context: [{manifestName}]", loadContext.Manifest.Name);
     }
 }

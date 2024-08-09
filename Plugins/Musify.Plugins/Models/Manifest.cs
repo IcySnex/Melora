@@ -1,4 +1,5 @@
-﻿using System.IO.Compression;
+﻿using Musify.Plugins.Enums;
+using System.IO.Compression;
 using System.Text.Json;
 
 namespace Musify.Plugins.Models;
@@ -12,7 +13,7 @@ namespace Musify.Plugins.Models;
 /// <param name="name">The name of the plugin.</param>
 /// <param name="description">The description of the plugin.</param>
 /// <param name="author">The author of the plugin.</param>
-/// <param name="kind">The kind of the plugins contained.</param>
+/// <param name="pluginKinds">The kinds of plugins contained.</param>
 /// <param name="lastUpdatedAt">The date and time when the plugin was last updated..</param>
 /// <param name="entryPoint">The path to the entry point of the plugin.</param>
 /// <param name="dependencies">The paths to the dependencies of the plugin.</param>
@@ -20,7 +21,7 @@ public class Manifest(
     string name,
     string description,
     string author,
-    int[] kind,
+    PluginKind[] pluginKinds,
     DateTime lastUpdatedAt,
     string entryPoint,
     string[] dependencies)
@@ -62,9 +63,9 @@ public class Manifest(
     public string Author { get; } = author;
 
     /// <summary>
-    /// The kind of the plugins contained.
+    /// The kinds of plugins contained.
     /// </summary>
-    public int[] Kind { get; } = kind;
+    public PluginKind[] PluginKinds { get; } = pluginKinds;
 
     /// <summary>
     /// The date and time when the plugin was last updated.

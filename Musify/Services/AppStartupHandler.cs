@@ -1,11 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.Windows.AppLifecycle;
-using Musify.Enums;
-using Musify.Helpers;
 using Musify.Models;
 using Musify.Plugins.Abstract;
-using Musify.Plugins.Exceptions;
+using Musify.ViewModels;
 using Musify.Views;
 
 namespace Musify.Services;
@@ -17,7 +13,8 @@ public class AppStartupHandler
         Config config,
         PluginManager pluginManager,
         MainView mainView,
-        Navigation navigation)
+        Navigation navigation,
+        PluginsViewModel pluginsViewModel)
     {
         mainView.SetSize(1150, 567);
         mainView.SetMinSize(700, 525);
@@ -26,47 +23,13 @@ public class AppStartupHandler
 
         navigation.SetCurrentItem("Home");
 
-        async void LoadPlugins()
+        mainView.DispatcherQueue.TryEnqueue(async () =>
         {
             foreach (string path in Directory.GetFiles(PluginManager.PluginsDirectory, "*.mfy"))
-            {
-                string pluginFileName = Path.GetFileNameWithoutExtension(path);
-                try
-                {
-                    await pluginManager.LoadPluginAsync(path);
-                    mainView.ShowNotification("Success!", $"Loaded plugin: {pluginFileName}.", NotificationLevel.Success);
-                }
-                catch (PluginNotLoadedException ex)
-                {
-                    mainView.ShowNotification("Warning!", $"Could not load plugin: {pluginFileName}.", NotificationLevel.Warning, async () =>
-                    {
-                        if (await mainView.AlertAsync(
-                            new()
-                            {
-                                Content = ex.ToFormattedString("Resetting the config may be able to fix this isuee.\nDo you want to reset the config for this plugin and restart the app?"),
-                                Title = "Warning!",
-                                CloseButtonText = "No",
-                                PrimaryButtonText = "Yes"
-                            }) != ContentDialogResult.Primary)
-                            return;
-
-                        config.Plugins.Configs.Remove(ex.PluginType!.Name);
-
-                        mainView.Close();
-                        AppInstance.Restart(null);
-                    });
-                    logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Could not load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
-                }
-                catch (Exception ex)
-                {
-                    mainView.ShowNotification("Warning!", $"Could not load plugin: {pluginFileName}.", NotificationLevel.Warning, ex.ToFormattedString());
-                    logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Could not load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
-                }
-            }
+                await pluginsViewModel.TryLoadAsync(path);
 
             config.Downloads.SelectedMetadatePlugin = pluginManager.GetLoadedOrDefault<MetadataPlugin>(config.Downloads.SelectedMetadatePlugin)?.Name;
-        };
-        LoadPlugins();
+        });
 
         logger.LogInformation("[AppStartupHandler-.ctor] AppStartupHandler has been initialized");
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Musify.Plugins.Enums;
 using Musify.Plugins.Models;
 
 namespace Musify.Plugins.Abstract;
@@ -24,6 +25,11 @@ public abstract class MetadataPlugin(
     /// </summary>
     readonly protected ILogger<IPlugin>? logger = logger;
 
+
+    /// <summary>
+    /// The kind of the plugin.
+    /// </summary>
+    public PluginKind Kind => PluginKind.Metadata;
 
     /// <summary>
     /// The name of the plugin.
