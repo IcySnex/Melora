@@ -81,7 +81,7 @@ public partial class DownloadsViewModel : ObservableObject
                 Downloads.Descending = Config.Downloads.SortDescending;
                 break;
         }
-        logger.LogInformation("[DownloadsViewModel-OnViewOptionsPropertyChanged] Reordered search results");
+        logger.LogInformation("[DownloadsViewModel-OnConfigPropertyChanged] Reordered search results");
     }
 
 
@@ -118,7 +118,7 @@ public partial class DownloadsViewModel : ObservableObject
         string value)
     {
         Downloads.Refresh();
-        logger.LogInformation("[DownloadsViewModel-OnPropertyChanged] Refreshed downloads");
+        logger.LogInformation("[DownloadsViewModel-OnQueryChanged] Refreshed downloads");
     }
 
 
