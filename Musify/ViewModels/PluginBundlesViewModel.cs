@@ -19,16 +19,16 @@ using Musify.Plugins;
 
 namespace Musify.ViewModels;
 
-public partial class PluginsViewModel : ObservableObject
+public partial class PluginBundlesViewModel : ObservableObject
 {
-    readonly ILogger<PluginsViewModel> logger;
+    readonly ILogger<PluginBundlesViewModel> logger;
     readonly MainView mainView;
 
     public Config Config { get; }
     public PluginManager PluginManager { get; }
 
-    public PluginsViewModel(
-        ILogger<PluginsViewModel> logger,
+    public PluginBundlesViewModel(
+        ILogger<PluginBundlesViewModel> logger,
         Config config,
         PluginManager pluginManager,
         MainView mainView)
@@ -38,7 +38,7 @@ public partial class PluginsViewModel : ObservableObject
         this.PluginManager = pluginManager;
         this.mainView = mainView;
 
-        PluginBundles = new()
+        Manifests = new()
         {
             KeySelector = Config.Plugins.Sorting switch
             {
@@ -63,10 +63,10 @@ public partial class PluginsViewModel : ObservableObject
         Config.Plugins.PropertyChanged += OnConfigPropertyChanged;
 
         pluginManager.SubscribeLoadContext(
-            loadContext => PluginBundles.Add(loadContext.Manifest),
-            loadContext => PluginBundles.Remove(loadContext.Manifest));
+            loadContext => Manifests.Add(loadContext.Manifest),
+            loadContext => Manifests.Remove(loadContext.Manifest));
 
-        logger.LogInformation("[PluginsViewModel-.ctor] PluginsViewModel has been initialized");
+        logger.LogInformation("[PluginBundlesViewModel-.ctor] PluginBundlesViewModel has been initialized");
     }
 
 
@@ -76,7 +76,7 @@ public partial class PluginsViewModel : ObservableObject
         switch (e.PropertyName)
         {
             case "Sorting":
-                PluginBundles.KeySelector = Config.Plugins.Sorting switch
+                Manifests.KeySelector = Config.Plugins.Sorting switch
                 {
                     Sorting.Default => null,
                     Sorting.Title => plugin => plugin.Name,
@@ -84,50 +84,50 @@ public partial class PluginsViewModel : ObservableObject
                     Sorting.Duration => plugin => plugin.LastUpdatedAt,
                     _ => null
                 };
-                logger.LogInformation("[PluginsViewModel-OnViewOptionsPropertyChanged] Reordered plugin bundles");
+                logger.LogInformation("[PluginBundlesViewModel-OnViewOptionsPropertyChanged] Reordered manifests");
                 break;
             case "SortDescending":
-                PluginBundles.Descending = Config.Plugins.SortDescending;
-                logger.LogInformation("[PluginsViewModel-OnViewOptionsPropertyChanged] Reordered plugin bundles");
+                Manifests.Descending = Config.Plugins.SortDescending;
+                logger.LogInformation("[PluginBundlesViewModel-OnViewOptionsPropertyChanged] Reordered manifests");
                 break;
             case "ShowOfKindPlatformSupport":
             case "ShowOfKindMetadata":
             case "ShowInstalled":
             case "ShowAvailable":
-                PluginBundles.Refresh();
-                logger.LogInformation("[PluginsViewModel-OnViewOptionsPropertyChanged] Refreshed plugin bundles");
+                Manifests.Refresh();
+                logger.LogInformation("[PluginBundlesViewModel-OnViewOptionsPropertyChanged] Refreshed manifests");
                 break;
         }
     }
 
 
-    public ObservableRangeCollection<Manifest> PluginBundles { get; }
+    public ObservableRangeCollection<Manifest> Manifests { get; }
 
 
     [ObservableProperty]
-    Manifest? selectedPluginBundle = null;
+    Manifest? selectedManifest = null;
 
-    async partial void OnSelectedPluginBundleChanged(
+    async partial void OnSelectedManifestChanged(
         Manifest? value)
     {
         if (value is null)
             return;
 
-        logger.LogInformation("[PluginsViewModel-OnSelectedSearchResultChanged] Creating PluginInfoViewModel...");
+        logger.LogInformation("[PluginBundlesViewModel-OnSelectedSearchResultChanged] Creating PluginBundleInfoViewModel...");
 
         PluginBundleInfoViewModel viewModel = App.Provider.GetRequiredService<PluginBundleInfoViewModel>();
         viewModel.Manifest = value;
 
         if (await mainView.AlertAsync(new PluginBundleInfoView(viewModel), $"Plugin: {value.Name}", "Close", "Remove") != ContentDialogResult.Primary)
         {
-            SelectedPluginBundle = null;
-            logger.LogInformation("[PluginsViewModel-OnSelectedPluginBundleChanged] Plugin info was shown: {name}", value.Name);
+            SelectedManifest = null;
+            logger.LogInformation("[PluginBundlesViewModel-OnSelectedManifestChanged] Plugin bundle info was shown: {name}", value.Name);
             return;
         }
 
-        if (await mainView.AlertAsync("By removing this plugin you will also remove its configuration and your preferences.", "Are you sure?", "No", "Yes") != ContentDialogResult.Primary)
+        if (await mainView.AlertAsync("By removing this plugin bundle you will also remove all its plugin configurations.", "Are you sure?", "No", "Yes") != ContentDialogResult.Primary)
         {
-            SelectedPluginBundle = null;
+            SelectedManifest = null;
             return;
         }
 
@@ -138,17 +138,17 @@ public partial class PluginsViewModel : ObservableObject
             PluginManager.Unload(loadContext);
             File.Delete(loadContext.Location);
 
-            SelectedPluginBundle = null;
+            SelectedManifest = null;
 
-            mainView.ShowNotification("Success!", $"Removed plugin: {value.Name}.", NotificationLevel.Success);
-            logger.LogInformation("[PluginsViewModel-OnSelectedPluginBundleChanged] Removed plugin: {name}", value.Name);
+            mainView.ShowNotification("Success!", $"Removed plugin bundle: {value.Name}.", NotificationLevel.Success);
+            logger.LogInformation("[PluginBundlesViewModel-OnSelectedManifestChanged] Removed plugin bundle: {name}", value.Name);
         }
         catch (Exception ex)
         {
-            SelectedPluginBundle = null;
+            SelectedManifest = null;
 
-            mainView.ShowNotification("Something went wrong!", $"Failed to remove plugin: {value.Name}.", NotificationLevel.Error, ex.ToFormattedString());
-            logger.LogError(ex, "[PluginsViewModel-OnSelectedPluginBundleChanged] Failed to remove plugin: {name}", value.Name);
+            mainView.ShowNotification("Something went wrong!", $"Failed to remove plugin bundle: {value.Name}.", NotificationLevel.Error, ex.ToFormattedString());
+            logger.LogError(ex, "[PluginBundlesViewModel-OnSelectedManifestChanged] Failed to remove plugin bundle: {name}", value.Name);
         }
     }
 
@@ -159,28 +159,28 @@ public partial class PluginsViewModel : ObservableObject
     partial void OnQueryChanged(
         string value)
     {
-        PluginBundles.Refresh();
-        logger.LogInformation("[PluginsViewModel-OnQueryChanged] Refreshed plugin bundles");
+        Manifests.Refresh();
+        logger.LogInformation("[PluginBundlesViewModel-OnQueryChanged] Refreshed manifests");
     }
 
 
     public async Task TryLoadAsync(
         string path)
     {
-        string pluginFileName = Path.GetFileNameWithoutExtension(path);
+        string bundleFileName = Path.GetFileNameWithoutExtension(path);
         try
         {
-            await PluginManager.LoadAsync(path);
-            mainView.ShowNotification("Success!", $"Loaded plugin: {pluginFileName}.", NotificationLevel.Success);
+            await PluginManager.LoadBundleAsync(path);
+            mainView.ShowNotification("Success!", $"Loaded plugin bundle: {bundleFileName}.", NotificationLevel.Success);
         }
         catch (PluginNotLoadedException ex)
         {
-            mainView.ShowNotification("Warning!", $"Could not load plugin: {pluginFileName}.", NotificationLevel.Warning, async () =>
+            mainView.ShowNotification("Warning!", $"Could not load plugin: {ex.PluginType!.Name}.", NotificationLevel.Warning, async () =>
             {
                 if (await mainView.AlertAsync(
                     new()
                     {
-                        Content = ex.ToFormattedString("Resetting the config may be able to fix this isuee.\nDo you want to reset the config for this plugin and restart the app?"),
+                        Content = ex.ToFormattedString("Resetting the config may be able to fix this isuee.\nDo you want to reset the config for this plugin bundle and restart the app?"),
                         Title = "Warning!",
                         CloseButtonText = "No",
                         PrimaryButtonText = "Yes"
@@ -192,12 +192,12 @@ public partial class PluginsViewModel : ObservableObject
                 mainView.Close();
                 AppInstance.Restart(null);
             });
-            logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Could not load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
+            logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Could not load plugin: {name}: {exception}", ex.PluginType!.Name, ex.Message);
         }
         catch (Exception ex)
         {
-            mainView.ShowNotification("Warning!", $"Could not load plugin: {pluginFileName}.", NotificationLevel.Warning, ex.ToFormattedString());
-            logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Could not load plugin: {pluginFileName}: {exception}", pluginFileName, ex.Message);
+            mainView.ShowNotification("Warning!", $"Could not load plugin bundle: {bundleFileName}.", NotificationLevel.Warning, ex.ToFormattedString());
+            logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Could not load plugin bundle: {bundleFileName}: {exception}", bundleFileName, ex.Message);
         }
     }
 
@@ -206,15 +206,15 @@ public partial class PluginsViewModel : ObservableObject
     {
         FileOpenPicker picker = new()
         {
-            CommitButtonText = "Import plugin",
-            SuggestedStartLocation = PickerLocationId.PicturesLibrary,
-            SettingsIdentifier = "Import plugin",
+            CommitButtonText = "Import plugin bundle",
+            SuggestedStartLocation = PickerLocationId.Downloads,
+            SettingsIdentifier = "Import plugin bundle",
         };
         picker.FileTypeFilter.Add(".mfy");
         mainView.Initialize(picker);
 
         StorageFile? file = await picker.PickSingleFileAsync();
-        logger.LogInformation("[PluginsViewModel-ImportAsync] File open picker was shown");
+        logger.LogInformation("[PluginBundlesViewModel-ImportAsync] File open picker was shown");
 
         if (file is null)
             return;
@@ -222,14 +222,14 @@ public partial class PluginsViewModel : ObservableObject
         string destination = Path.Combine(PluginManager.PluginsDirectory, file.Name);
         if (File.Exists(destination))
         {
-            mainView.ShowNotification("Something went wrong!", "Failed to import plugin.", NotificationLevel.Error, "It looks like a plugin with the same name is already imported. Please first uninstall that plugin.");
-            logger.LogError(new Exception("It looks like a plugin with the same name is already imported. Please first uninstall that plugin."), "Failed to import plugin: {fileName}", file.Name);
+            mainView.ShowNotification("Something went wrong!", "Failed to import plugin bundle.", NotificationLevel.Error, "It looks like a plugin bundle with the same name is already imported. Please first uninstall that plugin bundle.");
+            logger.LogError(new Exception("It looks like a plugin bundle with the same name is already imported. Please first uninstall that plugin bundle."), "Failed to import plugin bundle: {fileName}", file.Name);
             return;
         }
 
         File.Copy(file.Path, destination);
         await TryLoadAsync(destination);
 
-        logger.LogInformation("[PluginsViewModel-ImportAsync] Plugin was imported from file");
+        logger.LogInformation("[PluginBundlesViewModel-ImportAsync] Plugin bundle was imported from file");
     }
 }

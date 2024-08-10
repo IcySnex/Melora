@@ -14,7 +14,7 @@ public class AppStartupHandler
         PluginManager pluginManager,
         MainView mainView,
         Navigation navigation,
-        PluginsViewModel pluginsViewModel)
+        PluginBundlesViewModel pluginBundlesViewModel)
     {
         mainView.SetSize(1150, 567);
         mainView.SetMinSize(700, 525);
@@ -26,7 +26,7 @@ public class AppStartupHandler
         mainView.DispatcherQueue.TryEnqueue(async () =>
         {
             foreach (string path in Directory.GetFiles(PluginManager.PluginsDirectory, "*.mfy"))
-                await pluginsViewModel.TryLoadAsync(path);
+                await pluginBundlesViewModel.TryLoadAsync(path);
 
             config.Downloads.SelectedMetadatePlugin = pluginManager.GetLoadedOrDefault<MetadataPlugin>(config.Downloads.SelectedMetadatePlugin)?.Name;
         });

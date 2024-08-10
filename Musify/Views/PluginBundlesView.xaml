@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Page
-    x:Class="Musify.Views.PluginsView"
+    x:Class="Musify.Views.PluginBundlesView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ctr="using:Musify.Controls"
@@ -24,7 +24,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Style="{StaticResource PageTitleTextBlockStyle}" Text="Plugins" />
+        <TextBlock Style="{StaticResource PageTitleTextBlockStyle}" Text="Plugin Bundles" />
 
         <!--  Search bar  -->
         <Grid
@@ -128,8 +128,8 @@
             Margin="-24,0"
             Padding="48,24,42,24"
             DesiredWidth="300"
-            ItemsSource="{x:Bind viewModel.PluginBundles}"
-            SelectedItem="{x:Bind viewModel.SelectedPluginBundle, Mode=TwoWay}"
+            ItemsSource="{x:Bind viewModel.Manifests}"
+            SelectedItem="{x:Bind viewModel.SelectedManifest, Mode=TwoWay}"
             SelectionMode="Single">
             <ctr:AdaptiveGridView.ItemTemplate>
                 <DataTemplate x:DataType="pmdl:Manifest">
@@ -191,6 +191,6 @@
             Foreground="{ThemeResource TextFillColorTertiaryBrush}"
             HorizontalTextAlignment="Center"
             Text="There are currently no plugin bundles.&#x0a;Import new plugins or change the filter options..."
-            Visibility="{x:Bind viewModel.PluginBundles.Count, Mode=OneWay, Converter={StaticResource IntIsZeroVisibilityConverter}}" />
+            Visibility="{x:Bind viewModel.Manifests.Count, Mode=OneWay, Converter={StaticResource IntIsZeroVisibilityConverter}}" />
     </Grid>
 </Page>

@@ -74,7 +74,7 @@
 
         <ContentControl
             Grid.Row="6"
-            hlp:Attributes.Title="Plugin Kinds"
+            hlp:Attributes.Title="Contains"
             Template="{StaticResource WithHeader}">
             <Grid>
                 <ItemsControl ItemsSource="{x:Bind viewModel.Manifest.PluginKinds}" Style="{StaticResource HorizontalScroller}">

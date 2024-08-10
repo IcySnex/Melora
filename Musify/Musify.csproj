@@ -72,7 +72,7 @@
 	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 	    <SubType>Designer</SubType>
 	  </Page>
-	  <Page Update="Views\PluginsView.xaml">
+	  <Page Update="Views\PluginBundlesView.xaml">
 	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 	    <Generator>MSBuild:Compile</Generator>
 	  </Page>

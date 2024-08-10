@@ -64,7 +64,7 @@ public partial class App : Application
                 services.AddSingleton<DownloadsViewModel>();
                 services.AddSingleton<DownloadableTrackInfoViewModel>();
 
-                services.AddSingleton<PluginsViewModel>();
+                services.AddSingleton<PluginBundlesViewModel>();
                 services.AddSingleton<PluginBundleInfoViewModel>();
                 services.AddSingleton<SettingsViewModel>();
 

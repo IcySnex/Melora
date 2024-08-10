@@ -34,7 +34,7 @@ public class Navigation
                 return;
             }
 
-            Navigate((string)e.SelectedItemContainer.Content);
+            Navigate(((string)e.SelectedItemContainer.Content).Replace(" ", ""));
         };
         mainView.NavigationView.BackRequested += (s, e) => GoBack();
         mainView.BackButton.Click += (s, e) => GoBack();
@@ -47,7 +47,7 @@ public class Navigation
     {
         { "Lyrics", new LyricsView() },
         { "Downloads", new DownloadsView() },
-        { "Plugins", new PluginsView() },
+        { "PluginBundles", new PluginBundlesView() },
         { "Settings", new SettingsView() }
     };
     readonly Stack<Page> viewsHistory = [];

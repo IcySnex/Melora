@@ -111,7 +111,7 @@
                 <NavigationViewItem Content="Android" Icon="CellPhone" />-->
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem Content="Plugins" Icon="ViewAll" />
+                <NavigationViewItem Content="Plugin Bundles" Icon="ViewAll" />
                 <NavigationViewItem Content="Settings" Icon="Setting" />
             </NavigationView.FooterMenuItems>
 

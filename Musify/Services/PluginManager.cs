@@ -164,11 +164,11 @@ public class PluginManager
 
 
 
-    public async Task LoadAsync(
+    public async Task LoadBundleAsync(
         string path,
         CancellationToken cancellationToken = default)
     {
-        logger.LogInformation("[PluginManager-LoadAsync] Starting to load plugin: [{path}]...", path);
+        logger.LogInformation("[PluginManager-LoadAsync] Starting to load plugin bundle: [{path}]...", path);
         PluginLoadContext loadContext = await PluginLoadContext.FromPluginArchiveAsync(path, cancellationToken);
 
         foreach (Type type in loadContext.EntryPointAssembly.GetExportedTypes())
