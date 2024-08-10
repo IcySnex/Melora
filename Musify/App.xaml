@@ -282,6 +282,33 @@
                 </Style.Setters>
             </Style>
 
+            <Style x:Key="HorizontalScroller" TargetType="ItemsControl">
+                <Style.Setters>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ItemsControl">
+                                <ScrollViewer
+                                    Margin="-24,0"
+                                    Padding="24,0"
+                                    HorizontalAlignment="Left"
+                                    CanContentRenderOutsideBounds="True"
+                                    HorizontalScrollBarVisibility="Hidden"
+                                    VerticalScrollBarVisibility="Hidden"
+                                    VerticalScrollMode="Disabled">
+                                    <ItemsControl ItemTemplate="{TemplateBinding ItemTemplate}" ItemsSource="{TemplateBinding ItemsSource}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal" Spacing="4" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style.Setters>
+            </Style>
+
 
             <!--  Templates  -->
             <ControlTemplate x:Key="PluginSettingsExpander" TargetType="ContentControl">

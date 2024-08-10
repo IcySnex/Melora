@@ -30,7 +30,7 @@
 		<None Remove="Views\LyricsView.xaml" />
 		<None Remove="Views\MainView.xaml" />
 		<None Remove="Views\PlatformView.xaml" />
-		<None Remove="Views\PluginInfoView.xaml" />
+		<None Remove="Views\PluginBundleInfoView.xaml" />
 		<None Remove="Views\SettingsView.xaml" />
 	</ItemGroup>
 
@@ -68,7 +68,7 @@
 	  <ProjectReference Include="..\Plugins\Musify.Plugins\Musify.Plugins.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Page Update="Views\PluginInfoView.xaml">
+	  <Page Update="Views\PluginBundleInfoView.xaml">
 	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 	    <SubType>Designer</SubType>
 	  </Page>

@@ -115,13 +115,19 @@ public partial class PluginsViewModel : ObservableObject
 
         logger.LogInformation("[PluginsViewModel-OnSelectedSearchResultChanged] Creating PluginInfoViewModel...");
 
-        PluginInfoViewModel viewModel = App.Provider.GetRequiredService<PluginInfoViewModel>();
-        viewModel.PluginBundle = value;
+        PluginBundleInfoViewModel viewModel = App.Provider.GetRequiredService<PluginBundleInfoViewModel>();
+        viewModel.Manifest = value;
 
-        if (await mainView.AlertAsync(new PluginInfoView(viewModel), $"Plugin: {value.Name}", "Close", "Remove") != ContentDialogResult.Primary)
+        if (await mainView.AlertAsync(new PluginBundleInfoView(viewModel), $"Plugin: {value.Name}", "Close", "Remove") != ContentDialogResult.Primary)
         {
             SelectedPluginBundle = null;
             logger.LogInformation("[PluginsViewModel-OnSelectedPluginBundleChanged] Plugin info was shown: {name}", value.Name);
+            return;
+        }
+
+        if (await mainView.AlertAsync("By removing this plugin you will also remove its configuration and your preferences.", "Are you sure?", "No", "Yes") != ContentDialogResult.Primary)
+        {
+            SelectedPluginBundle = null;
             return;
         }
 

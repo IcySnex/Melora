@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="Musify.Views.PluginBundleInfoView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hlp="using:Musify.Helpers"
+    xmlns:local="using:Musify.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mdl="using:Musify.Models"
+    xmlns:penm="using:Musify.Plugins.Enums"
+    xmlns:sys="using:System"
+    x:Name="LyricsInfo"
+    mc:Ignorable="d">
+
+    <Grid Width="450" Margin="0,-8,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="26" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="12" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="12" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Opacity="0.7"
+            Text="{x:Bind viewModel.Manifest.Description}"
+            TextWrapping="WrapWholeWords" />
+
+        <Rectangle Grid.Row="1" Style="{StaticResource HorizontalDivider}" />
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ContentControl hlp:Attributes.Title="Author" Template="{ThemeResource WithHeader}">
+                <TextBox IsHitTestVisible="False" Text="{x:Bind viewModel.Manifest.Author}" />
+            </ContentControl>
+
+            <ContentControl
+                Grid.Column="2"
+                hlp:Attributes.Title="Last Updated At"
+                Template="{ThemeResource WithHeader}">
+                <CalendarDatePicker Date="{x:Bind viewModel.Manifest.LastUpdatedAt, Converter={StaticResource DateTimeDateTimeOffsetConverter}}" IsHitTestVisible="False" />
+            </ContentControl>
+        </Grid>
+
+        <ContentControl
+            Grid.Row="4"
+            hlp:Attributes.Title="Dependencies"
+            Template="{StaticResource WithHeader}">
+            <Grid>
+                <ItemsControl ItemsSource="{x:Bind viewModel.Manifest.Dependencies}" Style="{StaticResource HorizontalScroller}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="sys:String">
+                            <TextBox IsHitTestVisible="False" Text="{x:Bind}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock
+                    Margin="4,0"
+                    DataContext="{x:Bind viewModel}"
+                    Opacity="0.7"
+                    Text="None"
+                    Visibility="{Binding Manifest.Dependencies.Length, Converter={StaticResource IntIsZeroVisibilityConverter}}" />
+            </Grid>
+        </ContentControl>
+
+        <ContentControl
+            Grid.Row="6"
+            hlp:Attributes.Title="Plugin Kinds"
+            Template="{StaticResource WithHeader}">
+            <Grid>
+                <ItemsControl ItemsSource="{x:Bind viewModel.Manifest.PluginKinds}" Style="{StaticResource HorizontalScroller}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="penm:PluginKind">
+                            <TextBox IsHitTestVisible="False" Text="{x:Bind Converter={StaticResource PluginKindStringConverter}}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock
+                    Margin="4,0"
+                    DataContext="{x:Bind viewModel}"
+                    Opacity="0.7"
+                    Text="None"
+                    Visibility="{Binding Manifest.PluginKinds.Length, Converter={StaticResource IntIsZeroVisibilityConverter}}" />
+            </Grid>
+        </ContentControl>
+    </Grid>
+</Page>

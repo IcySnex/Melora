@@ -157,39 +157,28 @@
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="WrapWholeWords" />
 
-                        <ScrollViewer
+                        <ItemsControl
                             Grid.Row="3"
-                            Margin="-24"
-                            Padding="24"
-                            CanContentRenderOutsideBounds="True"
-                            HorizontalScrollBarVisibility="Auto"
-                            IsHitTestVisible="False"
-                            VerticalScrollMode="Disabled">
-                            <ItemsControl ItemsSource="{x:Bind PluginKinds}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Horizontal" Spacing="4" />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="penm:PluginKind">
-                                        <Border
-                                            Padding="4"
-                                            HorizontalAlignment="Left"
-                                            Background="{ThemeResource AccentFillColorDefaultBrush}"
-                                            BorderBrush="{ThemeResource AccentFillColorTertiaryBrush}"
-                                            BorderThickness="1"
-                                            CornerRadius="4">
-                                            <TextBlock
-                                                FontSize="12"
-                                                Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
-                                                Text="{x:Bind Converter={StaticResource PluginKindStringConverter}}" />
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </ScrollViewer>
+                            Height="26"
+                            ItemsSource="{x:Bind PluginKinds}"
+                            Style="{StaticResource HorizontalScroller}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="penm:PluginKind">
+                                    <Border
+                                        Padding="4"
+                                        HorizontalAlignment="Left"
+                                        Background="{ThemeResource AccentFillColorDefaultBrush}"
+                                        BorderBrush="{ThemeResource AccentFillColorTertiaryBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="4">
+                                        <TextBlock
+                                            FontSize="12"
+                                            Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                            Text="{x:Bind Converter={StaticResource PluginKindStringConverter}}" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </Grid>
                 </DataTemplate>
             </ctr:AdaptiveGridView.ItemTemplate>
