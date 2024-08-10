@@ -12,7 +12,7 @@
     x:Name="LyricsInfo"
     mc:Ignorable="d">
 
-    <Grid MaxWidth="800">
+    <Grid MaxWidth="700">
         <Grid.RowDefinitions>
             <RowDefinition Height="124" />
             <RowDefinition Height="16" />
@@ -26,9 +26,9 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="110" />
                 <ColumnDefinition Width="12" />
-                <ColumnDefinition Width="180" />
+                <ColumnDefinition MinWidth="180" />
                 <ColumnDefinition Width="12" />
-                <ColumnDefinition Width="180" />
+                <ColumnDefinition MinWidth="180" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="54" />

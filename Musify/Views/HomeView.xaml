@@ -130,7 +130,7 @@
                 Background="{ThemeResource ControlFillColorDefault}"
                 CornerRadius="4">
                 <TextBlock
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Opacity="0.7"
                     Text="Musify allows to easily download music from Spotify &amp; YouTube while saving all meta data &amp; lyrics.&#x0a;You can also directly sync your downloaded music with iTunes or an Android device.&#x0a;Please note that downloading copyrighted tracks may be illegal in your country. Musify is not responsible for any damages, this is for educational purposes only!"
                     TextWrapping="Wrap" />
             </Grid>

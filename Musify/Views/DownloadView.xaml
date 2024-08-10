@@ -57,20 +57,20 @@
                         <TextBlock
                             Grid.Column="4"
                             VerticalAlignment="Center"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Opacity="0.7"
                             Text="{x:Bind Track.Artists, Mode=OneWay, TargetNullValue='N/A'}"
                             TextTrimming="CharacterEllipsis" />
                         <TextBlock
                             Grid.Column="6"
                             VerticalAlignment="Center"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Opacity="0.7"
                             Text="{x:Bind Track.Album, Mode=OneWay, TargetNullValue='N/A'}"
                             TextTrimming="CharacterEllipsis" />
 
                         <TextBlock
                             Grid.Column="8"
                             VerticalAlignment="Center"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Opacity="0.7"
                             Text="{x:Bind Track.Duration, Mode=OneWay, Converter={StaticResource TimeSpanStringConverter}}"
                             TextTrimming="CharacterEllipsis" />
 

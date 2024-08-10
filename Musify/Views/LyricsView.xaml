@@ -43,7 +43,7 @@
                         <TextBlock
                             Grid.Column="2"
                             Margin="0,26,0,0"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Opacity="0.7"
                             Text="{x:Bind ArtistNames, TargetNullValue='N/A'}"
                             TextTrimming="CharacterEllipsis" />
                     </Grid>

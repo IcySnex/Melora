@@ -50,7 +50,7 @@
                         <TextBlock
                             Grid.Column="2"
                             Margin="0,26,0,0"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Opacity="0.7"
                             Text="{x:Bind Artists, TargetNullValue='N/A'}"
                             TextTrimming="CharacterEllipsis" />
 
@@ -58,7 +58,7 @@
                             Grid.Column="4"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Opacity="0.7"
                             Text="{x:Bind Duration, Converter={StaticResource TimeSpanStringConverter}}" />
                     </Grid>
                 </DataTemplate>

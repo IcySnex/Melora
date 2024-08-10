@@ -152,7 +152,7 @@
                         <TextBlock
                             Height="56"
                             Margin="0,21,0,0"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Opacity="0.7"
                             Text="{x:Bind Description}"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="WrapWholeWords" />
