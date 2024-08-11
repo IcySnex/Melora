@@ -182,7 +182,7 @@ public class PluginManager
                 var t when typeof(MetadataPlugin).IsAssignableFrom(t) => typeof(MetadataPluginConfig),
                 _ => typeof(IPluginConfig)
             };
-            bool isConfigSaved = config.Plugins.Configs.TryGetValue(type.Name, out IPluginConfig? pluginConfig) && pluginConfig.GetType() == configType;
+            bool isConfigSaved = config.PluginBundles.Configs.TryGetValue(type.Name, out IPluginConfig? pluginConfig) && pluginConfig.GetType() == configType;
 
             ConstructorInfo? constructor = null;
             object?[]? constructorArgs = null;

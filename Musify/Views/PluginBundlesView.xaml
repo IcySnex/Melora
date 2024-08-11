@@ -41,10 +41,6 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="26" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="12" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="8" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="26" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
@@ -59,7 +55,7 @@
                 Grid.Column="2"
                 Width="105"
                 CornerRadius="4,0,0,4"
-                SelectedIndex="{x:Bind viewModel.Config.Plugins.Sorting, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}"
+                SelectedIndex="{x:Bind viewModel.Config.PluginBundles.Sorting, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}"
                 ToolTipService.ToolTip="Sort plugin bundles by">
                 <ComboBoxItem Content="Default" />
                 <ComboBoxItem Content="Name" />
@@ -72,9 +68,9 @@
                 Height="32"
                 Padding="4"
                 CornerRadius="0,4,4,0"
-                IsChecked="{x:Bind viewModel.Config.Plugins.SortDescending, Mode=TwoWay}"
+                IsChecked="{x:Bind viewModel.Config.PluginBundles.SortDescending, Mode=TwoWay}"
                 ToolTipService.ToolTip="Sort plugin bundles descending/ascending">
-                <FontIcon FontSize="17" Glyph="{x:Bind viewModel.Config.Plugins.SortDescending, Mode=OneWay, Converter={StaticResource BoolFontIconChevronConverter}}" />
+                <FontIcon FontSize="17" Glyph="{x:Bind viewModel.Config.PluginBundles.SortDescending, Mode=OneWay, Converter={StaticResource BoolFontIconChevronConverter}}" />
             </ToggleButton>
 
             <Rectangle Grid.Column="5" Style="{StaticResource VerticalDivider}" />
@@ -88,29 +84,29 @@
                 ToolTipService.ToolTip="Show bundles that contain">
                 <Button.Flyout>
                     <MenuFlyout>
-                        <ToggleMenuFlyoutItem IsChecked="{x:Bind viewModel.Config.Plugins.ShowOfKindPlatformSupport, Mode=TwoWay}" Text="Platform Support" />
-                        <ToggleMenuFlyoutItem IsChecked="{x:Bind viewModel.Config.Plugins.ShowOfKindMetadata, Mode=TwoWay}" Text="Metadata" />
+                        <ToggleMenuFlyoutItem IsChecked="{x:Bind viewModel.Config.PluginBundles.ShowOfKindPlatformSupport, Mode=TwoWay}" Text="Platform Support" />
+                        <ToggleMenuFlyoutItem IsChecked="{x:Bind viewModel.Config.PluginBundles.ShowOfKindMetadata, Mode=TwoWay}" Text="Metadata" />
                     </MenuFlyout>
                 </Button.Flyout>
 
                 <FontIcon FontSize="17" Glyph="&#xe71c;" />
             </Button>
 
-            <CheckBox
+            <!--<CheckBox
                 Grid.Column="8"
                 Content="Installed"
-                IsChecked="{x:Bind viewModel.Config.Plugins.ShowInstalled, Mode=TwoWay}"
+                IsChecked="{x:Bind viewModel.Config.PluginBundles.ShowInstalled, Mode=TwoWay}"
                 ToolTipService.ToolTip="Show installed" />
             <CheckBox
                 Grid.Column="10"
                 Content="Available"
-                IsChecked="{x:Bind viewModel.Config.Plugins.ShowAvailable, Mode=TwoWay}"
-                ToolTipService.ToolTip="Show available" />
+                IsChecked="{x:Bind viewModel.Config.PluginBundles.ShowAvailable, Mode=TwoWay}"
+                ToolTipService.ToolTip="Show available" />-->
 
-            <Rectangle Grid.Column="11" Style="{StaticResource VerticalDivider}" />
+            <Rectangle Grid.Column="7" Style="{StaticResource VerticalDivider}" />
 
             <Button
-                Grid.Column="12"
+                Grid.Column="8"
                 Command="{x:Bind viewModel.ImportCommand}"
                 Style="{StaticResource AccentButtonStyle}"
                 ToolTipService.ToolTip="Import from files">

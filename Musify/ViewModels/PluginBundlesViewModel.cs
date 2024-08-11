@@ -40,7 +40,7 @@ public partial class PluginBundlesViewModel : ObservableObject
 
         Manifests = new()
         {
-            KeySelector = Config.Plugins.Sorting switch
+            KeySelector = Config.PluginBundles.Sorting switch
             {
                 Sorting.Default => null,
                 Sorting.Title => plugin => plugin.Name,
@@ -48,19 +48,19 @@ public partial class PluginBundlesViewModel : ObservableObject
                 Sorting.Duration => plugin => plugin.LastUpdatedAt,
                 _ => null
             },
-            Descending = Config.Plugins.SortDescending,
+            Descending = Config.PluginBundles.SortDescending,
             Filter = plugin =>
                 plugin.Name.Contains(Query, StringComparison.InvariantCultureIgnoreCase) &&
+                //(
+                    //(Config.PluginBundles.ShowInstalled) ||
+                    //(false) // Config.Plugins.ShowAvailable
+                //) &&
                 (
-                    (Config.Plugins.ShowInstalled) ||
-                    (false) // Config.Plugins.ShowAvailable
-                ) &&
-                (
-                    (Config.Plugins.ShowOfKindPlatformSupport && plugin.PluginKinds.Contains(PluginKind.PlatformSupport)) ||
-                    (Config.Plugins.ShowOfKindMetadata && plugin.PluginKinds.Contains(PluginKind.Metadata))
+                    (Config.PluginBundles.ShowOfKindPlatformSupport && plugin.PluginKinds.Contains(PluginKind.PlatformSupport)) ||
+                    (Config.PluginBundles.ShowOfKindMetadata && plugin.PluginKinds.Contains(PluginKind.Metadata))
                 )
         };
-        Config.Plugins.PropertyChanged += OnConfigPropertyChanged;
+        Config.PluginBundles.PropertyChanged += OnConfigPropertyChanged;
 
         pluginManager.SubscribeLoadContext(
             loadContext => Manifests.Add(loadContext.Manifest),
@@ -76,7 +76,7 @@ public partial class PluginBundlesViewModel : ObservableObject
         switch (e.PropertyName)
         {
             case "Sorting":
-                Manifests.KeySelector = Config.Plugins.Sorting switch
+                Manifests.KeySelector = Config.PluginBundles.Sorting switch
                 {
                     Sorting.Default => null,
                     Sorting.Title => plugin => plugin.Name,
@@ -87,7 +87,7 @@ public partial class PluginBundlesViewModel : ObservableObject
                 logger.LogInformation("[PluginBundlesViewModel-OnViewOptionsPropertyChanged] Reordered manifests");
                 break;
             case "SortDescending":
-                Manifests.Descending = Config.Plugins.SortDescending;
+                Manifests.Descending = Config.PluginBundles.SortDescending;
                 logger.LogInformation("[PluginBundlesViewModel-OnViewOptionsPropertyChanged] Reordered manifests");
                 break;
             case "ShowOfKindPlatformSupport":
@@ -187,7 +187,7 @@ public partial class PluginBundlesViewModel : ObservableObject
                     }) != ContentDialogResult.Primary)
                     return;
 
-                Config.Plugins.Configs.Remove(ex.PluginType!.Name);
+                Config.PluginBundles.Configs.Remove(ex.PluginType!.Name);
 
                 mainView.Close();
                 AppInstance.Restart(null);

@@ -255,11 +255,11 @@
             </ItemsControl>
 
 
-            <!--  General  -->
+            <!--  Musify  -->
             <TextBlock
                 Margin="0,8,0,0"
                 Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
-                Text="General" />
+                Text="Musify" />
 
             <!--  Lyrics  -->
             <ContentControl
@@ -387,6 +387,69 @@
                                 <FontIcon FontSize="17" Glyph="&#xe8a7;" />
                             </Button>
                         </StackPanel>
+                    </ContentControl>
+                </StackPanel>
+            </ContentControl>
+
+            <!--  Plugin Bundles  -->
+            <ContentControl
+                hlp:Attributes.Description="Show of kind, Sorting, Sort Descending..."
+                hlp:Attributes.Glyph="&#xe8a9;"
+                hlp:Attributes.Title="Plugin Bundles"
+                Template="{StaticResource SettingsExpander}">
+                <StackPanel Spacing="8">
+                    <!--  Show Installed  -->
+                    <!--<ContentControl
+                        hlp:Attributes.Description="Weither to show currently installed plugin bundles or not"
+                        hlp:Attributes.Title="Show Installed"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.PluginBundles.ShowInstalled, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    -->
+                    <!--  Show Avaibale  -->
+                    <!--<ContentControl
+                        hlp:Attributes.Description="Weither to show available plugin bundles or not"
+                        hlp:Attributes.Title="Show Available"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.PluginBundles.ShowAvailable, Mode=TwoWay}" />
+                    </ContentControl>-->
+
+                    <!--  Show Platform Support  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Weither to show plugin bundles that contain Platform Support Plugins or not"
+                        hlp:Attributes.Title="Show of kind Platform Support"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.PluginBundles.ShowOfKindPlatformSupport, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  Show Metadata  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Weither to show plugin bundles that contain Metada Plugins or not"
+                        hlp:Attributes.Title="Show of kind Metadata"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.PluginBundles.ShowOfKindMetadata, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  Sorting  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The sorting of plugin bundles"
+                        hlp:Attributes.Title="Sorting"
+                        Template="{StaticResource SettingsCard}">
+                        <ComboBox Width="105" SelectedIndex="{x:Bind viewModel.Config.PluginBundles.Sorting, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}">
+                            <ComboBoxItem Content="Default" />
+                            <ComboBoxItem Content="Name" />
+                            <ComboBoxItem Content="Authors" />
+                            <ComboBoxItem Content="Oldest" />
+                        </ComboBox>
+                    </ContentControl>
+
+                    <!--  Sort Descending  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Weither plugin bundles are sorted descending or not"
+                        hlp:Attributes.Title="Sort Descending"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.PluginBundles.SortDescending, Mode=TwoWay}" />
                     </ContentControl>
                 </StackPanel>
             </ContentControl>

@@ -80,7 +80,7 @@ public sealed partial class MainView : Window
     void OnClosed(object _, WindowEventArgs _1)
     {
         foreach (IPlugin plugin in pluginManager.LoadedPlugins)
-            config.Plugins.Configs[plugin.GetType().Name] = plugin.Config;
+            config.PluginBundles.Configs[plugin.GetType().Name] = plugin.Config;
 
         string jsonConfig = jsonConverter.ToString(config);
         File.WriteAllText("Config.json", jsonConfig);

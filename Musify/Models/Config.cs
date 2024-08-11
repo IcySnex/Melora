@@ -16,22 +16,17 @@ public class Config
     }
 
 
-    public ConfigPlugins Plugins { get; set; } = new();
-
     public ConfigDownloads Downloads { get; set; } = new();
 
     public ConfigPaths Paths { get; set; } = new();
 
     public ConfigLyrics Lyrics { get; set; } = new();
 
+    public ConfigPluginBundles PluginBundles { get; set; } = new();
+
 
     public void Reset()
     {
-        Plugins.ShowInstalled = true;
-        Plugins.ShowAvailable = true;
-        Plugins.Sorting = Sorting.Default;
-        Plugins.SortDescending = false;
-
         Downloads.SelectedMetadatePlugin = null;
         Downloads.AlreadyExistsBehavior = AlreadyExistsBehavior.Ask;
         Downloads.Sorting = Sorting.Default;
@@ -44,6 +39,13 @@ public class Config
         Paths.DownloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         Paths.Filename = "{artists} - {title}";
         Paths.FFMPEGLocation = "FFMPEG.exe";
+
+        //PluginBundles.ShowInstalled = true;
+        //PluginBundles.ShowAvailable = true;
+        PluginBundles.ShowOfKindPlatformSupport = true;
+        PluginBundles.ShowOfKindMetadata = true;
+        PluginBundles.Sorting = Sorting.Default;
+        PluginBundles.SortDescending = false;
     }
 }
 
@@ -87,22 +89,22 @@ public partial class ConfigPaths : ObservableObject
     string fFMPEGLocation = default!;
 }
 
-public partial class ConfigPlugins : ObservableObject
+public partial class ConfigPluginBundles : ObservableObject
 {
     public Dictionary<string, IPluginConfig> Configs { get; set; } = [];
 
+    //[ObservableProperty]
+    //bool showInstalled = default!;
+    
+    //[ObservableProperty]
+    //bool showAvailable = default!;
+    
     [ObservableProperty]
     bool showOfKindPlatformSupport = default!;
     
     [ObservableProperty]
     bool showOfKindMetadata = default!;
     
-    [ObservableProperty]
-    bool showInstalled = default!;
-    
-    [ObservableProperty]
-    bool showAvailable = default!;
-
     [ObservableProperty]
     Sorting sorting = default!;
 
