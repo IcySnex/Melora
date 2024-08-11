@@ -133,11 +133,6 @@ public partial class DownloadsViewModel : ObservableObject
             PlatformSupportPlugin plugin = PluginManager.GetLoaded<PlatformSupportPlugin>(download.Track.PluginHash);
             MetadataPlugin metadataPlugin = PluginManager.GetLoaded<MetadataPlugin>(Config.Downloads.SelectedMetadatePlugin);
 
-            download.Progress = 0;
-            download.IsProcessing = true;
-            Stream stream = await plugin.GetStreamAsync(download.Track, download.CancellationSource.Token);
-
-            download.IsProcessing = false;
             string fileName = Config.Paths.Filename
                 .Replace("{title}", download.Track.Title)
                 .Replace("{artists}", download.Track.Artists)
@@ -146,6 +141,25 @@ public partial class DownloadsViewModel : ObservableObject
                 .ToLegitFileName();
             string filePath = Path.Combine(Config.Paths.DownloadLocation, Path.ChangeExtension(fileName, $".{plugin.Config.Format}"));
 
+            if (File.Exists(filePath))
+                switch (Config.Downloads.AlreadyExistsBehavior)
+                {
+                    case AlreadyExistsBehavior.Ask:
+                        if (await mainView.AlertAsync("A track with the same file name already exists in the download location. Would you like to overwrite this file?", "Warning!", "No", "Yes") != ContentDialogResult.Primary)
+                            return;
+                        break;
+                    case AlreadyExistsBehavior.Skip:
+                        mainView.ShowNotification("Warning!", $"Skipped download of track: {download.Track.Title}.", NotificationLevel.Warning, "A track with the same file name already exists in the download location and the 'Already Exists Behaviour' is set to skip.");
+                        return;
+                    case AlreadyExistsBehavior.Overwrite:
+                        break;
+                }
+
+            download.Progress = 0;
+            download.IsProcessing = true;
+            Stream stream = await plugin.GetStreamAsync(download.Track, download.CancellationSource.Token);
+
+            download.IsProcessing = false;
             await encoder.WriteAsync(
                 filePath,
                 stream,
