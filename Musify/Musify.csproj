@@ -7,7 +7,6 @@
 
 		<Platforms>x86;x64;ARM64</Platforms>
 		<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
-		<PublishProfile>win10-$(Platform).pubxml</PublishProfile>
 
 		<RootNamespace>Musify</RootNamespace>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
@@ -15,7 +14,9 @@
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<UseWinUI>true</UseWinUI>
 		<WindowsPackageType>None</WindowsPackageType>
+		<WindowsAppSdkSelfContained>true</WindowsAppSdkSelfContained>
 		<UseRidGraph>true</UseRidGraph>
+		<TrimMode>partial</TrimMode>
 
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
@@ -35,7 +36,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="icon.ico" />
+		<Content Include="icon.ico">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
