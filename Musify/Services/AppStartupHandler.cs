@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Musify.Models;
-using Musify.Plugins.Abstract;
 using Musify.ViewModels;
 using Musify.Views;
 
@@ -11,7 +10,6 @@ public class AppStartupHandler
     public AppStartupHandler(
         ILogger<AppStartupHandler> logger,
         Config config,
-        PluginManager pluginManager,
         MainView mainView,
         Navigation navigation,
         PluginBundlesViewModel pluginBundlesViewModel)
@@ -27,8 +25,6 @@ public class AppStartupHandler
         {
             foreach (string path in Directory.GetFiles(PluginManager.PluginsDirectory, "*.mfy"))
                 await pluginBundlesViewModel.TryLoadAsync(path);
-
-            config.Downloads.SelectedMetadatePlugin = pluginManager.GetLoadedOrDefault<MetadataPlugin>(config.Downloads.SelectedMetadatePlugin)?.Name;
         });
 
         logger.LogInformation("[AppStartupHandler-.ctor] AppStartupHandler has been initialized");

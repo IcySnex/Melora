@@ -16,6 +16,7 @@ using Musify.Plugins.Exceptions;
 using Microsoft.Windows.AppLifecycle;
 using Microsoft.Extensions.DependencyInjection;
 using Musify.Plugins;
+using Musify.Plugins.Abstract;
 
 namespace Musify.ViewModels;
 
@@ -171,6 +172,9 @@ public partial class PluginBundlesViewModel : ObservableObject
         try
         {
             await PluginManager.LoadBundleAsync(path);
+
+            Config.Downloads.SelectedMetadatePlugin = PluginManager.GetLoadedOrDefault<MetadataPlugin>(Config.Downloads.SelectedMetadatePlugin)?.Name;
+
             mainView.ShowNotification("Success!", $"Loaded plugin bundle: {bundleFileName}.", NotificationLevel.Success);
         }
         catch (PluginNotLoadedException ex)
