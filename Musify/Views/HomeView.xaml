@@ -131,7 +131,7 @@
                 CornerRadius="4">
                 <TextBlock
                     Opacity="0.7"
-                    Text="Musify allows to easily download music from Spotify &amp; YouTube while saving all meta data &amp; lyrics.&#x0a;You can also directly sync your downloaded music with iTunes or an Android device.&#x0a;Please note that downloading copyrighted tracks may be illegal in your country. Musify is not responsible for any damages, this is for educational purposes only!"
+                    Text="Musify allows you to easily download music from any platform with the help of custom plugins. Metadata writing is also highly customizable due to support for custom Metadata Plugins.&#x0a;Please note that downloading copyrighted tracks may be illegal in your country. Musify is not responsible for any damages, this is for educational purposes only!"
                     TextWrapping="Wrap" />
             </Grid>
         </StackPanel>

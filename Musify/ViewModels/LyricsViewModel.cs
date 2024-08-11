@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Musify.Enums;
 using Musify.Helpers;
 using Musify.Models;
+using Musify.Plugins.Abstract;
 using Musify.Plugins.Enums;
 using Musify.Views;
 using System.ComponentModel;
@@ -135,7 +136,8 @@ public partial class LyricsViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(Query))
         {
-            await mainView.AlertAsync("Your query can not be empty. Type in a track title/artist name to search for lyrics.", "Something went wrong.");
+            mainView.ShowNotification("Warning!", "Query cannot be empty.", NotificationLevel.Warning, $"Type in a track title or artist name to search on Genius.");
+            logger.LogWarning("[PlatformViewModel-SearchAsync] Tried to search for empty query.");
             return;
         }
 

@@ -16,7 +16,7 @@ public class AppStartupHandler
         Navigation navigation,
         PluginBundlesViewModel pluginBundlesViewModel)
     {
-        mainView.SetSize(1150, 567);
+        mainView.SetSize(1100, 559);
         mainView.SetMinSize(700, 525);
         mainView.SetIcon("icon.ico");
         mainView.Activate();

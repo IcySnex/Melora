@@ -94,21 +94,18 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Home" Icon="Home" />
 
-                <NavigationViewItemHeader Content="Search" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+                <NavigationViewItemHeader Content="Platforms" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
+
+                <NavigationViewItemHeader Content="Musify" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
                 <NavigationViewItem Content="Lyrics">
                     <NavigationViewItem.Icon>
                         <PathIcon Data="{x:Bind vm:LyricsViewModel.IconPathData}" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-
-                <NavigationViewItemHeader Content="Local" Foreground="{ThemeResource TextFillColorTertiaryBrush}" />
                 <NavigationViewItem Content="Downloads" Icon="Download" />
                 <!--<NavigationViewItem Content="Library" Icon="Library" />-->
 
-                <!--<NavigationViewItemHeader Content="Syncing" />
-
-                <NavigationViewItem Content="iTunes" Icon="MusicInfo" />
-                <NavigationViewItem Content="Android" Icon="CellPhone" />-->
+                <!--<NavigationViewItemHeader Content="Syncing" />-->
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem Content="Plugin Bundles" Icon="ViewAll" />
