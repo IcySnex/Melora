@@ -6,7 +6,9 @@ namespace Musify.Models;
 public partial class DownloadContainer(
     DownloadableTrack track) : ObservableObject, IDisposable
 {
-    private bool isDisposed;
+    bool isDisposed;
+
+    public bool IsDisposed => isDisposed;
 
     protected virtual void Dispose(
         bool disposing)

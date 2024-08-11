@@ -221,7 +221,7 @@ public partial class DownloadsViewModel : ObservableObject
         {
             if (cancellationToken.IsCancellationRequested)
                 return;
-            if (!download.IsIdle)
+            if (!download.IsIdle || download.IsDisposed)
                 continue;
 
             CancellationTokenRegistration registration = cancellationToken.Register(download.CancellationSource.Cancel);
