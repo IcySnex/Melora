@@ -56,11 +56,11 @@ public class Navigation
     NavigationViewItem? GetItem(
         string key)
     {
-        NavigationViewItem? menuItem = (NavigationViewItem?)mainView.NavigationView.MenuItems.FirstOrDefault(item => item is NavigationViewItem navItem && (string)navItem.Content == key);
+        NavigationViewItem? menuItem = (NavigationViewItem?)mainView.NavigationView.MenuItems.FirstOrDefault(item => item is NavigationViewItem navItem && ((string)navItem.Content).Replace(" ", "") == key);
         if (menuItem is not null)
             return menuItem;
 
-        return (NavigationViewItem?)mainView.NavigationView.FooterMenuItems.FirstOrDefault(item => item is NavigationViewItem navItem && (string)navItem.Content == key);
+        return (NavigationViewItem?)mainView.NavigationView.FooterMenuItems.FirstOrDefault(item => item is NavigationViewItem navItem && ((string)navItem.Content).Replace(" ", "") == key);
     }
 
 

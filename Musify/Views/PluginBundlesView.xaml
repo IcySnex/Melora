@@ -11,7 +11,7 @@
     xmlns:plg="using:Musify.Plugins.Abstract"
     xmlns:pmdl="using:Musify.Plugins.Models"
     xmlns:vm="using:Musify.ViewModels"
-    x:Name="Plugins"
+    x:Name="PluginBundles"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
 
