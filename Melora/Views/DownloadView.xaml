@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="Melora.Views.DownloadsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ani="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hlp="using:Melora.Helpers"
+    xmlns:local="using:Melora.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mdl="using:Melora.Models"
+    xmlns:sys="using:System"
+    x:Name="Downloads"
+    NavigationCacheMode="Required"
+    mc:Ignorable="d">
+
+    <Grid>
+        <!--  Track Container  -->
+        <ListView
+            Name="DownloadsContainer"
+            Padding="24,116,24,24"
+            ItemsSource="{x:Bind viewModel.Downloads}"
+            SelectionMode="None">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="mdl:DownloadContainer">
+                    <Grid Padding="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="3*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="Auto" MaxWidth="84" />
+                            <ColumnDefinition Width="48" />
+                            <ColumnDefinition Width="24" />
+                            <ColumnDefinition Width="12" />
+                            <ColumnDefinition Width="32" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Style="{StaticResource PlaceholderImage}">
+                            <Image
+                                HorizontalAlignment="Center"
+                                Source="{Binding Track.ArtworkUrl, Mode=OneWay}"
+                                Stretch="UniformToFill" />
+                        </Border>
+
+                        <TextBlock
+                            Grid.Column="2"
+                            VerticalAlignment="Center"
+                            FontSize="22"
+                            Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
+                            Text="{x:Bind Track.Title, Mode=OneWay, TargetNullValue='N/A'}"
+                            TextTrimming="CharacterEllipsis" />
+                        <TextBlock
+                            Grid.Column="4"
+                            VerticalAlignment="Center"
+                            Opacity="0.7"
+                            Text="{x:Bind Track.Artists, Mode=OneWay, TargetNullValue='N/A'}"
+                            TextTrimming="CharacterEllipsis" />
+                        <TextBlock
+                            Grid.Column="6"
+                            VerticalAlignment="Center"
+                            Opacity="0.7"
+                            Text="{x:Bind Track.Album, Mode=OneWay, TargetNullValue='N/A'}"
+                            TextTrimming="CharacterEllipsis" />
+
+                        <TextBlock
+                            Grid.Column="8"
+                            VerticalAlignment="Center"
+                            Opacity="0.7"
+                            Text="{x:Bind Track.Duration, Mode=OneWay, Converter={StaticResource TimeSpanStringConverter}}"
+                            TextTrimming="CharacterEllipsis" />
+
+                        <ProgressRing
+                            Grid.Column="10"
+                            Width="24"
+                            Height="24"
+                            Background="{ThemeResource ControlFillColorSecondaryBrush}"
+                            IsIndeterminate="{x:Bind IsProcessing, Mode=OneWay}"
+                            Value="{x:Bind Progress, Mode=OneWay}" />
+
+                        <Button
+                            Grid.Column="12"
+                            Width="32"
+                            Height="32"
+                            Padding="4">
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem
+                                        Click="OnCancelClick"
+                                        Text="Cancel"
+                                        ToolTipService.ToolTip="Cancel download"
+                                        Visibility="{x:Bind IsIdle, Mode=OneWay, Converter={StaticResource InverseBoolVisibilityConverter}}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xe711;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+
+                                    <MenuFlyoutItem
+                                        Click="OnDownloadClick"
+                                        Text="Download"
+                                        ToolTipService.ToolTip="Download now"
+                                        Visibility="{x:Bind IsIdle, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xe896;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem
+                                        Click="OnTrackInfoClick"
+                                        Text="Track Info"
+                                        ToolTipService.ToolTip="View &amp; edit track info"
+                                        Visibility="{x:Bind IsIdle, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xe90b;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+
+                                    <MenuFlyoutItem
+                                        Click="OnOpenSourceClick"
+                                        Text="Open source"
+                                        ToolTipService.ToolTip="Open on source platform">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xe71b;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+
+                                    <MenuFlyoutItem
+                                        Click="OnRemoveClick"
+                                        Text="Remove"
+                                        ToolTipService.ToolTip="Remove from downloads">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xe74d;" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+
+                                </MenuFlyout>
+                            </Button.Flyout>
+
+                            <FontIcon
+                                FontSize="17"
+                                Glyph="&#xe712;"
+                                ToolTipService.ToolTip="More Options" />
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <TextBlock
+            Margin="0,82,0,0"
+            VerticalAlignment="Center"
+            FontSize="16"
+            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+            HorizontalTextAlignment="Center"
+            Text="There are currently no downloads.&#x0a;Search for tracks on a plugin to start downloading or change the filter options..."
+            Visibility="{x:Bind viewModel.Downloads.Count, Mode=OneWay, Converter={StaticResource IntIsZeroVisibilityConverter}}" />
+
+        <!--  Search bar  -->
+        <Grid
+            Margin="24"
+            Padding="18"
+            VerticalAlignment="Top"
+            Background="{ThemeResource CardBackgroundAcrylicBrush}"
+            CornerRadius="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="26" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="2" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="26" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="26" />
+                <ColumnDefinition Width="32" />
+                <ColumnDefinition Width="4" />
+                <ColumnDefinition Width="32" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Search  -->
+            <TextBox PlaceholderText="Search for downloads..." Text="{x:Bind viewModel.Query, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+            <Rectangle Grid.Column="1" Style="{StaticResource VerticalDivider}" />
+
+            <!--  View Options  -->
+            <ComboBox
+                Grid.Column="2"
+                Width="105"
+                CornerRadius="4,0,0,4"
+                SelectedIndex="{x:Bind viewModel.Config.Downloads.Sorting, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}"
+                ToolTipService.ToolTip="Sort tracks by">
+                <ComboBoxItem Content="Default" />
+                <ComboBoxItem Content="Title" />
+                <ComboBoxItem Content="Artist" />
+                <ComboBoxItem Content="Duration" />
+            </ComboBox>
+            <ToggleButton
+                Grid.Column="4"
+                Width="32"
+                Height="32"
+                Padding="4"
+                CornerRadius="0,4,4,0"
+                IsChecked="{x:Bind viewModel.Config.Downloads.SortDescending, Mode=TwoWay}"
+                ToolTipService.ToolTip="Sort tracks descending/ascending">
+                <FontIcon FontSize="17" Glyph="{x:Bind viewModel.Config.Downloads.SortDescending, Mode=OneWay, Converter={StaticResource BoolFontIconChevronConverter}}" />
+            </ToggleButton>
+
+            <Rectangle Grid.Column="5" Style="{StaticResource VerticalDivider}" />
+
+            <!--  Filter  -->
+            <Button
+                Grid.Column="6"
+                Width="32"
+                Height="32"
+                Padding="4"
+                ToolTipService.ToolTip="Show tracks from">
+                <Button.Flyout>
+                    <MenuFlyout x:Name="ShowTracksFromFlyout" />
+                </Button.Flyout>
+
+                <FontIcon FontSize="17" Glyph="&#xe71c;" />
+            </Button>
+
+            <Rectangle Grid.Column="7" Style="{StaticResource VerticalDivider}" />
+
+            <Button
+                Grid.Column="8"
+                Width="32"
+                Height="32"
+                Padding="4"
+                Command="{x:Bind viewModel.DownloadAllCommand}"
+                Style="{StaticResource AccentButtonStyle}"
+                ToolTipService.ToolTip="Download all">
+                <FontIcon FontSize="17" Glyph="&#xe896;" />
+            </Button>
+            <Button
+                Grid.Column="8"
+                Width="32"
+                Height="32"
+                Padding="4"
+                Command="{x:Bind viewModel.DownloadAllCancelCommand}"
+                Style="{StaticResource AccentButtonStyle}"
+                ToolTipService.ToolTip="Cancel all downloads"
+                Visibility="{x:Bind viewModel.DownloadAllCommand.CanBeCanceled, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}">
+                <FontIcon FontSize="17" Glyph="&#xe711;" />
+            </Button>
+
+            <Button
+                Grid.Column="10"
+                Width="32"
+                Height="32"
+                Padding="4"
+                Command="{x:Bind viewModel.RemoveAllCommand}"
+                Style="{StaticResource AccentButtonStyle}"
+                ToolTipService.ToolTip="Remove all downloads">
+                <FontIcon FontSize="17" Glyph="&#xe74d;" />
+            </Button>
+        </Grid>
+    </Grid>
+</Page>

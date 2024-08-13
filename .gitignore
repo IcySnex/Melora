@@ -6,17 +6,17 @@ packages/
 _ReSharper.*
 
 
-Musify/bin/
-Musify/obj/
+Melora/bin/
+Melora/obj/
 
-Plugins/Musify.Plugins/bin/
-Plugins/Musify.Plugins/obj/
+Plugins/Melora.Plugins/bin/
+Plugins/Melora.Plugins/obj/
 
-Plugins/Musify.PlatformSupport.Spotify/bin/
-Plugins/Musify.PlatformSupport.Spotify/obj/
+Plugins/Melora.PlatformSupport.Spotify/bin/
+Plugins/Melora.PlatformSupport.Spotify/obj/
 
-Plugins/Musify.PlatformSupport.YouTube/bin/
-Plugins/Musify.PlatformSupport.YouTube/obj/
+Plugins/Melora.PlatformSupport.YouTube/bin/
+Plugins/Melora.PlatformSupport.YouTube/obj/
 
-Plugins/Musify.MetaData.Default/bin/
-Plugins/Musify.MetaData.Default/obj/
+Plugins/Melora.MetaData.Default/bin/
+Plugins/Melora.MetaData.Default/obj/

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="Melora.Views.PluginBundlesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ctr="using:Melora.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Melora.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:penm="using:Melora.Plugins.Enums"
+    xmlns:plg="using:Melora.Plugins.Abstract"
+    xmlns:pmdl="using:Melora.Plugins.Models"
+    xmlns:vm="using:Melora.ViewModels"
+    x:Name="PluginBundles"
+    NavigationCacheMode="Required"
+    mc:Ignorable="d">
+
+    <Grid Padding="24,24,24,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="8" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="8" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Style="{StaticResource PageTitleTextBlockStyle}" Text="Plugin Bundles" />
+
+        <!--  Search bar  -->
+        <Grid
+            Grid.Row="2"
+            Padding="18"
+            VerticalAlignment="Top"
+            Background="{ThemeResource CardBackgroundAcrylicBrush}"
+            CornerRadius="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="26" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="2" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="26" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="26" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!--  Search  -->
+            <TextBox PlaceholderText="Search for plugin bundles..." Text="{x:Bind viewModel.Query, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+            <Rectangle Grid.Column="1" Style="{StaticResource VerticalDivider}" />
+
+            <!--  View Options  -->
+            <ComboBox
+                Grid.Column="2"
+                Width="105"
+                CornerRadius="4,0,0,4"
+                SelectedIndex="{x:Bind viewModel.Config.PluginBundles.Sorting, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}"
+                ToolTipService.ToolTip="Sort plugin bundles by">
+                <ComboBoxItem Content="Default" />
+                <ComboBoxItem Content="Name" />
+                <ComboBoxItem Content="Author" />
+                <ComboBoxItem Content="Oldest" />
+            </ComboBox>
+            <ToggleButton
+                Grid.Column="4"
+                Width="32"
+                Height="32"
+                Padding="4"
+                CornerRadius="0,4,4,0"
+                IsChecked="{x:Bind viewModel.Config.PluginBundles.SortDescending, Mode=TwoWay}"
+                ToolTipService.ToolTip="Sort plugin bundles descending/ascending">
+                <FontIcon FontSize="17" Glyph="{x:Bind viewModel.Config.PluginBundles.SortDescending, Mode=OneWay, Converter={StaticResource BoolFontIconChevronConverter}}" />
+            </ToggleButton>
+
+            <Rectangle Grid.Column="5" Style="{StaticResource VerticalDivider}" />
+
+            <!--  Filter  -->
+            <Button
+                Grid.Column="6"
+                Width="32"
+                Height="32"
+                Padding="4"
+                ToolTipService.ToolTip="Show bundles that contain">
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <ToggleMenuFlyoutItem IsChecked="{x:Bind viewModel.Config.PluginBundles.ShowOfKindPlatformSupport, Mode=TwoWay}" Text="Platform Support" />
+                        <ToggleMenuFlyoutItem IsChecked="{x:Bind viewModel.Config.PluginBundles.ShowOfKindMetadata, Mode=TwoWay}" Text="Metadata" />
+                    </MenuFlyout>
+                </Button.Flyout>
+
+                <FontIcon FontSize="17" Glyph="&#xe71c;" />
+            </Button>
+
+            <!--<CheckBox
+                Grid.Column="8"
+                Content="Installed"
+                IsChecked="{x:Bind viewModel.Config.PluginBundles.ShowInstalled, Mode=TwoWay}"
+                ToolTipService.ToolTip="Show installed" />
+            <CheckBox
+                Grid.Column="10"
+                Content="Available"
+                IsChecked="{x:Bind viewModel.Config.PluginBundles.ShowAvailable, Mode=TwoWay}"
+                ToolTipService.ToolTip="Show available" />-->
+
+            <Rectangle Grid.Column="7" Style="{StaticResource VerticalDivider}" />
+
+            <Button
+                Grid.Column="8"
+                Command="{x:Bind viewModel.ImportCommand}"
+                Style="{StaticResource AccentButtonStyle}"
+                ToolTipService.ToolTip="Import from files">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <FontIcon FontSize="17" Glyph="&#xecc8;" />
+                    <TextBlock Text="Import" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+
+        <ctr:AdaptiveGridView
+            x:Name="PluginBundlesContainer"
+            Grid.Row="4"
+            Margin="-24,0"
+            Padding="48,24,42,24"
+            DesiredWidth="300"
+            ItemsSource="{x:Bind viewModel.Manifests}"
+            SelectedItem="{x:Bind viewModel.SelectedManifest, Mode=TwoWay}"
+            SelectionMode="Single">
+            <ctr:AdaptiveGridView.ItemTemplate>
+                <DataTemplate x:DataType="pmdl:Manifest">
+                    <Grid
+                        Padding="24"
+                        Background="{ThemeResource CardBackgroundFillColorDefault}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="12" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock
+                            Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
+                            Text="{x:Bind Name}"
+                            TextTrimming="CharacterEllipsis" />
+                        <TextBlock
+                            Height="56"
+                            Margin="0,21,0,0"
+                            Opacity="0.7"
+                            Text="{x:Bind Description}"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="WrapWholeWords" />
+
+                        <ItemsControl
+                            Grid.Row="3"
+                            Height="26"
+                            ItemsSource="{x:Bind PluginKinds}"
+                            Style="{StaticResource HorizontalScroller}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="penm:PluginKind">
+                                    <Border
+                                        Padding="4"
+                                        HorizontalAlignment="Left"
+                                        Background="{ThemeResource AccentFillColorDefaultBrush}"
+                                        BorderBrush="{ThemeResource AccentFillColorTertiaryBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="4">
+                                        <TextBlock
+                                            FontSize="12"
+                                            Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                            Text="{x:Bind Converter={StaticResource PluginKindStringConverter}}" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </DataTemplate>
+            </ctr:AdaptiveGridView.ItemTemplate>
+        </ctr:AdaptiveGridView>
+
+        <TextBlock
+            Grid.Row="4"
+            VerticalAlignment="Center"
+            FontSize="16"
+            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+            HorizontalTextAlignment="Center"
+            Text="There are currently no plugin bundles.&#x0a;Import new plugins or change the filter options..."
+            Visibility="{x:Bind viewModel.Manifests.Count, Mode=OneWay, Converter={StaticResource IntIsZeroVisibilityConverter}}" />
+    </Grid>
+</Page>

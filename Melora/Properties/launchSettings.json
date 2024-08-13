@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Melora (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Melora (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "Name": "Default",
+  "Description": "Writes the default metadata for any downloaded track.",
+  "Author": "IcySnex",
+  "LastUpdatedAt": "2026-08-08T14:23:45Z",
+  "PluginKinds": [
+    1
+  ],
+  "EntryPoint": "Melora.Metadata.Default.dll",
+  "Dependencies": [
+    "ATL.dll",
+    "System.Drawing.Common.dll"
+  ]
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Window
+    x:Class="Melora.Views.LoggerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Melora.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Melora - Logger"
+    mc:Ignorable="d">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <RichTextBlock
+            x:Name="ContentBlock"
+            Margin="12"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            x:FieldModifier="public"
+            FontSize="15"
+            LineHeight="22"
+            TextWrapping="WrapWholeWords">
+            <RichTextBlock.Resources>
+                <SolidColorBrush x:Key="BracketsBrush" Color="{ThemeResource TextFillColorSecondary}" />
+                <SolidColorBrush x:Key="TimeColor" Color="{ThemeResource TextFillColorTertiary}" />
+                <SolidColorBrush x:Key="EventColor" Color="{ThemeResource SystemAccentColor}" />
+                <SolidColorBrush x:Key="SourceColor" Color="{ThemeResource SystemAccentColorLight2}" />
+                <SolidColorBrush x:Key="TextColor" Color="{ThemeResource TextFillColorPrimary}" />
+                <SolidColorBrush x:Key="ErrorTextColor" Color="{ThemeResource SystemFillColorCritical}" />
+            </RichTextBlock.Resources>
+        </RichTextBlock>
+    </ScrollViewer>
+</Window>
