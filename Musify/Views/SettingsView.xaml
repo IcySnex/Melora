@@ -394,7 +394,7 @@
 
             <!--  Plugin Bundles  -->
             <ContentControl
-                hlp:Attributes.Description="Show of kind, Sorting, Sort Descending..."
+                hlp:Attributes.Description="Show of kind, Sorting, Sort Descending, Plugins Directory..."
                 hlp:Attributes.Glyph="&#xe8a9;"
                 hlp:Attributes.Title="Plugin Bundles"
                 Template="{StaticResource SettingsExpander}">
@@ -478,7 +478,7 @@
 
             <!--  Advanced  -->
             <ContentControl
-                hlp:Attributes.Description="Reset Config, Create Logger..."
+                hlp:Attributes.Description="Logger, Reset Config..."
                 hlp:Attributes.Glyph="&#xec7a;"
                 hlp:Attributes.Title="Advanced"
                 Template="{StaticResource SettingsExpander}">
