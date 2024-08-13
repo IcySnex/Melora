@@ -144,8 +144,8 @@ internal partial class YouTubeMusicWrapper
             id: songVideo.Id,
             items: new()
             {
-                { "Explicit", !songVideo.IsFamiliyFriendly },
-                { "AlbumName", null },
+                { "Explicit", songVideo.IsExplicit },
+                { "AlbumName", songVideo.Album?.Name },
                 { "TrackNumber", 0 },
                 { "TotalTracks", 0 }
             });
@@ -258,7 +258,7 @@ internal partial class YouTubeMusicWrapper
         logger?.LogInformation("[YouTubeMusicWrapper-SearchQueryAsync] Searching for query...");
         progress.Report("Searching for query...");
 
-        IEnumerable<Song> songs = await client.SearchAsync<Song>(query, cancellationToken);
+        IEnumerable<Song> songs = await client.SearchAsync<Song>(query, 20, cancellationToken);
 
         IEnumerable<SearchResult> results = songs.Select(song => new SearchResult(
             title: song.Name,
