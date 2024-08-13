@@ -7,8 +7,10 @@ using Musify.Models;
 using Musify.Plugins.Abstract;
 using Musify.Services;
 using Musify.Views;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.System;
 
 namespace Musify.ViewModels;
 
@@ -140,6 +142,11 @@ public partial class SettingsViewModel : ObservableObject
             return;
         PathsFFMPEGLocation = file.Path;
     }
+
+
+    [RelayCommand]
+    async Task OpenPluginsDirectoryAsync() =>
+        await Launcher.LaunchFolderPathAsync(PluginManager.PluginsDirectory);
 
 
     [RelayCommand]

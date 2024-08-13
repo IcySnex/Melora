@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:plga="using:Musify.Plugins.Abstract"
     xmlns:plgm="using:Musify.Plugins.Models"
+    xmlns:svc="using:Musify.Services"
     xmlns:sys="using:System"
     xmlns:vm="using:Musify.ViewModels"
     x:Name="Settings"
@@ -451,6 +452,27 @@
                         Template="{StaticResource SettingsCard}">
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.PluginBundles.SortDescending, Mode=TwoWay}" />
                     </ContentControl>
+
+                    <!--  Show Platform Support  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The directory from which .mfy plugin bundles get loaded from"
+                        hlp:Attributes.Title="Plugins Directory"
+                        Template="{StaticResource SettingsCard}">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <TextBox
+                                Width="300"
+                                IsReadOnly="True"
+                                Text="{x:Bind svc:PluginManager.PluginsDirectory}" />
+                            <Button
+                                Width="32"
+                                Height="32"
+                                Padding="0"
+                                Command="{x:Bind viewModel.OpenPluginsDirectoryCommand}">
+                                <FontIcon FontSize="17" Glyph="&#xe838;" />
+                            </Button>
+                        </StackPanel>
+                    </ContentControl>
+
                 </StackPanel>
             </ContentControl>
 
