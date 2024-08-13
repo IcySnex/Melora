@@ -1,22 +1,22 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.Windows.AppLifecycle;
+using Musify.Enums;
 using Musify.Helpers;
 using Musify.Models;
+using Musify.Plugins;
+using Musify.Plugins.Abstract;
 using Musify.Plugins.Enums;
+using Musify.Plugins.Exceptions;
 using Musify.Plugins.Models;
 using Musify.Services;
 using Musify.Views;
 using System.ComponentModel;
-using Windows.Storage.Pickers;
 using Windows.Storage;
-using Musify.Enums;
-using Microsoft.UI.Xaml.Controls;
-using Musify.Plugins.Exceptions;
-using Microsoft.Windows.AppLifecycle;
-using Microsoft.Extensions.DependencyInjection;
-using Musify.Plugins;
-using Musify.Plugins.Abstract;
+using Windows.Storage.Pickers;
 
 namespace Musify.ViewModels;
 
@@ -53,8 +53,8 @@ public partial class PluginBundlesViewModel : ObservableObject
             Filter = plugin =>
                 plugin.Name.Contains(Query, StringComparison.InvariantCultureIgnoreCase) &&
                 //(
-                    //(Config.PluginBundles.ShowInstalled) ||
-                    //(false) // Config.Plugins.ShowAvailable
+                //(Config.PluginBundles.ShowInstalled) ||
+                //(false) // Config.Plugins.ShowAvailable
                 //) &&
                 (
                     (Config.PluginBundles.ShowOfKindPlatformSupport && plugin.PluginKinds.Contains(PluginKind.PlatformSupport)) ||

@@ -20,18 +20,14 @@ public class ConfigItemTemplateSelector : DataTemplateSelector
         DependencyObject container)
     {
         if (item is not PluginConfigItem configItem)
-            return base.SelectTemplateCore(item, container);
+            return InvalidTemplate;
 
-        switch (Type.GetTypeCode(configItem.Value.GetType()))
+        return Type.GetTypeCode(configItem.Value.GetType()) switch
         {
-            case TypeCode.String:
-                return StringTemplate;
-            case TypeCode.Int64:
-                return LongTemplate;
-            case TypeCode.Boolean:
-                return BoolTemplate;
-            default:
-                return InvalidTemplate;
-        }
+            TypeCode.String => StringTemplate,
+            TypeCode.Int64 => LongTemplate,
+            TypeCode.Boolean => BoolTemplate,
+            _ => InvalidTemplate,
+        };
     }
 }

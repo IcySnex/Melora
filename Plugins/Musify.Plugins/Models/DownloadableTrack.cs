@@ -106,7 +106,7 @@ public partial class DownloadableTrack(
     /// </summary>
     [ObservableProperty]
     int totalTracks = totalTracks;
-    
+
     /// <summary>
     /// The copyright of the downloadable track's album.
     /// </summary>
@@ -117,7 +117,7 @@ public partial class DownloadableTrack(
     /// An optional comment from the plugin.
     /// </summary>
     public string? Comment { get; } = comment;
-    
+
     /// <summary>
     /// The url of the downloadable track.
     /// </summary>

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Musify.Models;
 using Musify.ViewModels;
 using Musify.Views;
 
@@ -9,7 +8,6 @@ public class AppStartupHandler
 {
     public AppStartupHandler(
         ILogger<AppStartupHandler> logger,
-        Config config,
         MainView mainView,
         Navigation navigation,
         PluginBundlesViewModel pluginBundlesViewModel)

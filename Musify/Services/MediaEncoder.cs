@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Musify.Models;
 using Musify.Plugins.Enums;
-using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 
 namespace Musify.Services;

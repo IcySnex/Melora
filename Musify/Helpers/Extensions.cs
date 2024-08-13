@@ -73,6 +73,6 @@ public static class Extensions
             LogEventLevel.Warning => "WRN",
             LogEventLevel.Error => "ERR",
             LogEventLevel.Fatal => "FTL",
-            _ => "UNK" 
+            _ => "UNK"
         };
 }

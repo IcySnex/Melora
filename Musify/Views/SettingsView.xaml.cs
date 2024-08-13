@@ -39,7 +39,7 @@ public sealed partial class SettingsView : Page
                 MetadataPluginsSelectedComboBox.Items.Remove(plugin.Name);
 
                 (MetadataPluginsContainer.Visibility, MetadataPluginsPlaceholder.Visibility, MetadataPluginsSelected.Visibility) = MetadataPluginsContainer.Items.Count == 0 ? (Visibility.Collapsed, Visibility.Visible, Visibility.Collapsed) : (Visibility.Visible, Visibility.Collapsed, Visibility.Visible);
-                
+
                 viewModel.Config.Downloads.SelectedMetadatePlugin = viewModel.PluginManager.GetLoadedOrDefault<MetadataPlugin>(viewModel.Config.Downloads.SelectedMetadatePlugin)?.Name;
             });
     }

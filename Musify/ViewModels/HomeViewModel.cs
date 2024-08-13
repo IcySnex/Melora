@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Musify.Enums;
-using Musify.Plugins.Abstract;
 using Musify.Services;
 using Musify.Views;
 using Windows.ApplicationModel.DataTransfer;

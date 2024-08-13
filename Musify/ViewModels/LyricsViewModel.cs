@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Musify.Enums;
 using Musify.Helpers;
 using Musify.Models;
-using Musify.Plugins.Abstract;
 using Musify.Plugins.Enums;
 using Musify.Views;
 using System.ComponentModel;

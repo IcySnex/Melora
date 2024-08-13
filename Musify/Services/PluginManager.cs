@@ -5,7 +5,6 @@ using Musify.Plugins;
 using Musify.Plugins.Abstract;
 using Musify.Plugins.Exceptions;
 using Musify.Plugins.Models;
-using Serilog.Context;
 using System.Reflection;
 
 namespace Musify.Services;
@@ -75,7 +74,7 @@ public class PluginManager
     public T GetLoaded<T>(
         string? name) where T : IPlugin =>
         TryGetLoaded(name, out T result) ? result : throw new Exception($"Could not get plugin with specified name ({name}) and requested type.");
-    
+
     public T GetLoaded<T>(
         int? hash) where T : IPlugin =>
         TryGetLoaded(hash, out T result) ? result : throw new Exception($"Could not get plugin with given hash ({hash}) and requested type.");

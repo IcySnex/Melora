@@ -95,16 +95,16 @@ public partial class ConfigPluginBundles : ObservableObject
 
     //[ObservableProperty]
     //bool showInstalled = default!;
-    
+
     //[ObservableProperty]
     //bool showAvailable = default!;
-    
+
     [ObservableProperty]
     bool showOfKindPlatformSupport = default!;
-    
+
     [ObservableProperty]
     bool showOfKindMetadata = default!;
-    
+
     [ObservableProperty]
     Sorting sorting = default!;
 

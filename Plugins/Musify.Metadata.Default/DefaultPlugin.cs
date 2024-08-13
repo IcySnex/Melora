@@ -1,5 +1,3 @@
-#pragma warning disable IDE0290 // Use primary constructor
-
 using ATL;
 using Microsoft.Extensions.Logging;
 using Musify.Metadata.Default.Internal;

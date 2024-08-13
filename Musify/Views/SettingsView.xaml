@@ -181,7 +181,7 @@
                                     hlp:Attributes.Description="Resets the plugin config."
                                     hlp:Attributes.Title="Reset Config"
                                     Template="{StaticResource SettingsCard}">
-                                    <Button Click="OnResetPluginConfigClick" Content="Reset Plugin Config" />
+                                    <Button Click="OnResetPluginConfigClick" Content="Reset" />
                                 </ContentControl>
                             </StackPanel>
                         </ContentControl>
@@ -246,7 +246,7 @@
                                     hlp:Attributes.Description="Resets the plugin config."
                                     hlp:Attributes.Title="Reset Config"
                                     Template="{StaticResource SettingsCard}">
-                                    <Button Click="OnResetPluginConfigClick" Content="Reset Plugin Config" />
+                                    <Button Click="OnResetPluginConfigClick" Content="Reset" />
                                 </ContentControl>
                             </StackPanel>
                         </ContentControl>
@@ -466,7 +466,7 @@
                         hlp:Attributes.Description="View incoming logger events"
                         hlp:Attributes.Title="Logger"
                         Template="{StaticResource SettingsCard}">
-                        <Button Command="{x:Bind viewModel.CreateLoggerViewCommand}" Content="Create Logger" />
+                        <Button Command="{x:Bind viewModel.CreateLoggerViewCommand}" Content="Create" />
                     </ContentControl>
 
                     <!--  Reset config  -->
@@ -474,7 +474,7 @@
                         hlp:Attributes.Description="Resets the config."
                         hlp:Attributes.Title="Reset Config"
                         Template="{StaticResource SettingsCard}">
-                        <Button Command="{x:Bind viewModel.ResetConfigCommand}" Content="Reset Config" />
+                        <Button Command="{x:Bind viewModel.ResetConfigCommand}" Content="Reset" />
                     </ContentControl>
                 </StackPanel>
             </ContentControl>

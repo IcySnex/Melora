@@ -30,7 +30,7 @@ public abstract class PlatformSupportPlugin(
     /// The kind of the plugin.
     /// </summary>
     public PluginKind Kind => PluginKind.PlatformSupport;
-    
+
     /// <summary>
     /// The name of the plugin.
     /// </summary>
