@@ -1,6 +1,6 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Melora.Plugins.Models;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Melora.Plugins.Models;
 
 namespace Melora.Helpers;
 

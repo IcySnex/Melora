@@ -1,6 +1,6 @@
+using Melora.Enums;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Melora.Enums;
 
 namespace Melora.Controls;
 

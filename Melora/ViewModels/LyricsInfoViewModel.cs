@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GeniusAPI.Models;
-using Microsoft.Extensions.Logging;
 using Melora.Enums;
 using Melora.Helpers;
 using Melora.Views;
+using Microsoft.Extensions.Logging;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;

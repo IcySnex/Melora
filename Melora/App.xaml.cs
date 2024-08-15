@@ -1,13 +1,13 @@
 ﻿using GeniusAPI;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.UI.Xaml;
 using Melora.Helpers;
 using Melora.Models;
 using Melora.Services;
 using Melora.ViewModels;
 using Melora.Views;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml;
 using Serilog;
 
 namespace Melora;

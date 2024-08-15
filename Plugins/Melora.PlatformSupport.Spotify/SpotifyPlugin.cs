@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using Melora.PlatformSupport.Spotify.Internal;
+﻿using Melora.PlatformSupport.Spotify.Internal;
 using Melora.Plugins.Abstract;
 using Melora.Plugins.Enums;
 using Melora.Plugins.Models;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 
 namespace Melora.PlatformSupport.Spotify;

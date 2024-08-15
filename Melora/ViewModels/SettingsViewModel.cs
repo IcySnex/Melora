@@ -1,13 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Logging;
-using Microsoft.UI.Xaml.Controls;
 using Melora.Enums;
 using Melora.Models;
 using Melora.Plugins.Abstract;
 using Melora.Services;
 using Melora.Views;
-using Windows.Foundation;
+using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml.Controls;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.System;

@@ -1,5 +1,5 @@
-﻿using Microsoft.UI.Xaml.Data;
-using Melora.Plugins.Enums;
+﻿using Melora.Plugins.Enums;
+using Microsoft.UI.Xaml.Data;
 
 namespace Melora.Converters;
 

@@ -3,10 +3,10 @@
 // See the LICENSE file in the project root for more information.
 // Source: https://github.com/CommunityToolkit/WindowsCommunityToolkit
 
+using Melora.Converters;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
-using Melora.Converters;
 using System.Windows.Input;
 using Windows.Foundation.Collections;
 

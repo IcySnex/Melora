@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.Logging;
 using Melora.Plugins.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Melora.ViewModels;
 

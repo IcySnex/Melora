@@ -1,7 +1,7 @@
 using GeniusAPI.Models;
+using Melora.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
-using Melora.ViewModels;
 
 namespace Melora.Views;
 

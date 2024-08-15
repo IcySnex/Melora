@@ -2,13 +2,13 @@
 using CommunityToolkit.Mvvm.Input;
 using GeniusAPI;
 using GeniusAPI.Models;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Melora.Enums;
 using Melora.Helpers;
 using Melora.Models;
 using Melora.Plugins.Enums;
 using Melora.Views;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 
 namespace Melora.ViewModels;

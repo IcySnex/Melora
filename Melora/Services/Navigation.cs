@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Melora.Plugins.Abstract;
+using Melora.ViewModels;
+using Melora.Views;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
-using Melora.Plugins.Abstract;
-using Melora.ViewModels;
-using Melora.Views;
 
 namespace Melora.Services;
 

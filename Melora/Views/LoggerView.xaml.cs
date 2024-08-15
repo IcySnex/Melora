@@ -1,8 +1,8 @@
+using Melora.Helpers;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
-using Melora.Helpers;
 using Serilog.Events;
 
 namespace Melora.Views;

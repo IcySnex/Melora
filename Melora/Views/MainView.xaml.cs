@@ -1,3 +1,9 @@
+using Melora.Controls;
+using Melora.Enums;
+using Melora.Helpers;
+using Melora.Models;
+using Melora.Plugins.Abstract;
+using Melora.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
@@ -9,12 +15,6 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
-using Melora.Controls;
-using Melora.Enums;
-using Melora.Helpers;
-using Melora.Models;
-using Melora.Plugins.Abstract;
-using Melora.Services;
 using Windows.Foundation;
 using WinRT.Interop;
 

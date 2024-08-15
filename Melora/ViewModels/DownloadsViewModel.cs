@@ -1,8 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.UI.Xaml.Controls;
 using Melora.Enums;
 using Melora.Helpers;
 using Melora.Models;
@@ -10,6 +7,9 @@ using Melora.Plugins.Abstract;
 using Melora.Plugins.Enums;
 using Melora.Services;
 using Melora.Views;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml.Controls;
 using System.ComponentModel;
 using Windows.System;
 

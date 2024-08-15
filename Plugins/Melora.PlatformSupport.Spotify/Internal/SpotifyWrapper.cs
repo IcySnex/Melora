@@ -1,8 +1,8 @@
 ﻿using GeniusAPI;
 using GeniusAPI.Models;
-using Microsoft.Extensions.Logging;
 using Melora.Plugins.Abstract;
 using Melora.Plugins.Models;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SpotifyAPI.Web;
 using System.Globalization;
