@@ -214,7 +214,7 @@ public partial class PluginBundlesViewModel : ObservableObject
             SuggestedStartLocation = PickerLocationId.Downloads,
             SettingsIdentifier = "Import plugin bundle",
         };
-        picker.FileTypeFilter.Add(".mfy");
+        picker.FileTypeFilter.Add(".mlr");
         mainView.Initialize(picker);
 
         StorageFile? file = await picker.PickSingleFileAsync();

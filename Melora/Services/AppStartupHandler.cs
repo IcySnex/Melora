@@ -21,7 +21,7 @@ public class AppStartupHandler
 
         mainView.DispatcherQueue.TryEnqueue(async () =>
         {
-            foreach (string path in Directory.GetFiles(PluginManager.PluginsDirectory, "*.mfy"))
+            foreach (string path in Directory.GetFiles(PluginManager.PluginsDirectory, "*.mlr"))
                 await pluginBundlesViewModel.TryLoadAsync(path);
         });
 

@@ -29,6 +29,6 @@
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<Exec Command="powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath '$(TargetDir)\PluginArchive.zip' -Force" />
 		<Exec Command="powershell New-Item -ItemType Directory -Path '$(SolutionDir)\Melora\bin\x64\Debug\net8.0-windows10.0.19041.0\Plugins' -Force" />
-		<Exec Command="powershell Copy-Item -Path '$(TargetDir)\PluginArchive.zip' -Destination '$(SolutionDir)\Melora\bin\x64\Debug\net8.0-windows10.0.19041.0\Plugins\$(ProjectName).mfy' -Force" />
+		<Exec Command="powershell Copy-Item -Path '$(TargetDir)\PluginArchive.zip' -Destination '$(SolutionDir)\Melora\bin\x64\Debug\net8.0-windows10.0.19041.0\Plugins\$(ProjectName).mlr' -Force" />
 	</Target>
 </Project>

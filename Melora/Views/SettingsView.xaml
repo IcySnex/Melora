@@ -455,7 +455,7 @@
 
                     <!--  Show Platform Support  -->
                     <ContentControl
-                        hlp:Attributes.Description="The directory from which .mfy plugin bundles get loaded from"
+                        hlp:Attributes.Description="The directory from which .mlr plugin bundles get loaded from"
                         hlp:Attributes.Title="Plugins Directory"
                         Template="{StaticResource SettingsCard}">
                         <StackPanel Orientation="Horizontal" Spacing="4">
