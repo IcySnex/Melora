@@ -26,6 +26,13 @@ export default hopeTheme({
   darkmode: "toggle",
 
   plugins: {
+    search: {
+      locales: {
+        "/": {
+          placeholder: "Search"
+        }
+      }
+    },
     mdEnhance: {
       align: true,
       attrs: true,
@@ -58,5 +65,5 @@ export default hopeTheme({
       tasklist: true,
       vPre: true,
     },
-  },
+  }
 });

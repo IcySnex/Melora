@@ -13,15 +13,5 @@ export default defineUserConfig({
     ["link", { rel: "icon", href: "/Melora/favicon.png" }]
   ],
 
-  plugins: [
-    searchPlugin({
-      locales: {
-        "/": {
-          placeholder: "Search"
-        }
-      }
-    })
-  ],
-
   theme
 });
