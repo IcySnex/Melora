@@ -63,10 +63,9 @@ public class MediaEncoder
             if (e.Data is null || !e.Data.Contains("time="))
                 return;
 
-            TimeSpan currentTime = TimeSpan.ParseExact(
-                e.Data.Split("time=")[1][..11],
-                "hh\\:mm\\:ss\\.ff",
-                null);
+            string? currentTimeInfo = e.Data.Split(' ').FirstOrDefault(info => info.Contains("time="));
+            if (currentTimeInfo is null || currentTimeInfo.Length < 16 || !TimeSpan.TryParseExact(currentTimeInfo[5..16], "hh\\:mm\\:ss\\.ff", null, out TimeSpan currentTime))
+                return;
 
             progress.Report(currentTime);
             logger.LogInformation("[MediaEncoder-OnProcessorDataRecieved] Writing stream: {currentTime}", currentTime);
