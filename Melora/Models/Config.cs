@@ -38,7 +38,7 @@ public class Config
 
         Paths.DownloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         Paths.Filename = "{artists} - {title}";
-        Paths.FFMPEGLocation = "FFMPEG.exe";
+        Paths.FFmpegLocation = "FFmpeg.exe";
 
         //PluginBundles.ShowInstalled = true;
         //PluginBundles.ShowAvailable = true;
@@ -86,7 +86,7 @@ public partial class ConfigPaths : ObservableObject
     string filename = default!;
 
     [ObservableProperty]
-    string fFMPEGLocation = default!;
+    string fFmpegLocation = default!;
 }
 
 public partial class ConfigPluginBundles : ObservableObject

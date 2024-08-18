@@ -33,7 +33,7 @@ public partial class SettingsViewModel : ObservableObject
         this.mainView = mainView;
 
         PathsDownloadLocation = Config.Paths.DownloadLocation;
-        PathsFFMPEGLocation = Config.Paths.FFMPEGLocation;
+        PathsFFmpegLocation = Config.Paths.FFmpegLocation;
 
         logger.LogInformation("[SettingsViewModel-.ctor] SettingsViewModel has been initialized");
     }
@@ -104,42 +104,42 @@ public partial class SettingsViewModel : ObservableObject
 
 
     [ObservableProperty]
-    string pathsFFMPEGLocation;
+    string pathsFFmpegLocation;
 
-    partial void OnPathsFFMPEGLocationChanged(
+    partial void OnPathsFFmpegLocationChanged(
         string? oldValue,
         string newValue)
     {
         if (!File.Exists(newValue))
         {
-            mainView.ShowNotification("Something went wrong!", "Could not set FFMPEG path.", NotificationLevel.Error, "It looks like this file does not exist. Please make sure you have downloaded the FFMEPG binary to this path.");
+            mainView.ShowNotification("Something went wrong!", "Could not set FFmpeg path.", NotificationLevel.Error, "It looks like this file does not exist. Please make sure you have downloaded the FFmpeg binary to this path.");
 
-            PathsFFMPEGLocation = oldValue ?? "FFMPEG.exe";
+            PathsFFmpegLocation = oldValue ?? "FFmpeg.exe";
             return;
         }
 
-        Config.Paths.FFMPEGLocation = newValue;
-        logger.LogInformation("[SettingsViewModel-OnPathsFFMPEGLocationChanged] Validated & updated Config.Paths.FFMPEGLocation");
+        Config.Paths.FFmpegLocation = newValue;
+        logger.LogInformation("[SettingsViewModel-OnPathsFFmpegLocationChanged] Validated & updated Config.Paths.PathsFFmpegLocation");
     }
 
     [RelayCommand]
-    async Task SelectPathsFFMPEGLocationAsync()
+    async Task SelectPathsFFmpegLocationAsync()
     {
         FileOpenPicker picker = new()
         {
-            CommitButtonText = "Set FFMPEG executable",
+            CommitButtonText = "Set FFmpeg executable",
             SuggestedStartLocation = PickerLocationId.ComputerFolder,
-            SettingsIdentifier = "Set FFMPEG executable"
+            SettingsIdentifier = "Set FFmpeg executable"
         };
         picker.FileTypeFilter.Add(".exe");
         mainView.Initialize(picker);
 
         StorageFile? file = await picker.PickSingleFileAsync();
-        logger.LogInformation("[SettingsViewModel-SelectPathsFFMPEGLocationAsync] File open picker was shown");
+        logger.LogInformation("[SettingsViewModel-SelectPathsFFmpegLocationAsync] File open picker was shown");
 
         if (file is null)
             return;
-        PathsFFMPEGLocation = file.Path;
+        PathsFFmpegLocation = file.Path;
     }
 
 

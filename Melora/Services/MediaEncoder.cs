@@ -30,7 +30,7 @@ public class MediaEncoder
         {
             StartInfo = new ProcessStartInfo()
             {
-                FileName = config.Paths.FFMPEGLocation,
+                FileName = config.Paths.FFmpegLocation,
                 Arguments = $"-i - -v quiet -hide_banner -map_metadata -1 -stats -y -b:a {quality}k \"{filePath}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true,
@@ -40,7 +40,7 @@ public class MediaEncoder
         };
         processor.ErrorDataReceived += onDataRecieved;
 
-        logger.LogInformation("[MediaEncoder-CreateProcessor] Created FFMPEG processor...");
+        logger.LogInformation("[MediaEncoder-CreateProcessor] Created FFmpeg processor...");
         return processor;
     }
 

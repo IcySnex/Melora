@@ -343,7 +343,7 @@
 
             <!--  Paths  -->
             <ContentControl
-                hlp:Attributes.Description="Download location, Filename, FFMPEG location..."
+                hlp:Attributes.Description="Download location, Filename, FFmpeg location..."
                 hlp:Attributes.Glyph="&#xf12b;"
                 hlp:Attributes.Title="Paths"
                 Template="{StaticResource SettingsExpander}">
@@ -373,18 +373,18 @@
                         <TextBox Width="300" Text="{x:Bind viewModel.Config.Paths.Filename, Mode=TwoWay}" />
                     </ContentControl>
 
-                    <!--  FFMPEG location  -->
+                    <!--  FFmpeg location  -->
                     <ContentControl
-                        hlp:Attributes.Description="The location to the FFMPEG executable"
-                        hlp:Attributes.Title="FFMPEG location"
+                        hlp:Attributes.Description="The location to the FFmpeg executable"
+                        hlp:Attributes.Title="FFmpeg location"
                         Template="{StaticResource SettingsCard}">
                         <StackPanel Orientation="Horizontal" Spacing="4">
-                            <TextBox Width="300" Text="{x:Bind viewModel.PathsFFMPEGLocation, Mode=TwoWay}" />
+                            <TextBox Width="300" Text="{x:Bind viewModel.PathsFFmpegLocation, Mode=TwoWay}" />
                             <Button
                                 Width="32"
                                 Height="32"
                                 Padding="0"
-                                Command="{x:Bind viewModel.SelectPathsFFMPEGLocationCommand}">
+                                Command="{x:Bind viewModel.SelectPathsFFmpegLocationCommand}">
                                 <FontIcon FontSize="17" Glyph="&#xe8a7;" />
                             </Button>
                         </StackPanel>
