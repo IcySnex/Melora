@@ -23,10 +23,7 @@ jobs:
       - name: Build VuePress site
         run: |
           cd Website
-          npm install vuepress@2.0.0-rc.14
-          npm install -D @vuepress/bundler-vite@2.0.0-rc.41 --legacy-peer-deps
-          npm install -D @vuepress/plugin-search@2.0.0-rc.41 --legacy-peer-deps
-          npm install -D vuepress-theme-hope/plugin-search@2.0.0-rc.52 --legacy-peer-deps
+          npm install
           npm run docs:build
           
       - name: Deploy to GitHub Pages
