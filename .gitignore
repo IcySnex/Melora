@@ -6,6 +6,12 @@ packages/
 _ReSharper.*
 
 
+Website/node_modules
+Website/src/.vuepress/dist
+Website/src/.vuepress/.temp
+Website/src/.vuepress/.cache
+
+
 Melora/bin/
 Melora/obj/
 
