@@ -23,7 +23,7 @@ jobs:
       - name: Build VuePress site
         run: |
           cd Website
-          npm install
+          npm install --legacy-peer-deps
           npm run docs:build
           
       - name: Deploy to GitHub Pages
