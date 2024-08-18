@@ -23,6 +23,7 @@ jobs:
       - name: Build VuePress site
         run: |
           cd Website
+          npm install vuepress@2.0.0-rc.14
           npm run docs:build
           
       - name: Deploy to GitHub Pages
