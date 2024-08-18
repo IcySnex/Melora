@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 16
           cache: 'npm'
-          cache-dependency-path: Documentation/package-lock.json
+          cache-dependency-path: Website/package-lock.json
           
       - name: Build VuePress site
         run: |
