@@ -1,6 +1,8 @@
 import { defineUserConfig } from "vuepress";
-import { searchPlugin } from '@vuepress/plugin-search'
+import { getDirname, path } from "vuepress/utils";
 import theme from "./theme.js";
+
+const __dirname = getDirname(import.meta.url);
 
 export default defineUserConfig({
   base: "/Melora/",
@@ -12,6 +14,13 @@ export default defineUserConfig({
   head: [
     ["link", { rel: "icon", href: "/Melora/favicon.png" }]
   ],
+
+  alias: {
+    "@platform-support-collection-config": path.resolve(
+      __dirname,
+      "../../config/plugin-collection/platform-support.json",
+    ),
+  },
 
   theme
 });

@@ -3,6 +3,11 @@ import { sidebar } from "vuepress-theme-hope";
 export default sidebar({
   "/guide": [
     {
+      text: "Guide",
+      icon: "ph:chat-fill",
+      link: null,
+    },
+    {
       text: "Introduction",
       icon: "material-symbols:info",
       link: "/guide/introduction"
@@ -36,6 +41,23 @@ export default sidebar({
       text: "Lyrics",
       icon: "material-symbols:lyrics",
       link: "/guide/lyrics"
+    }
+  ],
+  "/plugin-collection": [
+    {
+      text: "Plugin Collection",
+      icon: "mingcute:plugin-2-fill",
+      link: null,
+    },
+    {
+      text: "Platform-Support",
+      icon: "fe:music",
+      link: "/plugin-collection/platform-support",
+    },
+    {
+      text: "Metadata",
+      icon: "tabler:tag-filled",
+      link: "/plugin-collection/metadata",
     }
   ]
 });

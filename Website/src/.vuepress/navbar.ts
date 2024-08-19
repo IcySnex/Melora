@@ -10,47 +10,61 @@ export default navbar([
     text: "Guide",
     icon: "ph:chat-fill",
     link: "/guide/",
+    prefix: "/guide/",
     children: [
       {
         text: "Introduction",
         icon: "material-symbols:info",
-        link: "/guide/introduction",
+        link: "introduction",
       },
       {
         text: "Getting Started",
         icon: "fluent:lightbulb-16-filled",
-        link: "/guide/getting-started",
+        link: "getting-started",
       },
       {
         text: "Plugins",
         icon: "mingcute:plugin-2-fill",
-        link: "/guide/plugins",
+        link: "plugins",
       },
       {
         text: "Platform-Support",
         icon: "fe:music",
-        link: "/guide/platform-support",
+        link: "platform-support",
       },
       {
         text: "Metadata",
         icon: "tabler:tag-filled",
-        link: "/guide/metadata"
+        link: "metadata"
       },
       {
         text: "Downloading",
         icon: "mingcute:arrow-down-fill",
-        link: "/guide/downloading",
+        link: "downloading",
       },
       {
         text: "Lyrics",
         icon: "material-symbols:lyrics",
-        link: "/guide/lyrics",
+        link: "lyrics",
       },
     ],
   },
   {
     text: "Plugin Collection",
     icon: "mingcute:plugin-2-fill",
-    link: "/plugin-collection"
+    link: "/plugin-collection/",
+    prefix: "/plugin-collection/",
+    children: [
+      {
+        text: "Platform-Support",
+        icon: "fe:music",
+        link: "platform-support",
+      },
+      {
+        text: "Metadata",
+        icon: "tabler:tag-filled",
+        link: "metadata",
+      },
+    ]
   }
 ]);
