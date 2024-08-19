@@ -27,13 +27,18 @@ export default navbar([
         link: "/guide/plugins",
       },
       {
-        text: "Searching",
-        icon: "iconamoon:search-bold",
-        link: "/guide/searching",
+        text: "Platform-Support",
+        icon: "fe:music",
+        link: "/guide/platform-support",
+      },
+      {
+        text: "Metadata",
+        icon: "tabler:tag-filled",
+        link: "/guide/metadata"
       },
       {
         text: "Downloading",
-        icon: "fe:music",
+        icon: "mingcute:arrow-down-fill",
         link: "/guide/downloading",
       },
       {
@@ -44,8 +49,8 @@ export default navbar([
     ],
   },
   {
-    text: "Plugins Collection",
+    text: "Plugin Collection",
     icon: "mingcute:plugin-2-fill",
-    link: "/plugins"
+    link: "/plugin-collection"
   }
 ]);

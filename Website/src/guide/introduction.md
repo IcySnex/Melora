@@ -6,14 +6,14 @@ icon: material-symbols:info
 ## About Melora
 Melora is an open-source standalone Music-Downloader designed with a focus on **simplicity**, **expandability** and **customization**. It seamlessly supports a wide range of platforms through custom plugins, ensuring that you can download your favorite tracks with no stress.
 
-Built on .NET 8.0 and the native Windows App SDK, Melora offers a sleek and intuitive user interface inspired by Microsoft's Fluent Design principles. This not only guarantees a visually pleasing experience but also delivers top-tier performance and stability.
+Built on **.NET 8.0** and the native **Windows App SDK**, Melora offers a sleek and intuitive user interface inspired by Microsoft's Fluent Design principles. This not only guarantees a visually pleasing experience but also delivers top-tier performance and stability.
 
 Rediscover the joy of taking control of your favorite music — *just like in the good old days of MP3 ripping* — with Melora!
 
 ## How it works
-Melora serves as the frontend for a variety of supported plugins, making it highly expandable and adaptable to your needs. Simply open the plugins page and import your preferred plugins to enhance your experience.
+Melora serves as the frontend for a variety of supported plugins, making it highly expandable and adaptable to your needs. Simply open the **Plugin Bundles** page and import your preferred plugins to enhance your experience.
 
-Currently Platform-Support Plugins ensure compatibility with all your favorite platforms, while Metadata Plugins give you the freedom to customize how metadata — *such as titles, artists, lyrics, and everything else* — is written to your tracks.
+Currently, **Platform-Support** Plugins ensure compatibility with all your favorite platforms, while **Metadata** Plugins give you the freedom to customize how metadata — *such as titles, artists, lyrics, and everything else* — is written to your tracks.
 
 Looking ahead, Melora plans to support even more types of plugins, including those for syncing with other libraries like iTunes and more.
 

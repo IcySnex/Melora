@@ -23,7 +23,6 @@ export default hopeTheme({
   copyright: "IcySnex",
   displayFooter: true,
 
-  darkmode: "toggle",
 
   plugins: {
     search: {
