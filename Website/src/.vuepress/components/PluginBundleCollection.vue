@@ -1,56 +1,58 @@
 <script setup>
-import { SourceIcon } from "vuepress-shared/client";
-
-const props = defineProps({
-  manifests: {
-    type: Array,
-    required: true
-  }
-})
-
-const download = (url) => {
-    const isConfirmed = window.confirm("Are you sure you want to download this plugin?")
+	import { SourceIcon } from "vuepress-shared/client";
+	
+	const props = defineProps({
+        manifests: {
+	    type: Array,
+	    required: true
+	  }
+	})
+	
+	const download = (url) => {
+	    const isConfirmed = window.confirm("Are you sure you want to download this plugin?")
+	    
+	    if (isConfirmed) {
+	        window.location.href = url;
+	    }
+	}
     
-    if (isConfirmed) {
-        window.location.href = url;
-    }
-}
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString)
-  return new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(date)
-}
-
-
-
+	const ignoreClick = (event) => {
+	    event.stopPropagation()
+	}
+	
+	const formatDate = (dateString) => {
+        const date = new Date(dateString)
+	    return new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(date)
+	}
+	
 </script>
 
 <template>
-    <div class="card-container">
-        <div
-            v-for="(manifest, index) in props.manifests"
-            :key="index"
-            class="card"
-            @click="download(manifest.DownloadUrl)">
-        <h3 class="card-name">
-            {{ manifest.Name }}
-            
-            <a class="card-source-icon-container" :href="manifest.SourceUrl" target="_blank" rel="noopener noreferrer">
-                <SourceIcon class="card-source-icon" />
-            </a>
-        </h3>
+	<div class="card-container">
+		<div
+			v-for="(manifest, index) in props.manifests"
+			:key="index"
+			class="card"
+			@click="download(manifest.DownloadUrl)">
 
-        <p class="card-author">
-            {{ manifest.Author }} - {{ formatDate(manifest.LastUpdatedAt) }}
-        </p> 
+			<h3 class="card-name">
+				{{ manifest.Name }}
 
-        <p class="card-description">
-            {{ manifest.Description }}
-        </p> 
-      </div>
-    </div>
+				<a @click="ignoreClick" class="card-source-icon-container" :href="manifest.SourceUrl" target="_blank" rel="noopener noreferrer">
+					<SourceIcon class="card-source-icon" />
+				</a>
+			</h3>
+			<p class="card-author">
+				{{ manifest.Author }} - {{ formatDate(manifest.LastUpdatedAt) }}
+			</p>
+
+			<p class="card-description">
+				{{ manifest.Description }}
+			</p>
+		</div>
+	</div>
 </template>
-  
+
 <style lang="scss">
     .card-container {
         display: grid;
