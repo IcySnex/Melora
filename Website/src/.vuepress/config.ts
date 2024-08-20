@@ -16,10 +16,8 @@ export default defineUserConfig({
   ],
 
   alias: {
-    "@platform-support-collection-config": path.resolve(
-      __dirname,
-      "../../config/plugin-collection/platform-support.json",
-    ),
+    "@plugin-manifests-platform-support": path.resolve(__dirname, "../../data/plugin-manifests/platform-support.json"),
+    "@plugin-manifests-metadata": path.resolve(__dirname, "../../data/plugin-manifests/metadata.json")
   },
 
   theme

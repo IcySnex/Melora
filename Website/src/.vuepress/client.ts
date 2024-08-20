@@ -1,8 +1,8 @@
 import { defineClientConfig } from "vuepress/client";
-import ProjectPanel from "./components/PluginBundleDetail.vue";
+import PluginBundleCollection from "./components/PluginBundleCollection.vue";
 
 export default defineClientConfig({
   enhance: ({ app }) => {
-    app.component("PluginBundleDetail", ProjectPanel);
+    app.component("PluginBundleCollection", PluginBundleCollection);
   },
 });

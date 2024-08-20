@@ -1,12 +1,11 @@
 import { sidebar } from "vuepress-theme-hope";
 
+const separator = {
+  template: `<hr style="border-color: rgba(0, 0, 0, 0.1); margin: 20px;">`
+}
+
 export default sidebar({
   "/guide": [
-    {
-      text: "Guide",
-      icon: "ph:chat-fill",
-      link: null,
-    },
     {
       text: "Introduction",
       icon: "material-symbols:info",
@@ -44,11 +43,6 @@ export default sidebar({
     }
   ],
   "/plugin-collection": [
-    {
-      text: "Plugin Collection",
-      icon: "mingcute:plugin-2-fill",
-      link: null,
-    },
     {
       text: "Platform-Support",
       icon: "fe:music",
