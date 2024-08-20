@@ -13,16 +13,18 @@ namespace Melora.Plugins.Models;
 /// <param name="name">The name of the plugin.</param>
 /// <param name="description">The description of the plugin.</param>
 /// <param name="author">The author of the plugin.</param>
-/// <param name="pluginKinds">The kinds of plugins contained.</param>
 /// <param name="lastUpdatedAt">The date and time when the plugin was last updated..</param>
+/// <param name="sourceUrl">The url to the source of the plugin (e.g. GitHub project, Website...).</param>
+/// <param name="pluginKinds">The kinds of plugins contained.</param>
 /// <param name="entryPoint">The path to the entry point of the plugin.</param>
 /// <param name="dependencies">The paths to the dependencies of the plugin.</param>
 public class Manifest(
     string name,
     string description,
     string author,
-    PluginKind[] pluginKinds,
     DateTime lastUpdatedAt,
+    string sourceUrl,
+    PluginKind[] pluginKinds,
     string entryPoint,
     string[] dependencies)
 {
@@ -63,14 +65,19 @@ public class Manifest(
     public string Author { get; } = author;
 
     /// <summary>
-    /// The kinds of plugins contained.
-    /// </summary>
-    public PluginKind[] PluginKinds { get; } = pluginKinds;
-
-    /// <summary>
     /// The date and time when the plugin was last updated.
     /// </summary>
     public DateTime LastUpdatedAt { get; } = lastUpdatedAt;
+
+    /// <summary>
+    /// The url to the source of the plugin (e.g. GitHub project, Website...).
+    /// </summary>
+    public string SourceUrl { get; } = sourceUrl;
+
+    /// <summary>
+    /// The kinds of plugins contained.
+    /// </summary>
+    public PluginKind[] PluginKinds { get; } = pluginKinds;
 
     /// <summary>
     /// The path to the entry point of the plugin.

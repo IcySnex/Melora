@@ -3,6 +3,7 @@
   "Description": "Writes the default metadata for any downloaded track.",
   "Author": "IcySnex",
   "LastUpdatedAt": "2026-08-08T14:23:45Z",
+  "SourceUrl": "https://github.com/IcySnex/Melora/tree/main/Plugins/Melora.Metadata.Default",
   "PluginKinds": [
     1
   ],
