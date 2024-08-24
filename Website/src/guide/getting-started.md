@@ -31,7 +31,7 @@ Melora uses FFmpeg internally to encode your downloaded tracks into your desired
 ### Other Paths
 In the Settings menu, you can also specify the download location for your tracks. Additionally, you can customize the file name by embedding track information using placeholders like *{title}*, *{artists}*, *{album}*, and *{release}*.
 
-To organize your tracks into a folder structure, use the '\' character. For example, setting the file name as *"{artists}\{album}\{title}"* would save the track within a folder named after the album, which is nested inside a folder named after the artist. This allows for a neatly organized music library.
+To organize your tracks into a folder structure, use the '\\' character. For example, setting the file name as *"{artists}\\{album}\\{title}"* would save the track within a folder named after the album, which is nested inside a folder named after the artist. This allows for a neatly organized music library.
 
 ![](/guide/getting-started-otherpaths.webp)
 
