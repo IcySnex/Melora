@@ -16,29 +16,35 @@ public class Config
     }
 
 
+    public ConfigLyrics Lyrics { get; set; } = new();
+
     public ConfigDownloads Downloads { get; set; } = new();
 
     public ConfigPaths Paths { get; set; } = new();
 
-    public ConfigLyrics Lyrics { get; set; } = new();
+    public ConfigUpdates Updates { get; set; } = new();
 
     public ConfigPluginBundles PluginBundles { get; set; } = new();
 
 
     public void Reset()
     {
+        Lyrics.GeniusAccessToken = "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr";
+        Lyrics.SearchResultsSorting = Sorting.Default;
+        Lyrics.SearchResultsSortDescending = false;
+
         Downloads.SelectedMetadatePlugin = null;
         Downloads.AlreadyExistsBehavior = AlreadyExistsBehavior.Ask;
         Downloads.Sorting = Sorting.Default;
         Downloads.SortDescending = false;
 
-        Lyrics.GeniusAccessToken = "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr";
-        Lyrics.SearchResultsSorting = Sorting.Default;
-        Lyrics.SearchResultsSortDescending = false;
-
         Paths.DownloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         Paths.Filename = "{artists} - {title}";
         Paths.FFmpegLocation = "FFmpeg.exe";
+
+        Updates.ReleasesUrl = "https://api.github.com/repos/IcySnex/UpdateTests/releases";
+        Updates.Channel = UpdateChannel.Stable;
+        Updates.AutomaticUpdateCheck = true;
 
         //PluginBundles.ShowInstalled = true;
         //PluginBundles.ShowAvailable = true;
@@ -87,6 +93,18 @@ public partial class ConfigPaths : ObservableObject
 
     [ObservableProperty]
     string fFmpegLocation = default!;
+}
+
+public partial class ConfigUpdates : ObservableObject
+{
+    [ObservableProperty]
+    string releasesUrl = default!;
+
+    [ObservableProperty]
+    UpdateChannel channel = default!;
+
+    [ObservableProperty]
+    bool automaticUpdateCheck = default!;
 }
 
 public partial class ConfigPluginBundles : ObservableObject

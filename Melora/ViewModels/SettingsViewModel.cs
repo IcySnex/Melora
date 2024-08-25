@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Melora.Enums;
+using Melora.Helpers;
 using Melora.Models;
 using Melora.Plugins.Abstract;
 using Melora.Services;
@@ -17,6 +18,7 @@ public partial class SettingsViewModel : ObservableObject
 {
     readonly ILogger<SettingsViewModel> logger;
     readonly MainView mainView;
+    readonly UpdateManager updateManager;
 
     public Config Config { get; }
     public PluginManager PluginManager { get; }
@@ -25,9 +27,11 @@ public partial class SettingsViewModel : ObservableObject
         ILogger<SettingsViewModel> logger,
         Config config,
         PluginManager pluginManager,
+        UpdateManager updateManager,
         MainView mainView)
     {
         this.logger = logger;
+        this.updateManager = updateManager;
         this.PluginManager = pluginManager;
         this.Config = config;
         this.mainView = mainView;
@@ -38,6 +42,140 @@ public partial class SettingsViewModel : ObservableObject
         logger.LogInformation("[SettingsViewModel-.ctor] SettingsViewModel has been initialized");
     }
 
+
+    [ObservableProperty]
+    string pathsDownloadLocation;
+
+    [ObservableProperty]
+    string pathsFFmpegLocation;
+
+    partial void OnPathsDownloadLocationChanged(
+        string? oldValue,
+        string newValue)
+    {
+        if (!Directory.Exists(newValue))
+        {
+            mainView.ShowNotification("Something went wrong!", "Could not set download location.", NotificationLevel.Error, "It looks like this directory doesnt exist. Please make sure you have created the folder.");
+
+            PathsDownloadLocation = oldValue ?? Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            return;
+        }
+
+        Config.Paths.DownloadLocation = newValue;
+        logger.LogInformation("[SettingsViewModel-OnPathsDownloadLocationChanged] Validated & updated Config.Paths.DownloadLocation");
+    }
+
+    partial void OnPathsFFmpegLocationChanged(
+        string? oldValue,
+        string newValue)
+    {
+        if (!File.Exists(newValue))
+        {
+            mainView.ShowNotification("Something went wrong!", "Could not set FFmpeg path.", NotificationLevel.Error, "It looks like this file does not exist. Please make sure you have downloaded the FFmpeg binary to this path.");
+
+            PathsFFmpegLocation = oldValue ?? "FFmpeg.exe";
+            return;
+        }
+
+        Config.Paths.FFmpegLocation = newValue;
+        logger.LogInformation("[SettingsViewModel-OnPathsFFmpegLocationChanged] Validated & updated Config.Paths.PathsFFmpegLocation");
+    }
+
+    [RelayCommand]
+    async Task SelectPathsDownloadLocationAsync()
+    {
+        FolderPicker picker = new()
+        {
+            CommitButtonText = "Set download location",
+            SuggestedStartLocation = PickerLocationId.MusicLibrary,
+            SettingsIdentifier = "Set download location"
+        };
+        mainView.Initialize(picker);
+
+        StorageFolder? folder = await picker.PickSingleFolderAsync();
+        logger.LogInformation("[SettingsViewModel-SelectPathsDownloadLocationAsync] Folder picker was shown");
+
+        if (folder is null)
+            return;
+        PathsDownloadLocation = folder.Path;
+    }
+
+    [RelayCommand]
+    async Task SelectPathsFFmpegLocationAsync()
+    {
+        FileOpenPicker picker = new()
+        {
+            CommitButtonText = "Set FFmpeg executable",
+            SuggestedStartLocation = PickerLocationId.ComputerFolder,
+            SettingsIdentifier = "Set FFmpeg executable"
+        };
+        picker.FileTypeFilter.Add(".exe");
+        mainView.Initialize(picker);
+
+        StorageFile? file = await picker.PickSingleFileAsync();
+        logger.LogInformation("[SettingsViewModel-SelectPathsFFmpegLocationAsync] File open picker was shown");
+
+        if (file is null)
+            return;
+        PathsFFmpegLocation = file.Path;
+    }
+
+
+    public async Task<bool> TryGetUpdatesAsync()
+    {
+        try
+        {
+            Release release = await updateManager.GetLatestReleaseAsync();
+            if (release.Version <= UpdateManager.CurrentVersion)
+            {
+                logger.LogInformation("[SettingsViewModel-TryGetUpdatesAsync] Newest version is already installed");
+                return true;
+            }
+
+            UpdateInfoView view = new(release);
+            if (await mainView.AlertAsync(view, "New Update Available!", "Not now", "Install") != ContentDialogResult.Primary)
+            {
+                logger.LogInformation("[SettingsViewModel-TryGetUpdatesAsync] Found new update, but got ignored");
+                return false;
+            }
+
+            CancellationTokenSource cts = new();
+            IProgress<string> progress = mainView.ShowLoadingPopup(cts.Cancel);
+
+            await updateManager.InstallReleaseAsync(release, progress, cts.Token);
+
+            logger.LogInformation("[SettingsViewModel-TryGetUpdatesAsync] Installed update");
+            return false;
+        }
+        catch (OperationCanceledException)
+        {
+            logger.LogWarning("[PlatformViewModel-TryGetUpdatesAsync] Cancelled getting updates");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            mainView.ShowNotification("Warning!", $"Failed to get any updates.", NotificationLevel.Warning, ex.ToFormattedString());
+            logger.LogWarning(ex, "[SettingsViewModel-TryGetUpdatesAsync] Failed get any updates: {exception}", ex.Message);
+            return false;
+        }
+    }
+
+    [RelayCommand]
+    async Task CheckForUpdatesAsync()
+    {
+        if (await TryGetUpdatesAsync())
+            mainView.ShowNotification("No Updates Found!", "You already have installed the latest updates.", NotificationLevel.Success);
+    }
+
+
+    [RelayCommand]
+    static async Task OpenPluginsDirectoryAsync() =>
+        await Launcher.LaunchFolderPathAsync(PluginManager.PluginsDirectory);
+
+
+    [RelayCommand]
+    void CreateLoggerView() =>
+        mainView.CreateLoggerView();
 
     public async Task ResetPluginConfigAsync(
         IPlugin plugin)
@@ -62,93 +200,4 @@ public partial class SettingsViewModel : ObservableObject
         mainView.ShowNotification("Success!", $"Reset config", NotificationLevel.Success);
         logger.LogInformation("[SettingsViewModel-ResetConfig] Reset config");
     }
-
-
-    [ObservableProperty]
-    string pathsDownloadLocation;
-
-    partial void OnPathsDownloadLocationChanged(
-        string? oldValue,
-        string newValue)
-    {
-        if (!Directory.Exists(newValue))
-        {
-            mainView.ShowNotification("Something went wrong!", "Could not set download location.", NotificationLevel.Error, "It looks like this directory doesnt exist. Please make sure you have created the folder.");
-
-            PathsDownloadLocation = oldValue ?? Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-            return;
-        }
-
-        Config.Paths.DownloadLocation = newValue;
-        logger.LogInformation("[SettingsViewModel-OnPathsDownloadLocationChanged] Validated & updated Config.Paths.DownloadLocation");
-    }
-
-    [RelayCommand]
-    async Task SelectPathsDownloadLocationAsync()
-    {
-        FolderPicker picker = new()
-        {
-            CommitButtonText = "Set download location",
-            SuggestedStartLocation = PickerLocationId.MusicLibrary,
-            SettingsIdentifier = "Set download location"
-        };
-        mainView.Initialize(picker);
-
-        StorageFolder? folder = await picker.PickSingleFolderAsync();
-        logger.LogInformation("[SettingsViewModel-SelectPathsDownloadLocationAsync] Folder picker was shown");
-
-        if (folder is null)
-            return;
-        PathsDownloadLocation = folder.Path;
-    }
-
-
-    [ObservableProperty]
-    string pathsFFmpegLocation;
-
-    partial void OnPathsFFmpegLocationChanged(
-        string? oldValue,
-        string newValue)
-    {
-        if (!File.Exists(newValue))
-        {
-            mainView.ShowNotification("Something went wrong!", "Could not set FFmpeg path.", NotificationLevel.Error, "It looks like this file does not exist. Please make sure you have downloaded the FFmpeg binary to this path.");
-
-            PathsFFmpegLocation = oldValue ?? "FFmpeg.exe";
-            return;
-        }
-
-        Config.Paths.FFmpegLocation = newValue;
-        logger.LogInformation("[SettingsViewModel-OnPathsFFmpegLocationChanged] Validated & updated Config.Paths.PathsFFmpegLocation");
-    }
-
-    [RelayCommand]
-    async Task SelectPathsFFmpegLocationAsync()
-    {
-        FileOpenPicker picker = new()
-        {
-            CommitButtonText = "Set FFmpeg executable",
-            SuggestedStartLocation = PickerLocationId.ComputerFolder,
-            SettingsIdentifier = "Set FFmpeg executable"
-        };
-        picker.FileTypeFilter.Add(".exe");
-        mainView.Initialize(picker);
-
-        StorageFile? file = await picker.PickSingleFileAsync();
-        logger.LogInformation("[SettingsViewModel-SelectPathsFFmpegLocationAsync] File open picker was shown");
-
-        if (file is null)
-            return;
-        PathsFFmpegLocation = file.Path;
-    }
-
-
-    [RelayCommand]
-    async Task OpenPluginsDirectoryAsync() =>
-        await Launcher.LaunchFolderPathAsync(PluginManager.PluginsDirectory);
-
-
-    [RelayCommand]
-    void CreateLoggerView() =>
-        mainView.CreateLoggerView();
 }

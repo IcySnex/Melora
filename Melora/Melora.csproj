@@ -21,6 +21,9 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<ApplicationIcon>icon.ico</ApplicationIcon>
+		
+		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<FileVersion>1.0.0</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -33,6 +36,7 @@
 		<None Remove="Views\PlatformView.xaml" />
 		<None Remove="Views\PluginBundleInfoView.xaml" />
 		<None Remove="Views\SettingsView.xaml" />
+		<None Remove="Views\UpdateInfoView.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -70,6 +74,10 @@
 	  <ProjectReference Include="..\Plugins\Melora.Plugins\Melora.Plugins.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Page Update="Views\UpdateInfoView.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	  </Page>
 	  <Page Update="Views\PluginBundleInfoView.xaml">
 	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 	    <SubType>Designer</SubType>

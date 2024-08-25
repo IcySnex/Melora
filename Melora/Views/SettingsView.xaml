@@ -392,6 +392,51 @@
                 </StackPanel>
             </ContentControl>
 
+            <!--  Updates  -->
+            <ContentControl
+                hlp:Attributes.Description="Check For Updates, Releases Url, Channel, Automatic Update Check..."
+                hlp:Attributes.Glyph="&#xe777;"
+                hlp:Attributes.Title="Updates"
+                Template="{StaticResource SettingsExpander}">
+                <StackPanel Spacing="8">
+                    <!--  Manual Update Check  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Manually check for updates now and install if available."
+                        hlp:Attributes.Title="Check For Updates"
+                        Template="{StaticResource SettingsCard}">
+                        <Button Command="{x:Bind viewModel.CheckForUpdatesCommand}" Content="Check Now" />
+                    </ContentControl>
+
+                    <!--  Releases Url  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The Url from which GitHub released get fetched from"
+                        hlp:Attributes.Title="Releases Url"
+                        Template="{StaticResource SettingsCard}">
+                        <TextBox Width="300" Text="{x:Bind viewModel.Config.Updates.ReleasesUrl, Mode=TwoWay}" />
+                    </ContentControl>
+
+                    <!--  Releases Url  -->
+                    <ContentControl
+                        hlp:Attributes.Description="The channel used to search for new updates ('Stable' is recommended)"
+                        hlp:Attributes.Title="Channel"
+                        Template="{StaticResource SettingsCard}">
+                        <ComboBox Width="105" SelectedIndex="{x:Bind viewModel.Config.Updates.Channel, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}">
+                            <ComboBoxItem Content="Stable" />
+                            <ComboBoxItem Content="Beta" />
+                            <ComboBoxItem Content="Alpha" />
+                        </ComboBox>
+                    </ContentControl>
+
+                    <!--  Automatic Update Check  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Weither to check for updates automatically at startup"
+                        hlp:Attributes.Title="Automatic Update Check"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.Updates.AutomaticUpdateCheck, Mode=TwoWay}" />
+                    </ContentControl>
+                </StackPanel>
+            </ContentControl>
+
             <!--  Plugin Bundles  -->
             <ContentControl
                 hlp:Attributes.Description="Show of kind, Sorting, Sort Descending, Plugins Directory..."

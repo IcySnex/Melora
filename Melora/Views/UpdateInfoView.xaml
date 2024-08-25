@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="Melora.Views.UpdateInfoView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hlp="using:Melora.Helpers"
+    xmlns:local="using:Melora.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mdl="using:Melora.Models"
+    xmlns:sys="using:System"
+    x:Name="LyricsInfo"
+    mc:Ignorable="d">
+
+    <ScrollViewer Margin="-24,0,-24,-24">
+        <Grid Width="420" Margin="24,0,24,24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="26" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="26" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Updates may earse your settings, please backup these before installing. Updates can also break support for outdated plugins." TextWrapping="WrapWholeWords" />
+
+            <Rectangle Grid.Row="1" Style="{StaticResource HorizontalDivider}" />
+
+            <TextBlock
+                Grid.Row="2"
+                Margin="0,0,0,4"
+                FontSize="16"
+                FontWeight="SemiBold"
+                Text="Information" />
+            <Grid Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="115" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="105" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Opacity="0.7"
+                    Text="• Author:" />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Text="{x:Bind NewRelease.Author.Name}" />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="4"
+                    Opacity="0.7"
+                    Text="• Published At:" />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="6"
+                    Text="{x:Bind NewRelease.PublishedAt.ToShortDateString()}" />
+
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Opacity="0.7"
+                    Text="• Channel:" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Text="{x:Bind NewRelease.Channel}" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="4"
+                    Opacity="0.7"
+                    Text="• Version:" />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="6"
+                    Text="{x:Bind NewRelease.Version}" />
+
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Opacity="0.7"
+                    Text="• Total Downloads:" />
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Text="{x:Bind NewRelease.Binary.TotalDownloads}" />
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="4"
+                    Opacity="0.7"
+                    Text="• Download Size:" />
+                <TextBlock Grid.Row="2" Grid.Column="6">
+                    <Run Text="{x:Bind NewRelease.Binary.SizeInMb}" />
+                    <Run Text="MB" />
+                </TextBlock>
+            </Grid>
+
+            <Rectangle Grid.Row="4" Style="{StaticResource HorizontalDivider}" />
+
+            <TextBlock
+                Grid.Row="5"
+                FontSize="16"
+                FontWeight="SemiBold"
+                Text="Release Notes" />
+            <TextBlock
+                Grid.Row="6"
+                Grid.Column="6"
+                Opacity="0.7"
+                Text="{x:Bind NewRelease.Body.Replace('-', '•', x:True, x:Null)}"
+                TextWrapping="WrapWholeWords" />
+        </Grid>
+    </ScrollViewer>
+</Page>
