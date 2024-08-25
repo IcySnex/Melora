@@ -165,17 +165,17 @@ public partial class PluginBundlesViewModel : ObservableObject
     }
 
 
-    public async Task TryLoadAsync(
+    public async Task<bool> TryLoadAsync(
         string path)
     {
         string bundleFileName = Path.GetFileNameWithoutExtension(path);
         try
         {
             await PluginManager.LoadBundleAsync(path);
-
             Config.Downloads.SelectedMetadatePlugin = PluginManager.GetLoadedOrDefault<MetadataPlugin>(Config.Downloads.SelectedMetadatePlugin)?.Name;
 
             mainView.ShowNotification("Success!", $"Loaded plugin bundle: {bundleFileName}.", NotificationLevel.Success);
+            return true;
         }
         catch (PluginNotLoadedException ex)
         {
@@ -197,11 +197,13 @@ public partial class PluginBundlesViewModel : ObservableObject
                 AppInstance.Restart(null);
             });
             logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Could not load plugin: {name}: {exception}", ex.PluginType!.Name, ex.Message);
+            return false;
         }
         catch (Exception ex)
         {
             mainView.ShowNotification("Warning!", $"Could not load plugin bundle: {bundleFileName}.", NotificationLevel.Warning, ex.ToFormattedString());
             logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Could not load plugin bundle: {bundleFileName}: {exception}", bundleFileName, ex.Message);
+            return false;
         }
     }
 
@@ -232,8 +234,8 @@ public partial class PluginBundlesViewModel : ObservableObject
         }
 
         File.Copy(file.Path, destination);
-        await TryLoadAsync(destination);
 
-        logger.LogInformation("[PluginBundlesViewModel-ImportAsync] Plugin bundle was imported from file");
+        if (await TryLoadAsync(destination))
+            logger.LogInformation("[PluginBundlesViewModel-ImportAsync] Plugin bundle was imported from file");
     }
 }
