@@ -78,8 +78,7 @@ public class MediaEncoder
                 processor.Kill();
                 await Task.Delay(1000, CancellationToken.None);
 
-                if (File.Exists(filePath))
-                    File.Delete(filePath);
+                File.Delete(filePath);
             }
             catch (Exception ex)
             {
