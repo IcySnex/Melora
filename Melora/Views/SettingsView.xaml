@@ -409,7 +409,7 @@
 
                     <!--  Releases Url  -->
                     <ContentControl
-                        hlp:Attributes.Description="The Url from which GitHub released get fetched from"
+                        hlp:Attributes.Description="The Url from which GitHub releases get fetched from"
                         hlp:Attributes.Title="Releases Url"
                         Template="{StaticResource SettingsCard}">
                         <TextBox Width="300" Text="{x:Bind viewModel.Config.Updates.ReleasesUrl, Mode=TwoWay}" />
@@ -528,12 +528,20 @@
                 hlp:Attributes.Title="Advanced"
                 Template="{StaticResource SettingsExpander}">
                 <StackPanel Spacing="8">
+                    <!--  About Melora  -->
+                    <ContentControl
+                        hlp:Attributes.Description="View some information about Melora"
+                        hlp:Attributes.Title="About Melora"
+                        Template="{StaticResource SettingsCard}">
+                        <Button Command="{x:Bind viewModel.ShowAboutCommand}" Content="Show" />
+                    </ContentControl>
+
                     <!--  Create logger  -->
                     <ContentControl
                         hlp:Attributes.Description="View incoming logger events"
                         hlp:Attributes.Title="Logger"
                         Template="{StaticResource SettingsCard}">
-                        <Button Command="{x:Bind viewModel.CreateLoggerViewCommand}" Content="Create" />
+                        <Button Command="{x:Bind viewModel.CreateLoggerViewCommand}" Content="Show" />
                     </ContentControl>
 
                     <!--  Reset config  -->
