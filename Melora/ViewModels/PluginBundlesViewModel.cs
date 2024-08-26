@@ -12,6 +12,7 @@ using Melora.Services;
 using Melora.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.AppLifecycle;
 using System.ComponentModel;
@@ -177,9 +178,9 @@ public partial class PluginBundlesViewModel : ObservableObject
             mainView.ShowNotification("Success!", $"Loaded plugin bundle: {bundleFileName}.", NotificationLevel.Success);
             return true;
         }
-        catch (PluginNotLoadedException ex)
+        catch (PluginNotLoadedException ex) when (ex.PluginType is not null)
         {
-            mainView.ShowNotification("Warning!", $"Could not load plugin: {ex.PluginType!.Name}.", NotificationLevel.Warning, async () =>
+            mainView.ShowNotification("Warning!", $"Could not load plugin: {ex.PluginType.Name}.", NotificationLevel.Warning, async () =>
             {
                 if (await mainView.AlertAsync(
                     new()
@@ -191,18 +192,19 @@ public partial class PluginBundlesViewModel : ObservableObject
                     }) != ContentDialogResult.Primary)
                     return;
 
-                Config.PluginBundles.Configs.Remove(ex.PluginType!.Name);
+                Config.PluginBundles.Configs.Remove(ex.PluginType.Name);
+                logger.LogInformation(ex, "[AppStartupHandler-TryLoadAsync] Reset plugins config: {pluginType}. Restarting now...", ex.PluginType.Name);
 
-                mainView.Close();
+                Application.Current.Exit();
                 AppInstance.Restart(null);
             });
-            logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Could not load plugin: {name}: {exception}", ex.PluginType!.Name, ex.Message);
+            logger.LogWarning(ex, "[AppStartupHandler-TryLoadAsync] Could not load plugin: {name}: {exception}", ex.PluginType.Name, ex.Message);
             return false;
         }
         catch (Exception ex)
         {
             mainView.ShowNotification("Warning!", $"Could not load plugin bundle: {bundleFileName}.", NotificationLevel.Warning, ex.ToFormattedString());
-            logger.LogWarning(ex, "[AppStartupHandler-LoadPlugins] Could not load plugin bundle: {bundleFileName}: {exception}", bundleFileName, ex.Message);
+            logger.LogWarning(ex, "[AppStartupHandler-TryLoadAsync] Could not load plugin bundle: {bundleFileName}: {exception}", bundleFileName, ex.Message);
             return false;
         }
     }
