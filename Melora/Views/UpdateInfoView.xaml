@@ -24,7 +24,10 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Before updaing please note that updates may break support for outdated plugins. It is also recommended to backup any settings." TextWrapping="WrapWholeWords" />
+            <TextBlock
+                Opacity="0.7"
+                Text="Before updaing please note that updates may break support for outdated plugins. It is also recommended to backup any settings."
+                TextWrapping="WrapWholeWords" />
 
             <Rectangle Grid.Row="1" Style="{StaticResource HorizontalDivider}" />
 
@@ -103,7 +106,7 @@
                     Opacity="0.7"
                     Text="• Download Size:" />
                 <TextBlock Grid.Row="2" Grid.Column="6">
-                    <Run Text="{x:Bind NewRelease.Binary.SizeInMb}" />
+                    <Run Text="{x:Bind NewRelease.Binary.SizeInMb.ToString('#.00', x:Null)}" />
                     <Run Text="MB" />
                 </TextBlock>
             </Grid>
