@@ -47,6 +47,11 @@ export default navbar([
         icon: "material-symbols:lyrics",
         link: "lyrics",
       },
+      {
+        text: "Updating",
+        icon: "ic:baseline-update",
+        link: "updating",
+      },
     ],
   },
   {

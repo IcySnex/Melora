@@ -40,7 +40,12 @@ export default sidebar({
       text: "Lyrics",
       icon: "material-symbols:lyrics",
       link: "/guide/lyrics"
-    }
+    },
+    {
+      text: "Updating",
+      icon: "ic:baseline-update",
+      link: "updating",
+    },
   ],
   "/plugin-collection": [
     {
