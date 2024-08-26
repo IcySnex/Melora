@@ -44,11 +44,11 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="115" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="12" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="12" />
-                    <ColumnDefinition Width="105" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="12" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
@@ -57,7 +57,7 @@
                     Grid.Row="0"
                     Grid.Column="0"
                     Opacity="0.7"
-                    Text="• Author:" />
+                    Text="Author:" />
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="2"
@@ -66,7 +66,7 @@
                     Grid.Row="0"
                     Grid.Column="4"
                     Opacity="0.7"
-                    Text="• Published At:" />
+                    Text="Published At:" />
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="6"
@@ -76,7 +76,7 @@
                     Grid.Row="1"
                     Grid.Column="0"
                     Opacity="0.7"
-                    Text="• Channel:" />
+                    Text="Channel:" />
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="2"
@@ -85,7 +85,7 @@
                     Grid.Row="1"
                     Grid.Column="4"
                     Opacity="0.7"
-                    Text="• Version:" />
+                    Text="Version:" />
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="6"
@@ -95,7 +95,7 @@
                     Grid.Row="2"
                     Grid.Column="0"
                     Opacity="0.7"
-                    Text="• Total Downloads:" />
+                    Text="Total Downloads:" />
                 <TextBlock
                     Grid.Row="2"
                     Grid.Column="2"
@@ -104,7 +104,7 @@
                     Grid.Row="2"
                     Grid.Column="4"
                     Opacity="0.7"
-                    Text="• Download Size:" />
+                    Text="Download Size:" />
                 <TextBlock Grid.Row="2" Grid.Column="6">
                     <Run Text="{x:Bind NewRelease.Binary.SizeInMb.ToString('#.00', x:Null)}" />
                     <Run Text="MB" />
