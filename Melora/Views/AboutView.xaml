@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="Melora.Views.AboutView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hlp="using:Melora.Helpers"
+    xmlns:local="using:Melora.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mdl="using:Melora.Models"
+    xmlns:srv="using:Melora.Services"
+    xmlns:sys="using:System"
+    x:Name="LyricsInfo"
+    mc:Ignorable="d">
+
+    <Grid Width="500">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75" />
+            <RowDefinition Height="24" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="75" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Source="/icon.ico" />
+            <TextBlock
+                Grid.Column="2"
+                FontSize="24"
+                FontWeight="SemiBold"
+                Text="Melora" />
+            <TextBlock
+                Grid.Column="2"
+                Margin="0,28,0,0"
+                FontSize="16"
+                Opacity="0.7"
+                Text="Just like the good old days of MP3 ripping - but with a modern twist."
+                TextWrapping="WrapWholeWords" />
+        </Grid>
+
+        <Rectangle Grid.Row="1" Style="{StaticResource HorizontalDivider}" />
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="24" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                Opacity="0.7"
+                Text="Version:" />
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="2"
+                Text="{x:Bind srv:UpdateManager.CurrentVersion.ToString(3)}" />
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="4"
+                Opacity="0.7"
+                Text="Architecture:" />
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="6"
+                Text="{x:Bind srv:UpdateManager.Architecture}" />
+
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="0"
+                Opacity="0.7"
+                Text="GitHub Project:" />
+            <TextBlock Grid.Row="1" Grid.Column="2">
+                <Hyperlink NavigateUri="https://github.com/IcySnex/Melora">IcySnex/Melora</Hyperlink>
+            </TextBlock>
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="4"
+                Opacity="0.7"
+                Text="Licensing:" />
+            <TextBlock Grid.Row="1" Grid.Column="6">
+                <Hyperlink NavigateUri="https://icysnex.github.io/Melora/license">GPL-3.0 License</Hyperlink>
+            </TextBlock>
+
+            <Rectangle
+                Grid.Row="2"
+                Grid.ColumnSpan="7"
+                Style="{StaticResource HorizontalDivider}" />
+
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="0"
+                Opacity="0.7"
+                Text="Build Mode:" />
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="2"
+                Text="{x:Bind BuildMode}" />
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="4"
+                Opacity="0.7"
+                Text="Runtime:" />
+            <TextBlock Grid.Row="3" Grid.Column="6">
+                <Run Text=".net" />
+                <Run Text="{x:Bind RuntimeVersion}" />
+            </TextBlock>
+
+            <TextBlock
+                Grid.Row="4"
+                Grid.Column="0"
+                Opacity="0.7"
+                Text="WindowsAppSDK:" />
+            <TextBlock
+                Grid.Row="4"
+                Grid.Column="2"
+                Text="{x:Bind WindowsAppSDKVersion}" />
+            <TextBlock
+                Grid.Row="4"
+                Grid.Column="4"
+                Opacity="0.7"
+                Text="Windows OS:" />
+            <TextBlock
+                Grid.Row="4"
+                Grid.Column="6"
+                Text="{x:Bind WindowsOSVersion}" />
+        </Grid>
+    </Grid>
+</Page>

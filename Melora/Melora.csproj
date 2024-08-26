@@ -54,7 +54,7 @@
 		<PackageReference Include="GeniusAPI" Version="1.1.1" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240627000" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240802000" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Serilog" Version="4.0.1" />
@@ -74,6 +74,11 @@
 	  <ProjectReference Include="..\Plugins\Melora.Plugins\Melora.Plugins.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Page Update="Views\AboutView.xaml">
+	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	    <SubType>Designer</SubType>
+	    <Generator>MSBuild:Compile</Generator>
+	  </Page>
 	  <Page Update="Views\UpdateInfoView.xaml">
 	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 	    <SubType>Designer</SubType>

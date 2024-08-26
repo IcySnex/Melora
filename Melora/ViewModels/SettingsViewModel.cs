@@ -176,6 +176,13 @@ public partial class SettingsViewModel : ObservableObject
 
 
     [RelayCommand]
+    async Task ShowAboutAsync()
+    {
+        AboutView view = new();
+        await mainView.AlertAsync(view);
+    }
+    
+    [RelayCommand]
     void CreateLoggerView() =>
         mainView.CreateLoggerView();
 
