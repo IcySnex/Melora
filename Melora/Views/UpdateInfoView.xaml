@@ -24,7 +24,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Updates may earse your settings, please backup these before installing. Updates can also break support for outdated plugins." TextWrapping="WrapWholeWords" />
+            <TextBlock Text="Before updaing please note that updates may break support for outdated plugins. It is also recommended to backup any settings." TextWrapping="WrapWholeWords" />
 
             <Rectangle Grid.Row="1" Style="{StaticResource HorizontalDivider}" />
 

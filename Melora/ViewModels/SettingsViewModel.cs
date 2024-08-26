@@ -154,6 +154,8 @@ public partial class SettingsViewModel : ObservableObject
         }
         catch (Exception ex)
         {
+            mainView.HideLoadingPopup();
+
             mainView.ShowNotification("Warning!", $"Failed to get any updates.", NotificationLevel.Warning, ex.ToFormattedString());
             logger.LogWarning(ex, "[SettingsViewModel-TryGetUpdatesAsync] Failed get any updates: {exception}", ex.Message);
             return false;

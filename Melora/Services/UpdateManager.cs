@@ -1,8 +1,10 @@
 ﻿using Melora.Models;
-using Melora.Views;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.IO.Compression;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -17,7 +19,6 @@ public class UpdateManager
 
     readonly ILogger<UpdateManager> logger;
     readonly Config config;
-    readonly MainView mainView;
     readonly JsonConverter converter;
 
     readonly HttpClient client;
@@ -25,12 +26,10 @@ public class UpdateManager
     public UpdateManager(
         ILogger<UpdateManager> logger,
         Config config,
-        MainView mainView,
         JsonConverter converter)
     {
         this.logger = logger;
         this.config = config;
-        this.mainView = mainView;
         this.converter = converter;
 
         client = new();
@@ -66,63 +65,98 @@ public class UpdateManager
             throw new NullReferenceException("Release binary is null.");
 
         string tempDirectory = Path.GetTempPath();
-        string binaryPath = Path.Combine(tempDirectory, "melora_update_binary.tmp");
-        string scriptPath = Path.Combine(tempDirectory, "melora_update_script.bat");
+        string scriptPath = Path.Combine(tempDirectory, "melora_update_script.ps1");
+        string binariesPath = Path.Combine(tempDirectory, "melora_update_binaries.zip");
+        string binariesDirectory = Path.Combine(tempDirectory, "melora_update_binaries");
 
-        string scriptContent = $"""
-            @echo off
-
-            set maxTries=10
-            set tryCount=1
+        string scriptContent = $$"""
+            Add-Type -AssemblyName System.Windows.Forms
 
 
-            :loop
-            echo Checking if Melora did exit [%tryCount%/%maxTries%]...
+            # Wait until Melora is closed
+            $maxTries = 10
+            $tryCount = 1
 
-            tasklist | find "Melora.exe" >nul 2>&1
-            if errorlevel 1 goto replace
+            while ($tryCount -le $maxTries) {
+                Write-Output "Checking if Melora is closed [$tryCount/$maxTries]..."
+
+                if (-not (Get-Process -Name "Melora" -ErrorAction SilentlyContinue)) {
+                    break
+                }
+
+                Start-Sleep -Seconds 1
+                $tryCount++
+            }
+            if ($tryCount -gt $maxTries) {
+                [System.Windows.Forms.MessageBox]::Show("Timeout reached: Melora didn't exit in the expected time.", "Melora Update: Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+                exit 1
+            }
+            
+
+            # Clean up old Melora files
+            $result = [System.Windows.Forms.MessageBox]::Show("Do you want to clean up old Melora files?`n`nCaution: this operation will delete ALL files in the directory Melora is located in except for your config, plugins, logs & backups.", "Melora Update: Warning", [System.Windows.Forms.MessageBoxButtons]::YesNo, [System.Windows.Forms.MessageBoxIcon]::Exclamation)
                         
-            set /a tryCount+=1
-            if %tryCount% gtr %maxTries% goto timeout
-                        
-            timeout /t 1 >nul
-            goto loop
+            if ($result -eq "No") {
+                Write-Output "Skipping clean up of old files..."
+            } else {
+                Write-Output "Cleaning up old Melora files..."
+                Get-ChildItem -Path "." -File | Where-Object { $_.Name -ne "Config.json" } | Remove-Item -Force
+                Get-ChildItem -Path "." -Directory | Where-Object { $_.Name -notin @("Plugins", "Logs", "Backup") } | Remove-Item -Recurse -Force
+            }
+            
 
+            # Copy new files and start Melora
+            Write-Output "Copying new Melora files..."
+            Copy-Item -Path (Join-Path {{binariesDirectory}} "*") -Destination "." -Recurse -Force
+            
 
-            :replace
-            echo Replacing Melora now...
+            # Cleanup
+            Write-Output "Cleaning up temporary files..."
+            Remove-Item -Path {{binariesDirectory}} -Recurse -Force
+            Remove-Item -Path {{scriptPath}} -Force
+            
 
-            move /Y "{binaryPath}" "Melora.exe" >nul
-            start "" "Melora.exe" >nul
-            del "%~f0"
-
-
-            :timeout
-            echo Timeout reached: Update not installed. Melora didn't exit in the expected time.
-            powershell -Command "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Timeout reached: Melora didn''t exit in the expected time.', 'Melora: Update failed', [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)"
-
-            del "%~f0"
+            # Start Melora
+            Write-Output "Starting Melora..."
+            [System.Windows.Forms.MessageBox]::Show("Updating Melora finished successfully. Opening Melora now...", "Melora Update: Sucess", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+            Start-Process "Melora.exe" -ArgumentList "--updated"
             """;
         await File.WriteAllTextAsync(scriptPath, scriptContent, cancellationToken);
 
         cancellationToken.Register(async () =>
         {
-            await Task.Delay(1000, CancellationToken.None);
+            try
+            {
+                await Task.Delay(1000, CancellationToken.None);
 
-            if (File.Exists(scriptPath))
                 File.Delete(scriptPath);
-            if (File.Exists(binaryPath))
-                File.Delete(binaryPath);
+                File.Delete(binariesPath);
+                Directory.Delete(binariesDirectory, true);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "[UpdateManager-InstallReleaseAsync] Failed to delete file/directory: {exception}", ex.Message);
+            }
+            await Task.Delay(1000, CancellationToken.None);
         });
 
 
         logger.LogInformation("[UpdateManager-InstallReleaseAsync] Downloading new release...");
         progress.Report("Downloading new release...");
 
-        using Stream binaryStream = await client.GetStreamAsync(release.Binary.DownloadUrl, cancellationToken);
-        using Stream fileStream = File.Open(binaryPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        using (Stream binariesStream = await client.GetStreamAsync(release.Binary.DownloadUrl, cancellationToken))
+        using (Stream fileStream = File.Open(binariesPath, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            await binariesStream.CopyToAsync(fileStream, cancellationToken);
 
-        await binaryStream.CopyToAsync(fileStream, cancellationToken);
+
+        logger.LogInformation("[UpdateManager-InstallReleaseAsync] Extracting release...");
+        progress.Report("Extracting release...");
+
+        if (Directory.Exists(binariesDirectory))
+            Directory.Delete(binariesDirectory, true);
+        await Task.Run(() => ZipFile.ExtractToDirectory(binariesPath, binariesDirectory), cancellationToken);
+
+        File.Delete(binariesPath);
 
 
         int countdownSeconds = 5;
@@ -136,13 +170,12 @@ public class UpdateManager
 
         ProcessStartInfo startInfo = new()
         {
-            FileName = scriptPath,
-            CreateNoWindow = true,
-            UseShellExecute = false
+            FileName = "powershell.exe",
+            Arguments = $"-ExecutionPolicy Bypass -File \"{scriptPath}\"",
+            CreateNoWindow = true
         };
         Process.Start(startInfo);
 
-        mainView.Close();
         Application.Current.Exit();
     }
 }
