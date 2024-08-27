@@ -16,7 +16,7 @@
 		<Title>Melora.Plugins</Title>
 		<Version>$(AssemblyVersion)</Version>
 		<Authors>IcySnex</Authors>
-		<Description>THE he SKD DK used to devvelop.</Description>
+		<Description>Provides the API and core infrastructure for developing plugins compatible with Melora - Melora allows you to download all your music from any platform using custom plugins</Description>
 		<Company />
 		<Copyright>Copyright (C) 2024 IcySnex</Copyright>
 		<RepositoryUrl>https://github.com/IcySnex/Melora/tree/main</RepositoryUrl>
