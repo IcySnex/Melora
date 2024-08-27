@@ -75,4 +75,9 @@ public static class Extensions
             LogEventLevel.Fatal => "FTL",
             _ => "UNK"
         };
+
+
+    public static Version Normalize(
+        this Version? version) =>
+        version is null ? new(1, 0, 0) : version.Revision == -1 ? version : new(version.Major, version.Minor, version.Build);
 }

@@ -1,4 +1,5 @@
-﻿using Melora.Models;
+﻿using Melora.Helpers;
+using Melora.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
@@ -10,7 +11,7 @@ namespace Melora.Services;
 
 public class UpdateManager
 {
-    public readonly static Version Version = typeof(App).Assembly.GetName().Version ?? new(1, 0, 0);
+    public readonly static Version Version = typeof(App).Assembly.GetName().Version.Normalize();
 
     public readonly static string Architecture = RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant();
 
@@ -20,9 +21,9 @@ public class UpdateManager
     public readonly static string BuildMode = "Release";
 #endif
 
-    public readonly static Version RuntimeVersion = Environment.Version;
+    public readonly static Version RuntimeVersion = Environment.Version.Normalize();
 
-    public readonly static Version WindowsAppSDKVersion = typeof(AppInstance).Assembly.GetName().Version ?? new(1, 0, 0, 0);
+    public readonly static Version WindowsAppSDKVersion = typeof(AppInstance).Assembly.GetName().Version.Normalize();
 
 
 

@@ -71,7 +71,7 @@
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="2"
-                Text="{x:Bind srv:UpdateManager.Version.ToString(3)}" />
+                Text="{x:Bind srv:UpdateManager.Version}" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="4"
@@ -80,7 +80,7 @@
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="6"
-                Text="{x:Bind plg:PluginLoadContext.ApiVersion.ToString(3)}" />
+                Text="{x:Bind plg:PluginLoadContext.ApiVersion}" />
 
             <TextBlock
                 Grid.Row="1"
@@ -130,7 +130,7 @@
                 Text="Runtime:" />
             <TextBlock Grid.Row="4" Grid.Column="2">
                 <Run Text=".net" />
-                <Run Text="{x:Bind srv:UpdateManager.RuntimeVersion.ToString(3)}" /></TextBlock>
+                <Run Text="{x:Bind srv:UpdateManager.RuntimeVersion}" /></TextBlock>
             <TextBlock
                 Grid.Row="4"
                 Grid.Column="4"
@@ -139,7 +139,7 @@
             <TextBlock
                 Grid.Row="4"
                 Grid.Column="6"
-                Text="{x:Bind srv:UpdateManager.WindowsAppSDKVersion.ToString(3)}" />
+                Text="{x:Bind srv:UpdateManager.WindowsAppSDKVersion}" />
         </Grid>
     </Grid>
 </Page>

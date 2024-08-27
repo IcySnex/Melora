@@ -69,7 +69,7 @@ public class Manifest(
     /// <summary>
     /// The version of the plugins API used.
     /// </summary>
-    public Version ApiVersion { get; } = apiVersion;
+    public Version ApiVersion { get; } = apiVersion.Revision == -1 ? apiVersion : new(apiVersion.Major, apiVersion.Minor, apiVersion.Build);
 
     /// <summary>
     /// The date and time when the plugin was last updated.
