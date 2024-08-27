@@ -1,6 +1,7 @@
 ---
 title: Lyrics
 icon: material-symbols:lyrics
+order: 7
 ---
 
 Melora includes built-in support for searching lyrics on [Genius](https://genius.com/). Simply open the **Lyrics** page in Melora, search for a track or artist, and view the lyrics for the selected song.

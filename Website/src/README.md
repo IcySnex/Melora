@@ -1,5 +1,6 @@
 ---
 home: true
+index: false
 title: Home
 heroImage: logo.png
 heroText: Melora

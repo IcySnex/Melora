@@ -1,6 +1,7 @@
 ---
 title: Metadata
 icon: tabler:tag-filled
+order: 2
 ---
 
 Here you can find officially tested Metadata plugins for Melora, ensuring both **quality** and **safety**.

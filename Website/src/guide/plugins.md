@@ -1,6 +1,7 @@
 ---
 title: Plugins
 icon: mingcute:plugin-2-fill
+order: 3
 ---
 
 As you may have already noticed, Melora depends on plugins for downloading tracks and managing metadata, making them a crucial part of the application. Fortunately, installing and using plugins is straightforward. This guide will walk you through the process of adding and fully utilizing plugins in Melora.

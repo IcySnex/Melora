@@ -1,6 +1,7 @@
 ---
 title: Platform-Support
 icon: fe:music
+order: 4
 ---
 
 Platform-Support and searching for tracks in Melora is managed entirely by plugins.

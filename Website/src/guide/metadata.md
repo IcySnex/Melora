@@ -1,6 +1,7 @@
 ---
 title: Metadata
 icon: tabler:tag-filled
+order: 5
 ---
 
 We believe your tracks should be **personal** to you! That's why metadata writing with Melora is **highly** customizable. All metadata handling is managed by plugins, giving you full control over how your tracks are labeled and organized.

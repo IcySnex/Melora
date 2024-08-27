@@ -1,6 +1,7 @@
 ---
 title: Updating
 icon: ic:baseline-update
+order: 8
 ---
 
 Melora regularly introduces new features and important bug fixes to enhance your experience. Melora makes it easy to update from any version to the latest, ensuring you always have the latest improvements.

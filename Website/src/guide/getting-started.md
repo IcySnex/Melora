@@ -1,13 +1,14 @@
 ---
 title: Getting Started
 icon: fluent:lightbulb-16-filled
+order: 2
 ---
 
-## System Requirements
-- Windows 10 / 11
-  - *Minimum Build:* 17763
-  - *Target Build:* 19041
-- 64-bit / 32-bit / ARM64 (untested)
+## Requirements
+- **OS:** Windows 10 / 11
+  - **Minimum Build:** 17763
+  - **Target Build:** 19041
+- **Architecture:** 64-bit / 32-bit / ARM64 (untested)
 
 
 ## Installation

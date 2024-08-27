@@ -1,6 +1,7 @@
 ---
 title: Platform-Support
 icon: fe:music
+order: 1
 ---
 
 Here you can find officially tested Platform-Support plugins for Melora, ensuring both **quality** and **safety**.

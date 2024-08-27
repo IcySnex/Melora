@@ -1,6 +1,7 @@
 ---
 title: Downloading
 icon: mingcute:arrow-down-fill
+order: 6
 ---
 
 Once you've added tracks to the download queue, you'll be taken to Melora's advanced **Download** page. Here, you can manage your queue and remove any accidentally added tracks, edit the metadata for any track, and start the downloading process.
