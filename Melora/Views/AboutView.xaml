@@ -70,16 +70,16 @@
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="2"
-                Text="{x:Bind srv:UpdateManager.CurrentVersion.ToString(3)}" />
+                Text="{x:Bind srv:UpdateManager.Version.ToString(3)}" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="4"
                 Opacity="0.7"
-                Text="Architecture:" />
+                Text="Plugins API Version:" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="6"
-                Text="{x:Bind srv:UpdateManager.Architecture}" />
+                Text="{x:Bind srv:UpdateManager.PluginsAPIVersion.ToString(3)}" />
 
             <TextBlock
                 Grid.Row="1"
@@ -107,39 +107,38 @@
                 Grid.Row="3"
                 Grid.Column="0"
                 Opacity="0.7"
-                Text="Build Mode:" />
+                Text="Architecture:" />
             <TextBlock
                 Grid.Row="3"
                 Grid.Column="2"
-                Text="{x:Bind BuildMode}" />
+                Text="{x:Bind srv:UpdateManager.Architecture}" />
             <TextBlock
                 Grid.Row="3"
                 Grid.Column="4"
                 Opacity="0.7"
-                Text="Runtime:" />
-            <TextBlock Grid.Row="3" Grid.Column="6">
-                <Run Text=".net" />
-                <Run Text="{x:Bind RuntimeVersion}" />
-            </TextBlock>
+                Text="Build Mode:" />
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="6"
+                Text="{x:Bind srv:UpdateManager.BuildMode}" />
 
             <TextBlock
                 Grid.Row="4"
                 Grid.Column="0"
                 Opacity="0.7"
-                Text="WindowsAppSDK:" />
-            <TextBlock
-                Grid.Row="4"
-                Grid.Column="2"
-                Text="{x:Bind WindowsAppSDKVersion}" />
+                Text="Runtime:" />
+            <TextBlock Grid.Row="4" Grid.Column="2">
+                <Run Text=".net" />
+                <Run Text="{x:Bind srv:UpdateManager.RuntimeVersion.ToString(3)}" /></TextBlock>
             <TextBlock
                 Grid.Row="4"
                 Grid.Column="4"
                 Opacity="0.7"
-                Text="Windows OS:" />
+                Text="WindowsAppSDK:" />
             <TextBlock
                 Grid.Row="4"
                 Grid.Column="6"
-                Text="{x:Bind WindowsOSVersion}" />
+                Text="{x:Bind srv:UpdateManager.WindowsAppSDKVersion.ToString(3)}" />
         </Grid>
     </Grid>
 </Page>

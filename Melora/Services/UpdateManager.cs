@@ -1,18 +1,31 @@
 ﻿using Melora.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
+using Microsoft.Windows.AppLifecycle;
 using System.Diagnostics;
 using System.IO.Compression;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Melora.Services;
 
 public class UpdateManager
 {
+    public readonly static Version Version = typeof(App).Assembly.GetName().Version ?? new(1, 0, 0);
+
+    public readonly static Version PluginsAPIVersion = typeof(Plugins.PluginLoadContext).Assembly.GetName().Version ?? new(1, 0, 0);
+
     public readonly static string Architecture = RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant();
 
-    public readonly static Version CurrentVersion = Assembly.GetExecutingAssembly().GetName().Version ?? new(1, 0, 0);
+#if DEBUG
+    public readonly static string BuildMode = "Debug";
+#else
+    public readonly static string BuildMode = "Release";
+#endif
+
+    public readonly static Version RuntimeVersion = Environment.Version;
+
+    public readonly static Version WindowsAppSDKVersion = typeof(AppInstance).Assembly.GetName().Version ?? new(1, 0, 0, 0);
+
 
 
     readonly ILogger<UpdateManager> logger;
@@ -31,7 +44,7 @@ public class UpdateManager
         this.converter = converter;
 
         client = new();
-        client.DefaultRequestHeaders.UserAgent.ParseAdd($"Melora/{CurrentVersion} (https://icysnex.github.io/Melora/)");
+        client.DefaultRequestHeaders.UserAgent.ParseAdd($"Melora/{Version} (https://icysnex.github.io/Melora/)");
 
         logger.LogInformation("[UpdateManager-.ctor] UpdateManager has been initialized");
     }
