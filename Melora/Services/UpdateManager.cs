@@ -12,8 +12,6 @@ public class UpdateManager
 {
     public readonly static Version Version = typeof(App).Assembly.GetName().Version ?? new(1, 0, 0);
 
-    public readonly static Version PluginsAPIVersion = typeof(Plugins.PluginLoadContext).Assembly.GetName().Version ?? new(1, 0, 0);
-
     public readonly static string Architecture = RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant();
 
 #if DEBUG

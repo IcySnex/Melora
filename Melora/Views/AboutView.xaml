@@ -8,6 +8,7 @@
     xmlns:local="using:Melora.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mdl="using:Melora.Models"
+    xmlns:plg="using:Melora.Plugins"
     xmlns:srv="using:Melora.Services"
     xmlns:sys="using:System"
     x:Name="LyricsInfo"
@@ -79,7 +80,7 @@
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="6"
-                Text="{x:Bind srv:UpdateManager.PluginsAPIVersion.ToString(3)}" />
+                Text="{x:Bind plg:PluginLoadContext.ApiVersion.ToString(3)}" />
 
             <TextBlock
                 Grid.Row="1"

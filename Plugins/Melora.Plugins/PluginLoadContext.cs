@@ -12,6 +12,12 @@ namespace Melora.Plugins;
 public class PluginLoadContext : AssemblyLoadContext
 {
     /// <summary>
+    /// The version of the current plugins API.
+    /// </summary>
+    public readonly static Version ApiVersion = typeof(PluginLoadContext).Assembly.GetName().Version ?? new(1, 0, 0);
+
+
+    /// <summary>
     /// The plugin manifest corresponding to this load context.
     /// </summary>
     public Manifest Manifest { get; }
@@ -55,6 +61,11 @@ public class PluginLoadContext : AssemblyLoadContext
         using ZipArchive pluginArchive = ZipFile.OpenRead(path);
 
         Manifest manifest = await Manifest.FromPluginArchivetAsync(pluginArchive, cancellationToken) ?? throw new PluginNotLoadedException(path, null, null, new("Plugin archive does not contain a manifest or is badly formatted."));
+        if (manifest.ApiVersion != ApiVersion)
+            throw new PluginNotLoadedException(path, null, manifest, new(manifest.ApiVersion < ApiVersion ?
+                $"This plugin uses an outdated API version ({manifest.ApiVersion.ToString(3)}). The current required version is {ApiVersion.ToString(3)}. Update the plugin or contact it's developer." :
+                $"This plugin uses a newer API version ({manifest.ApiVersion.ToString(3)}) than supported. The current supported version is {ApiVersion.ToString(3)}. Update the client or use a compatible version of the plugin."));
+
         PluginLoadContext loadContext = new(manifest, path);
 
         loadContext.EntryPointAssembly = await loadContext.LoadFromArchiveAsync(pluginArchive, manifest.EntryPoint, cancellationToken) ?? throw new PluginNotLoadedException(path, null, manifest, new($"Entry point assembly could not be loaded: [{manifest.EntryPoint}]."));

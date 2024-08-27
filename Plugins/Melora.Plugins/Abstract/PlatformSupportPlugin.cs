@@ -40,7 +40,7 @@ public abstract class PlatformSupportPlugin(
     /// The path date for the plugin icon.
     /// </summary>
     public string IconPathData { get; } = iconPathData;
-
+    
 
     /// <summary>
     /// The config for the plugin.

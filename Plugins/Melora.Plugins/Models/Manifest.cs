@@ -13,6 +13,7 @@ namespace Melora.Plugins.Models;
 /// <param name="name">The name of the plugin.</param>
 /// <param name="description">The description of the plugin.</param>
 /// <param name="author">The author of the plugin.</param>
+/// <param name="apiVersion">The version of the plugins API used.</param>
 /// <param name="lastUpdatedAt">The date and time when the plugin was last updated..</param>
 /// <param name="sourceUrl">The url to the source of the plugin (e.g. GitHub project, Website...).</param>
 /// <param name="pluginKinds">The kinds of plugins contained.</param>
@@ -22,6 +23,7 @@ public class Manifest(
     string name,
     string description,
     string author,
+    Version apiVersion,
     DateTime lastUpdatedAt,
     string sourceUrl,
     PluginKind[] pluginKinds,
@@ -63,6 +65,11 @@ public class Manifest(
     /// The author of the plugin.
     /// </summary>
     public string Author { get; } = author;
+
+    /// <summary>
+    /// The version of the plugins API used.
+    /// </summary>
+    public Version ApiVersion { get; } = apiVersion;
 
     /// <summary>
     /// The date and time when the plugin was last updated.
