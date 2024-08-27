@@ -33,7 +33,7 @@ public static class Extensions
             return;
 
         builder.Append(new string(' ', level * 2));
-        builder.AppendLine(ex.Message.Length <= 100 ? $"> {ex.Message}" : $"> {ex.Message[..100]}...");
+        builder.AppendLine(ex.Message.Length <= 200 ? $"> {ex.Message}" : $"> {ex.Message[..100]}...");
 
         if (ex.InnerException is not null)
             FormatException(builder, ex.InnerException, level + 1);
