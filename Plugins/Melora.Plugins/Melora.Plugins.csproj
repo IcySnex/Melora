@@ -1,15 +1,54 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<!--  General  -->
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<FileVersion>1.0.0</FileVersion>
+
+		<Title>Melora.Plugins</Title>
+		<Version>$(AssemblyVersion)</Version>
+		<Authors>IcySnex</Authors>
+		<Description>THE he SKD DK used to devvelop.</Description>
+		<Company />
+		<Copyright>Copyright (C) 2024 IcySnex</Copyright>
+		<RepositoryUrl>https://github.com/IcySnex/Melora/tree/main</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+
+		<PackageProjectUrl>https://icysnex.github.io/Melora/plugin-development/</PackageProjectUrl>
+		<PackageIcon>icon.ico</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageTags>melora;music;downloader;music-downloadr;spotify;youtube;youtube-music</PackageTags>
+		<PackageReleaseNotes />
 	</PropertyGroup>
-	
+
+	<!--  Dependencies  -->
 	<ItemGroup>
-	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-	  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+	</ItemGroup>
+
+	<!--  Resources  -->
+	<ItemGroup>
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Update="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Update="icon.ico">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 </Project>

@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<!--  General  -->
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-
 		<TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-
 		<Platforms>x86;x64;ARM64</Platforms>
 		<RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
 
@@ -21,32 +20,46 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<ApplicationIcon>icon.ico</ApplicationIcon>
-		
+
+		<!--<IncludeSymbols>true</IncludeSymbols>
+			<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+			<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
+
 		<AssemblyVersion>1.0.0</AssemblyVersion>
 		<FileVersion>1.0.0</FileVersion>
+
+		<Title>Melora</Title>
+		<Version>$(AssemblyVersion)</Version>
+		<Authors>IcySnex</Authors>
+		<Description>Melora allows you to download all your music from any platform using custom plugins.</Description>
+		<Company />
+		<Copyright>Copyright (C) 2024 IcySnex</Copyright>
+		<RepositoryUrl>https://github.com/IcySnex/Melora/tree/main</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+
+		<PackageProjectUrl>https://icysnex.github.io/Melora/</PackageProjectUrl>
+		<PackageIcon>icon.ico</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageTags>melora;music;downloader;music-downloadr;spotify;youtube;youtube-music</PackageTags>
+		<PackageReleaseNotes />
 	</PropertyGroup>
 
-	<ItemGroup>
-		<None Remove="Views\DownloadableTrackInfoView.xaml" />
-		<None Remove="Views\HomeView.xaml" />
-		<None Remove="Views\LoggerView.xaml" />
-		<None Remove="Views\LyricsInfoView.xaml" />
-		<None Remove="Views\LyricsView.xaml" />
-		<None Remove="Views\MainView.xaml" />
-		<None Remove="Views\PlatformView.xaml" />
-		<None Remove="Views\PluginBundleInfoView.xaml" />
-		<None Remove="Views\SettingsView.xaml" />
-		<None Remove="Views\UpdateInfoView.xaml" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Include="icon.ico">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
-
+	<!--  Additional  -->
 	<ItemGroup>
 		<RuntimeHostConfigurationOption Include="System.Runtime.Loader.UseRidGraph" Value="true" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<ProjectCapability Include="Msix" />
+	</ItemGroup>
+	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+	</PropertyGroup>
+
+	<!--  Dependencies  -->
+	<ItemGroup>
+		<ProjectReference Include="..\Plugins\Melora.Plugins\Melora.Plugins.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -61,75 +74,104 @@
 		<PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+		
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-		<ProjectCapability Include="Msix" />
-	</ItemGroup>
-	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
-	</PropertyGroup>
+	<!--  Resources  -->
 	<ItemGroup>
-	  <ProjectReference Include="..\Plugins\Melora.Plugins\Melora.Plugins.csproj" />
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Update="icon.ico">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
+	
 	<ItemGroup>
-	  <Page Update="Views\AboutView.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	  <Page Update="Views\UpdateInfoView.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="Views\PluginBundleInfoView.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="Views\PluginBundlesView.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	  <Page Update="Views\LoggerView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	  <Page Update="Views\DownloadableTrackInfoView.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
+		<Content Include="icon.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
+
+	<!--  Views  -->
 	<ItemGroup>
-	  <Page Update="Views\LyricsInfoView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
-	  <Page Update="Views\LyricsView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	  <Page Update="Views\DownloadView.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	  <Page Update="Views\PlatformView.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
+		<None Remove="Views\MainView.xaml" />
+		<None Remove="Views\LoggerView.xaml" />
+		
+		<None Remove="Views\UpdateInfoView.xaml" />
+		<None Remove="Views\AboutView.xaml" />
+		<None Remove="Views\DownloadableTrackInfoView.xaml" />
+		<None Remove="Views\LyricsInfoView.xaml" />
+		<None Remove="Views\PluginBundleInfoView.xaml" />
+
+		<None Remove="Views\HomeView.xaml" />
+		<None Remove="Views\PlatformView.xaml" />
+		<None Remove="Views\DownloadView.xaml" />
+		<None Remove="Views\LyricsView.xaml" />
+		<None Remove="Views\PluginBundlesView.xaml" />
+		<None Remove="Views\SettingsView.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Page Update="Views\SettingsView.xaml">
-	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-	    <SubType>Designer</SubType>
-	  </Page>
-	  <Page Update="Views\HomeView.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-	<ItemGroup>
 		<Page Update="Views\MainView.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\LoggerView.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		
+		<Page Update="Views\UpdateInfoView.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\AboutView.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\DownloadableTrackInfoView.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\LyricsInfoView.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\PluginBundleInfoView.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+
+		<Page Update="Views\HomeView.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\PlatformView.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\DownloadView.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\LyricsView.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\PluginBundlesView.xaml">
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\SettingsView.xaml">
+			<SubType>Designer</SubType>
 			<Generator>MSBuild:Compile</Generator>
 		</Page>
 	</ItemGroup>

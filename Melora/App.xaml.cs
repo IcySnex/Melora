@@ -56,21 +56,18 @@ public partial class App : Application
                     provider.GetRequiredService<ILogger<GeniusClient>>()));
 
                 // Add ViewModels and MainView
-                services.AddSingleton<HomeViewModel>();
-
-                services.AddTransient<PlatformViewModel>();
-                services.AddSingleton<LyricsViewModel>();
-                services.AddTransient<LyricsInfoViewModel>();
-
-                services.AddSingleton<DownloadsViewModel>();
-                services.AddSingleton<DownloadableTrackInfoViewModel>();
-
-                services.AddSingleton<PluginBundlesViewModel>();
-                services.AddSingleton<PluginBundleInfoViewModel>();
-                services.AddSingleton<SettingsViewModel>();
-
                 services.AddSingleton<MainView>();
 
+                services.AddSingleton<DownloadableTrackInfoViewModel>();
+                services.AddTransient<LyricsInfoViewModel>();
+                services.AddSingleton<PluginBundleInfoViewModel>();
+
+                services.AddSingleton<HomeViewModel>();
+                services.AddTransient<PlatformViewModel>();
+                services.AddSingleton<LyricsViewModel>();
+                services.AddSingleton<DownloadsViewModel>();
+                services.AddSingleton<PluginBundlesViewModel>();
+                services.AddSingleton<SettingsViewModel>();
             })
             .Build();
         Provider = host.Services;
