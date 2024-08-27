@@ -523,7 +523,7 @@
 
             <!--  Advanced  -->
             <ContentControl
-                hlp:Attributes.Description="Logger, Reset Config..."
+                hlp:Attributes.Description="About Melora, Logger, Reset Config..."
                 hlp:Attributes.Glyph="&#xec7a;"
                 hlp:Attributes.Title="Advanced"
                 Template="{StaticResource SettingsExpander}">
