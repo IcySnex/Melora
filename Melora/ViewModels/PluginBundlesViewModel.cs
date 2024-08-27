@@ -178,7 +178,10 @@ public partial class PluginBundlesViewModel : ObservableObject
             mainView.ShowNotification("Success!", $"Loaded plugin bundle: {bundleFileName}.", NotificationLevel.Success);
             return true;
         }
-        catch (PluginNotLoadedException ex) when (ex.PluginType is not null)
+        catch (PluginNotLoadedException ex) when (
+            ex.InnerException is not null && 
+            ex.InnerException.InnerException is PluginConfigInvalidException &&
+            ex.PluginType is not null)
         {
             mainView.ShowNotification("Warning!", $"Could not load plugin: {ex.PluginType.Name}.", NotificationLevel.Warning, async () =>
             {
@@ -236,8 +239,21 @@ public partial class PluginBundlesViewModel : ObservableObject
         }
 
         File.Copy(file.Path, destination);
+        if (!await TryLoadAsync(destination))
+        {
+            try
+            {
+                await Task.Delay(1000);
 
-        if (await TryLoadAsync(destination))
-            logger.LogInformation("[PluginBundlesViewModel-ImportAsync] Plugin bundle was imported from file");
+                File.Delete(destination);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "[PluginBundlesViewModel-ImportAsync] Failed to delete file: {exception}", ex.Message);
+            }
+            return;
+        }
+
+        logger.LogInformation("[PluginBundlesViewModel-ImportAsync] Plugin bundle was imported from file");
     }
 }
