@@ -55,7 +55,7 @@ public class UpdateManager
         logger.LogInformation("[UpdateManager-GetLatestReleaseAsync] Checking for updates...");
         string releasesData = await client.GetStringAsync(config.Updates.ReleasesUrl, cancellationToken);
 
-        Release[] releases = converter.ToObject<Release[]>(releasesData)?? throw new Exception("Failed to parse releases data. Make sure the provided update server supports the GitHub releases format.");
+        Release[] releases = converter.ToObject<Release[]>(releasesData) ?? throw new Exception("Failed to parse releases data. Make sure the provided update server supports the GitHub releases format.");
         return releases
             .Where(release => release.Channel == config.Updates.Channel && release.Binary is not null)
             .OrderByDescending(release => release.Version)

@@ -14,7 +14,7 @@ public class PluginLoadContext : AssemblyLoadContext
     /// <summary>
     /// The version of the current plugins API.
     /// </summary>
-    public readonly static Version ApiVersion = typeof(PluginLoadContext).Assembly.GetName().Version is Version version ? version.Revision == -1 ? version : new(version.Major, version.Minor, version.Build) : new(1, 0 ,0);
+    public readonly static Version ApiVersion = typeof(PluginLoadContext).Assembly.GetName().Version is Version version ? version.Revision == -1 ? version : new(version.Major, version.Minor, version.Build) : new(1, 0, 0);
 
 
     /// <summary>

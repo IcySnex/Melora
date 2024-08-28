@@ -179,7 +179,7 @@ public partial class PluginBundlesViewModel : ObservableObject
             return true;
         }
         catch (PluginNotLoadedException ex) when (
-            ex.InnerException is not null && 
+            ex.InnerException is not null &&
             ex.InnerException.InnerException is PluginConfigInvalidException &&
             ex.PluginType is not null)
         {

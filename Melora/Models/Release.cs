@@ -13,7 +13,7 @@ public class Release(
     [JsonProperty("body")] string body)
 {
     public string Name { get; } = name;
-    
+
     public DateTime PublishedAt { get; } = publishedAt;
 
     public ReleaseUser Author { get; } = author;
@@ -53,7 +53,7 @@ public class ReleaseAsset(
     public string ContentType { get; } = contentType;
 
     public int TotalDownloads { get; } = totalDownloads;
-    
+
     public double SizeInMb { get; } = sizeInBytes / 1000000.0;
 
     public DateTime UpdatedAt { get; } = updatedAt;
