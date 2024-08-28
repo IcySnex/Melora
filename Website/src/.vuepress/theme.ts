@@ -32,6 +32,10 @@ export default hopeTheme({
         }
       }
     },
+    shiki: {
+      theme: "rose-pine",
+      notationHighlight: true
+    },
     mdEnhance: {
       align: true,
       attrs: true,
