@@ -33,7 +33,7 @@ export default hopeTheme({
       }
     },
     shiki: {
-      theme: "rose-pine",
+      theme: "tokyo-night",
       notationHighlight: true
     },
     mdEnhance: {
