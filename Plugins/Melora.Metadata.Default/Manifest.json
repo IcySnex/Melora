@@ -5,6 +5,7 @@
   "ApiVersion": "1.0.0",
   "LastUpdatedAt": "2024-08-20T14:26:30Z",
   "SourceUrl": "https://github.com/IcySnex/Melora/tree/main/Plugins/Melora.Metadata.Default",
+  "DownloadUrl": "https://github.com/IcySnex/Melora/releases/download/v1.0.0-stable/Melora.Metadata.Default.mlr",
   "PluginKinds": [
     1
   ],

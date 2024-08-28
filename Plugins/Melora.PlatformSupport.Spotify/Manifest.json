@@ -5,6 +5,7 @@
   "ApiVersion": "1.0.0",
   "LastUpdatedAt": "2024-08-20T14:26:00Z",
   "SourceUrl": "https://github.com/IcySnex/Melora/tree/main/Plugins/Melora.PlatformSupport.Spotify",
+  "DownloadUrl": "https://github.com/IcySnex/Melora/releases/download/v1.0.0-stable/Melora.PlatformSupport.Spotify.mlr",
   "PluginKinds": [
     0
   ],

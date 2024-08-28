@@ -1,16 +1,62 @@
 <script setup>
 	import { SourceIcon } from "vuepress-shared/client";
+    import { ref, onMounted } from 'vue';  // Import ref and onMounted
 	
 	const props = defineProps({
-        manifests: {
+        manifestUrls: {
 	    type: Array,
 	    required: true
 	  }
 	})
+
+    const manifests = ref([]);
+    const loading = ref(false);
+    const sentinel = ref(null);
+
+    const fetchManifests = async (start = 0, limit = 10) => {
+        const urlsToFetch = props.manifestUrls.slice(start, start + limit);
+        const fetchOptions = {
+          headers: {
+            'User-Agent': 'Melora-Website/1.0.0'
+          }
+        }
+
+        const fetchedManifests = await Promise.all(
+            urlsToFetch.map(async (url) => {
+                const response = await fetch(url, fetchOptions);
+                return await response.json();
+            })
+        );
+
+        manifests.value.push(...fetchedManifests);
+    };
+
+    const loadMore = () => {
+        if (!loading.value) {
+            loading.value = true;
+            fetchManifests(manifests.value.length, 10).finally(() => {
+                loading.value = false;
+            });
+        }
+    };
+
+    onMounted(() => {
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                loadMore();
+            }
+        }, {
+            rootMargin: '100px', 
+        });
+
+        if (sentinel.value) {
+            observer.observe(sentinel.value);
+        }
+    });
+
 	
 	const download = (url) => {
 	    const isConfirmed = window.confirm("Are you sure you want to download this plugin?")
-	    
 	    if (isConfirmed) {
 	        window.location.href = url;
 	    }
@@ -30,7 +76,7 @@
 <template>
 	<div class="card-container">
 		<div
-			v-for="(manifest, index) in props.manifests"
+			v-for="(manifest, index) in manifests"
 			:key="index"
 			class="card"
 			@click="download(manifest.DownloadUrl)">
@@ -42,18 +88,25 @@
 					<SourceIcon class="card-source-icon" />
 				</a>
 			</h3>
-			<p class="card-author">
-				{{ manifest.Author }} - {{ formatDate(manifest.LastUpdatedAt) }}
+			<p class="card-info">
+				{{ manifest.Author }} - {{ formatDate(manifest.LastUpdatedAt) }} - API: {{  manifest.ApiVersion }}
 			</p>
 
 			<p class="card-description">
 				{{ manifest.Description }}
 			</p>
 		</div>
+
+        <div ref="sentinel" class="sentinel"></div>
 	</div>
 </template>
 
 <style lang="scss">
+    .sentinel {
+        height: 1px;
+        width: 100%;
+    }
+
     .card-container {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -109,7 +162,7 @@
         }
     }
     
-    .card-author {
+    .card-info {
         margin: 0;
         margin-bottom: 10px;
         color: var(--text-color-lightest);

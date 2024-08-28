@@ -9,8 +9,8 @@ Here you can find officially tested Platform-Support plugins for Melora, ensurin
 If you're unfamiliar with what Platform-Support plugins are, please refer to the [Platform-Support Guide](/Melora/guide/platform-support.html). If you don't know how to install a plugin, please refer to the [Installing A Plugin Guide](/Melora/guide/plugins#installing-a-plugin).
 
 
-<PluginBundleCollection :manifests="manifestsData"/>
+<PluginBundleCollection :manifestUrls="urls"/>
 
 <script setup>
-import manifestsData from "@plugin-manifests-platform-support"
+import urls from "@plugin-manifestUrls-platform-support"
 </script>
