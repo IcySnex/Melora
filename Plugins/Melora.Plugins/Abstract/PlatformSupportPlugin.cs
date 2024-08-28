@@ -11,7 +11,7 @@ namespace Melora.Plugins.Abstract;
 /// Creates a new PlatformSupportPlugin.
 /// </remarks>
 /// <param name="name">The name of the plugin.</param>
-/// <param name="iconPathData">The path date for the plugin icon.</param>
+/// <param name="iconPathData">The svg path data for the plugin icon.</param>
 /// <param name="config">The config the plugin gets initialized with.</param>
 /// <param name="logger">An optional logger.</param>
 public abstract class PlatformSupportPlugin(
@@ -37,7 +37,7 @@ public abstract class PlatformSupportPlugin(
     public string Name { get; } = name;
 
     /// <summary>
-    /// The path date for the plugin icon.
+    /// The svg path data for the plugin icon.
     /// </summary>
     public string IconPathData { get; } = iconPathData;
 

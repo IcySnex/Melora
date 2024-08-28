@@ -18,7 +18,7 @@ public interface IPlugin
     string Name { get; }
 
     /// <summary>
-    /// The path date for the plugin icon.
+    /// The svg path data for the plugin icon.
     /// </summary>
     string IconPathData { get; }
 
