@@ -30,17 +30,61 @@ This structure keeps your plugin **organized** and ensures that your main functi
 
 ## Implementing Your Plugin
 
-### 1. Create the Plugin Class
+### 1. The Manifest
+To ensure Melora understands what your plugin bundle does, you first need to provide some essential information via a **manifest file**.
+This file tells Melora about your plugin’s purpose, author, and more. For instructions on adding the manifest to your project, refer to the [Getting Started Guide](/Melora/plugin-development/getting-started.html#create-a-plugin-manifest).
+
+In our SoundCloud example the manifest will look this:
+```json
+{
+  "Name": "SoundCloud",
+  "Description": "Adds support to search & download tracks, sets & users from SoundCloud.",
+  "Author": "IcySnex",
+  "ApiVersion": "1.0.0",
+  "LastUpdatedAt": "2024-08-28T14:26:00Z",
+  "SourceUrl": "https://github.com/IcySnex/Melora/tree/main/Plugins/Melora.PlatformSupport.SoundCloud",
+  "DownloadUrl": "https://github.com/IcySnex/Melora/releases/download/v1.0.0-stable/Melora.PlatformSupport.SoundCloud.mlr",
+  "PluginKinds": [
+    0
+  ],
+  "EntryPoint": "Melora.PlatformSupport.SoundCloud.dll",
+  "Dependencies": [
+    "SoundCloudExplode.dll"
+  ]
+}
+```
+
+### 2. The Plugin Class
 - Create a new class called `<NAME>Plugin.cs` in the root of your project.
 - This class should inherit from `PlatformSupportPlugin`, which itself implements the `IPlugin` interface.
 ```cs
 public class SoundCloudPlugin : PlatformSupportPlugin
 {
-    // YOUR PLUGIN CODE
+    public override async Task<IEnumerable<SearchResult>> SearchAsync(
+        string query,
+        IProgress<string> progress,
+        CancellationToken cancellationToken = default) =>
+        throw new NotImplementedException();
+
+    public override Task<IEnumerable<DownloadableTrack>> PrepareDownloadsAsync(
+        IEnumerable<SearchResult> searchResults,
+        IProgress<string> progress,
+        CancellationToken cancellationToken = default) =>
+        throw new NotImplementedException();
+
+    public override Task<Stream> GetStreamAsync(
+        DownloadableTrack track,
+        CancellationToken cancellationToken = default) =>
+        throw new NotImplementedException();
 }
 ```
+| Method | Description |
+| --- | --- |
+| `SearchAsync` | Handles searching based on the query input by the user. |
+| `PrepareDownloadsAsync` | This method will convert the selected `SearchResult`'s to proper `DownloadableTrack`'s. |
+| `GetStreamAsync` | Responsible for downloading the track and returning an audio stream. The stream's format doesn't matter, as it will be re-encoded later on. |
 
-### 2. Constructors
+### 3. The Constructors
 The `PlatformSupportPlugin` class **requires** a few key pieces of information from your plugin, which are passed through its constructor. Here’s a breakdown of the parameters:
 | Parameter | Description |
 | --- | --- |
@@ -116,15 +160,18 @@ Before proceeding, ensure that everything is set up correctly. If you have follo
 
 ![](/plugin-development/platformsupport1.webp)
 
-### 3. Searching
+### 5. Searching
 Once your plugin is set up and you have validated it loads in Melora, you can finally start coding the search functionality for your platform-support plugin.
 
 The `PlatformSupportPlugin` class requires you to override the `SearchAsync()` method. This method provides:
-- **`string` query:** The search query entered by the user.
-- **`IProgress<string>` progress:** An object to report progress which will be shown in the Melora client UI.
-- **`CancellationToken` cancellationToken:** A token to handle cancellation requests.
+| Parameter | Description |
+| --- | --- |
+| `string` query | The search query entered by the user. |
+| `IProgress<string>` progress | An object to report progress which will be shown in the Melora client UI. |
+| `CancellationToken` cancellationToken | A token to handle cancellation requests. |
 
-#### High-level overview:
+---
+Here is a high-level overview on how to implement searching for your platform specific plugin:
 - **Implement the SearchAsync() Method:** Write the logic to perform searches specific to your platform, such as SoundCloud. You’ll need to integrate with the platform's API to fetch search results.
 - **Progress Reporting:** Use the progress parameter to update the UI with search progress, enhancing user experience.
 - **Cancellation Handling:** Ensure that your search operation can be cancelled using the cancellationToken if the user decides to stop the search.
@@ -133,8 +180,9 @@ The `PlatformSupportPlugin` class requires you to override the `SearchAsync()` m
 For better organization and clarity, it’s recommended to create a "Wrapper" class in the **Internal namespace**. This class can handle all platform-specific interactions, keeping your `SearchAsync()` method focused on integrating with your wrapper.
 :::
 
-#### What To Return?
-Each platform may return different result types, like `Track` models from Spotify or `Video` models from YouTube. In Melora, you need to convert these models to the `SearchResult` model to handle everything uniformly.
+---
+
+Each platform may return different result types, like `Track` models from Spotify or `Video` models from YouTube. In Melora, you need to convert these models to the `SearchResult` model to handle everything uniformly. This also benefits memory usage and performance, as it avoids unnecessary processing of tracks that the user may not end up downloading.
 
 You can use the `Melora.Plugins` API’s static method in the `SearchResult` class to convert and buffer `IAsyncEnumerable<T>` to `IEnumerable<SearchResult>`:
 ```cs
@@ -145,39 +193,48 @@ public static async Task<IEnumerable<SearchResult>> BufferAsync<T>(
     CancellationToken cancellationToken)
 ```
 
-If your API doesn’t use `IAsyncEnumerable`, you can use the LINQ `Select` method to achieve similar results:
+If your platform API doesn’t use `IAsyncEnumerable`, you can use the LINQ `Select` method to achieve similar results:
 ```cs
 public static IEnumerable<TResult> Select<TSource, TResult>(
     this IEnumerable<TSource> source,
     Func<TSource, int, TResult> selector)
 ```
 
-#### Example:
-Here’s a **simplified** example of how to interact with a wrapper class. For the complete code, please refer to the source code on [GitHub](https://github.com/IcySnex/Melora/tree/main/Plugins/Melora.PlatformSupport.SoundCloud/).
+---
+
+Here’s a example of how the search method could look like. You can see the entire source code *- including the wrapper -* on [GitHub](https://github.com/IcySnex/Melora/tree/main/Plugins/Melora.PlatformSupport.SoundCloud/).
 ```cs
 public async Task<IEnumerable<SearchResult>> SearchAsync(
     string query,
     IProgress<string> progress,
     CancellationToken cancellationToken)
 {
-    progress.Report("Searching on SoundCLoud...";)
-    logger?.LogInformation("[SoundCloudPlugin-SearchAsync] Searching on SoundCLoud...");
-    
-    IAsyncEnumerable<Track> results = wrapper.SearchAsync(query, progress, cancellationToken);
-    return SearchResult.BufferAsync(
-        results,
-        Config.SearchResultsLimit,
-        createSearchResult: (track, index) =>
-        {
-            progress.Report($"Buffering Tracks [{index}]...";)
-            return new SearchResult(
-                title: track.Title,
-                artists: track.User.Username,
-                duration: TimeSpan.FromMilliseconds(track.FullDuration)
-                imageUrl: track.ArtworkUrl?.AbsoluteUri,
-                id: track.Id,
-                items: []);
-        },
-        cancellationToken);
+    logger?.LogInformation("[SoundCloudPlugin-SearchAsync] Getting SoundCloud search type...");
+    progress.Report("Preparing search...");
+
+    SoundCloudSearchType type = SoundCloudWrapper.GetSearchType(query, out string? id);
+    switch (type)
+    {
+        case SoundCloudSearchType.Track:
+            SearchResult trackResult = await wrapper.SearchTrackAsync(id!, progress, cancellationToken);
+            return [trackResult];
+        case SoundCloudSearchType.Set:
+            IEnumerable<SearchResult> albumResults = await wrapper.SearchSetAsync(id!, progress, cancellationToken);
+            return albumResults;
+        case SoundCloudSearchType.User:
+            IEnumerable<SearchResult> artistResults = await wrapper.SearchUserAsync(id!, progress, cancellationToken);
+            return artistResults;
+        case SoundCloudSearchType.Query:
+            IEnumerable<SearchResult> querytResults = await wrapper.SearchQueryAsync(query, progress, cancellationToken);
+            return querytResults;
+    }
+
+    return [];
 }
 ```
+
+If you did everything correct, you should now be able to use the Melora UI to search seamlessly on your platform.
+
+![](/plugin-development/platformsupport2.webp)
+
+### 6. Preparing For Download
