@@ -92,7 +92,8 @@ public class YouTubePlugin : PlatformSupportPlugin
             progress.Report($"Preparing downloads [{index}/{indexableSearchResults.Length}]...");
 
             DownloadableTrack track = await wrapper.PrepareDownloadAsync(indexableSearchResults[index], token);
-            results[index] = track;
+            lock (results)
+                results[index] = track;
         });
         return results;
     }
