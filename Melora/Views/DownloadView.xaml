@@ -33,7 +33,7 @@
                             <ColumnDefinition Width="12" />
                             <ColumnDefinition Width="2*" />
                             <ColumnDefinition Width="12" />
-                            <ColumnDefinition Width="Auto" MaxWidth="84" />
+                            <ColumnDefinition Width="78" />
                             <ColumnDefinition Width="48" />
                             <ColumnDefinition Width="24" />
                             <ColumnDefinition Width="12" />
