@@ -105,8 +105,6 @@ public class YouTubeMusicPlugin : PlatformSupportPlugin
         SearchResult[] indexableSearchResults = searchResults.ToArray();
         DownloadableTrack[] results = new DownloadableTrack[indexableSearchResults.Length];
 
-        Type responsiblePlugin = GetType();
-
         await Parallel.ForEachAsync(
             indexableSearchResults.Select((searchRresult, index) => new { searchRresult, index }),
             cancellationToken,
