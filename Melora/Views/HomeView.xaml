@@ -75,19 +75,31 @@
                     Height="70"
                     HorizontalAlignment="Stretch"
                     Command="{x:Bind viewModel.OpenBrowserCommand}"
-                    CommandParameter="https://github.com/IcySnex/Melora"
-                    ToolTipService.ToolTip="Open GitHub page">
+                    CommandParameter="https://icysnex.github.io/Melora/guide/getting-started.html"
+                    ToolTipService.ToolTip="Open Melora guides">
                     <StackPanel Spacing="8">
-                        <FontIcon Glyph="&#xE943;" />
-                        <TextBlock Text="GitHub" />
+                        <FontIcon Glyph="&#xe8f1;" />
+                        <TextBlock Text="Guides" />
                     </StackPanel>
                 </Button>
                 <Button
                     Grid.Column="2"
                     Height="70"
                     HorizontalAlignment="Stretch"
-                    Command="{x:Bind viewModel.CopyToClipboardCommand}"
+                    Command="{x:Bind viewModel.OpenBrowserCommand}"
                     CommandParameter="https://github.com/IcySnex/Melora"
+                    ToolTipService.ToolTip="Open Melora website">
+                    <StackPanel Spacing="8">
+                        <FontIcon Glyph="&#xE943;" />
+                        <TextBlock Text="GitHub" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    Grid.Column="4"
+                    Height="70"
+                    HorizontalAlignment="Stretch"
+                    Command="{x:Bind viewModel.CopyToClipboardCommand}"
+                    CommandParameter="https://icysnex.github.io/Melora/"
                     ToolTipService.ToolTip="Copy GitHub page to clipboard">
                     <StackPanel Spacing="8">
                         <FontIcon Glyph="&#xE72D;" />
@@ -95,27 +107,15 @@
                     </StackPanel>
                 </Button>
                 <Button
-                    Grid.Column="4"
-                    Height="70"
-                    HorizontalAlignment="Stretch"
-                    Command="{x:Bind viewModel.OpenBrowserCommand}"
-                    CommandParameter="https://discord.gg/Z8kweuryux"
-                    ToolTipService.ToolTip="Open Discord invite">
-                    <StackPanel Spacing="8">
-                        <FontIcon Glyph="&#xE8BD;" />
-                        <TextBlock Text="Discord" />
-                    </StackPanel>
-                </Button>
-                <Button
                     Grid.Column="6"
                     Height="70"
                     HorizontalAlignment="Stretch"
                     Command="{x:Bind viewModel.OpenBrowserCommand}"
-                    CommandParameter="https://www.youtube.com/@icysnex"
-                    ToolTipService.ToolTip="Open YouTube Channel">
+                    CommandParameter="https://discord.gg/Z8kweuryux"
+                    ToolTipService.ToolTip="Open Discord server invite">
                     <StackPanel Spacing="8">
-                        <FontIcon Glyph="&#xE714;" />
-                        <TextBlock Text="YouTube" />
+                        <FontIcon Glyph="&#xE8BD;" />
+                        <TextBlock Text="Discord" />
                     </StackPanel>
                 </Button>
             </Grid>
