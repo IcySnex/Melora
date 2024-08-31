@@ -21,8 +21,8 @@ public interface IPluginConfig
 ```
 As you can see, a config **must** include a field for any additional config items you may want to add. More on that [later](/Melora/plugin-development/configs.html#custom-config-items). The interface also requires a method to **reset** the config. However, you typically don't need to implement this yourself, as the specific plugin classes handle all the heavy lifting.
 
----
 
+#### Example:
 For instance, `PlatformSupportPluginConfig` **requires** a few parameters, such as the download quality, format, etc., which you **must** include.
 
 When initializing your plugin, you can use the constructor of these configs. This allows you to pass in your **default config values** (used if the Melora client can't find any existing configs for your plugin or when the user resets your plugin config) and an **instance of an existing config** (if it exists).
@@ -61,7 +61,7 @@ While the default plugin configs cover many useful properties (e.g., download qu
 ### What Are Custom Config Items?
 This is where the `PluginConfigItem` comes in. Every `IPluginConfig` includes an array of these items, allowing you to add **any custom** settings you need. When creating your config, simply pass the default values in the constructor. Melora will ensure these custom settings are populated in the user's config when your plugin is loaded.
 
-Here's what the `PluginConfigItem` constructor looks like:
+#### The `PluginConfigItem` Constructor:
 ```cs
 public PluginConfigItem(
     string name,
@@ -81,7 +81,6 @@ Melora currently supports only the following value types: `String`, `Int64`, and
 ### How To Use Them?
 To access custom settings in your plugin code, use the extension method `GetItem<T>(string name)` from `IPluginConfig`. This method **retrieves** and **casts** the value to the specified type `T`. If the item is not found or the type does not match, it throws a `PluginConfigInvalidItemException`.
 
-Example usage:
 ```cs
 string clientId = config.GetItem<string>("Client ID");
 long artworkResolution = config.GetItem<long>("Artwork Resolution");
@@ -93,7 +92,7 @@ It may happen that users change some of your plugin settings. While dynamic use 
 
 To handle these situations, **all** specific plugin configs, such as `PlatformSupportPluginConfig` and `MetadataPluginConfig`, as well as `PluginConfigItem`, implement the `INotifyPropertyChanged` interface. This allows you to easily subscribe to property change events and update your plugin as needed.
 
-Here’s how you can handle config updates in your plugin:
+#### Example:
 ```cs{4,13,16}
 public SpotifyPlugin() : this(null, null)
 {
@@ -115,7 +114,6 @@ void OnConfigPropertyChanged(object? sender, PropertyChangedEventArgs e)
     }
 }
 ```
-In this example:
 - `OnConfigPropertyChanged` method handles changes based on the `PropertyName` provided by the `PropertyChangedEventArgs`.
 - If certain settings change (e.g., **"Client ID"** or **"Client Secret"**), you can reinitialize or re-authenticate components as needed.
 
