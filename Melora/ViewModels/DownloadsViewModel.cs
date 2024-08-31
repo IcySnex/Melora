@@ -54,7 +54,7 @@ public partial class DownloadsViewModel : ObservableObject
                     download.Track.Artists.Contains(Query, StringComparison.InvariantCultureIgnoreCase) ||
                     (download.Track.Album?.Contains(Query, StringComparison.InvariantCultureIgnoreCase) ?? false)
                 ) &&
-                ShowTracksFrom.Any(pair => download.Track.PluginHash == pair.Key && pair.Value)
+                ShowTracksFrom.Any(pair => download.PluginHash == pair.Key && pair.Value)
         };
 
         Config.Downloads.PropertyChanged += OnConfigPropertyChanged;
@@ -130,7 +130,7 @@ public partial class DownloadsViewModel : ObservableObject
         logger.LogInformation("[DownloadsViewModel-DownloadAsync] Starting download of track");
         try
         {
-            PlatformSupportPlugin plugin = PluginManager.GetLoaded<PlatformSupportPlugin>(download.Track.PluginHash);
+            PlatformSupportPlugin plugin = PluginManager.GetLoaded<PlatformSupportPlugin>(download.PluginHash);
             MetadataPlugin metadataPlugin = PluginManager.GetLoaded<MetadataPlugin>(Config.Downloads.SelectedMetadatePlugin);
 
             string fileName = Config.Paths.Filename

@@ -4,7 +4,8 @@ using Melora.Plugins.Models;
 namespace Melora.Models;
 
 public partial class DownloadContainer(
-    DownloadableTrack track) : ObservableObject, IDisposable
+    DownloadableTrack track,
+    int pluginHash) : ObservableObject, IDisposable
 {
     bool isDisposed;
 
@@ -44,6 +45,8 @@ public partial class DownloadContainer(
     public bool IsIdle => !IsProcessing && Progress == -1;
 
     public DownloadableTrack Track { get; } = track;
+
+    public int PluginHash { get; } = pluginHash;
 
     public CancellationTokenSource CancellationSource { get; private set; } = new();
 

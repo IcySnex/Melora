@@ -138,7 +138,9 @@ public partial class PlatformViewModel : ObservableObject
         try
         {
             IEnumerable<DownloadableTrack> results = await plugin.PrepareDownloadsAsync(SelectedSearchResults.Cast<SearchResult>(), progress, cts.Token);
-            downloadsViewModel.Downloads.AddRange(results.Select(d => new DownloadContainer(d)));
+
+            int pluginHash = plugin.GetHashCode();
+            downloadsViewModel.Downloads.AddRange(results.Select(track => new DownloadContainer(track, pluginHash)));
 
             mainView.HideLoadingPopup();
             navigation.SetCurrentItem("Downloads");

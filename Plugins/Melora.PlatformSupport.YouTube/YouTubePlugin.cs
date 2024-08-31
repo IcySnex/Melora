@@ -29,7 +29,7 @@ public class YouTubePlugin : PlatformSupportPlugin
                 initialConfig: config),
             logger)
     {
-        wrapper = new(GetHashCode(), Config, logger);
+        wrapper = new(Config, logger);
     }
 
     public YouTubePlugin(

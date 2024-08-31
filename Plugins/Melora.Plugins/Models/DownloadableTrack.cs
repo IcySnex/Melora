@@ -20,7 +20,6 @@ namespace Melora.Plugins.Models;
 /// <param name="comment">An optional comment from the plugin.</param>
 /// <param name="url">The url of the downloadable track.</param>
 /// <param name="id">The Id of the downloadable track.</param>
-/// <param name="pluginHash">The hash code for the plugin responsible for this downloadable track.</param>
 /// <remarks>
 /// Creates a new DownloadableTrack.
 /// </remarks>
@@ -39,8 +38,7 @@ public partial class DownloadableTrack(
     string copyright,
     string? comment,
     string url,
-    string id,
-    int pluginHash) : ObservableObject
+    string id) : ObservableObject
 {
     /// <summary>
     /// The title of the downloadable track.
@@ -127,9 +125,4 @@ public partial class DownloadableTrack(
     /// The Id of the downloadable track.
     /// </summary>
     public string Id { get; } = id;
-
-    /// <summary>
-    /// The hash code for the plugin responsible for this downloadable track.
-    /// </summary>
-    public int PluginHash { get; } = pluginHash;
 }

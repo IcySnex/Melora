@@ -33,7 +33,7 @@ public class YouTubeMusicPlugin : PlatformSupportPlugin
                 initialConfig: config),
             logger)
     {
-        wrapper = new(GetHashCode(), Config, logger);
+        wrapper = new(Config, logger);
 
         Config.PropertyChanged += OnConfigPropertyChanged;
     }
