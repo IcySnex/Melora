@@ -82,17 +82,17 @@ public class YouTubePlugin : PlatformSupportPlugin
         SearchResult[] indexableSearchResults = searchResults.ToArray();
         DownloadableTrack[] results = new DownloadableTrack[indexableSearchResults.Length];
 
-        await Parallel.ForEachAsync(
-            indexableSearchResults.Select((searchRresult, index) => new { searchRresult, index }),
+        await Parallel.ForAsync(
+            0, indexableSearchResults.Length,
             cancellationToken,
-            async (item, token) =>
+            async (index, token) =>
         {
             token.ThrowIfCancellationRequested();
 
-            progress.Report($"Preparing downloads [{item.index}/{indexableSearchResults.Length}]...");
+            progress.Report($"Preparing downloads [{index}/{indexableSearchResults.Length}]...");
 
-            DownloadableTrack track = await wrapper.PrepareDownloadAsync(item.searchRresult, token);
-            results[item.index] = track;
+            DownloadableTrack track = await wrapper.PrepareDownloadAsync(indexableSearchResults[index], token);
+            results[index] = track;
         });
         return results;
     }
