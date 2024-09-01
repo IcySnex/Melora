@@ -2,6 +2,7 @@
 using Melora.Enums;
 using Melora.Plugins.Abstract;
 using Melora.Plugins.Enums;
+using System.Text.Json.Serialization;
 
 namespace Melora.Models;
 
@@ -10,21 +11,34 @@ public class Config
     public static readonly string ConfigFilepath = Path.Combine(Environment.CurrentDirectory, "Config.json");
 
 
-    public Config()
+    [JsonConstructor]
+    public Config(
+        ConfigLyrics lyrics,
+        ConfigDownloads downloads,
+        ConfigPaths paths,
+        ConfigUpdates updates,
+        ConfigPluginBundles pluginBundles)
     {
-        Reset();
+        Lyrics = lyrics;
+        Downloads = downloads;
+        Paths = paths;
+        Updates = updates;
+        PluginBundles = pluginBundles;
     }
 
+    public Config() =>
+        Reset();
 
-    public ConfigLyrics Lyrics { get; set; } = new();
 
-    public ConfigDownloads Downloads { get; set; } = new();
+    public ConfigLyrics Lyrics { get; } = new();
 
-    public ConfigPaths Paths { get; set; } = new();
+    public ConfigDownloads Downloads { get; } = new();
 
-    public ConfigUpdates Updates { get; set; } = new();
+    public ConfigPaths Paths { get; } = new();
 
-    public ConfigPluginBundles PluginBundles { get; set; } = new();
+    public ConfigUpdates Updates { get; } = new();
+
+    public ConfigPluginBundles PluginBundles { get; } = new();
 
 
     public void Reset()
@@ -40,7 +54,7 @@ public class Config
 
         Paths.DownloadLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         Paths.Filename = "{artists} - {title}";
-        Paths.FFmpegLocation = "FFmpeg.exe";
+        Paths.FFmpegLocation = Path.Combine(Environment.CurrentDirectory, "FFmpeg.exe");
 
         Updates.ReleasesUrl = "https://api.github.com/repos/IcySnex/Melora/releases";
         Updates.Channel = UpdateChannel.Stable;
