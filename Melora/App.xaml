@@ -48,7 +48,6 @@
             <conv:BoolFontIconChevronConverter x:Key="BoolFontIconChevronConverter" />
             <conv:PluginConfigDescriptionConverter x:Key="PluginConfigDescriptionConverter" />
             <conv:IntDoubleConverter x:Key="IntDoubleConverter" />
-            <conv:LongDoubleConverter x:Key="LongDoubleConverter" />
             <conv:DateTimeDateTimeOffsetConverter x:Key="DateTimeDateTimeOffsetConverter" />
             <conv:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
             <conv:InverseBoolVisibilityConverter x:Key="InverseBoolVisibilityConverter" />

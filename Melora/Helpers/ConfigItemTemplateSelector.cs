@@ -10,7 +10,9 @@ public class ConfigItemTemplateSelector : DataTemplateSelector
 
     public DataTemplate StringTemplate { get; set; } = default!;
 
-    public DataTemplate LongTemplate { get; set; } = default!;
+    public DataTemplate IntTemplate { get; set; } = default!;
+    
+    public DataTemplate DoubleTemplate { get; set; } = default!;
 
     public DataTemplate BoolTemplate { get; set; } = default!;
 
@@ -22,11 +24,12 @@ public class ConfigItemTemplateSelector : DataTemplateSelector
         if (item is not PluginConfigItem configItem)
             return InvalidTemplate;
 
-        return Type.GetTypeCode(configItem.Value.GetType()) switch
+        return configItem.Type switch
         {
-            TypeCode.String => StringTemplate,
-            TypeCode.Int64 => LongTemplate,
-            TypeCode.Boolean => BoolTemplate,
+            "System.String" => StringTemplate,
+            "System.Int32" => IntTemplate,
+            "System.Double" => DoubleTemplate,
+            "System.Boolean" => BoolTemplate,
             _ => InvalidTemplate,
         };
     }

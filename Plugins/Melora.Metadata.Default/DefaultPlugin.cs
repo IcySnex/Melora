@@ -21,7 +21,7 @@ public class DefaultPlugin : MetadataPlugin
                 [
                     new("Artists Seperator", "The string used to seperate multiple artists.", ", "),
                     new("Save Artwork", "Whether to save the artwork.", true),
-                    new("Artwork Resolution", "The resolution (nXn) the artwork gets resized to before saving.", 512L)
+                    new("Artwork Resolution", "The resolution (nXn) the artwork gets resized to before saving.", 512)
                 ],
                 initialConfig: config),
             logger)

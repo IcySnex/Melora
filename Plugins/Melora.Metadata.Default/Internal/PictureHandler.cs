@@ -51,7 +51,7 @@ public class PictureHandler
     public byte[] Resize(
         Stream stream)
     {
-        int resolution = (int)config.GetItem<long>("Artwork Resolution");
+        int resolution = config.GetItem<int>("Artwork Resolution");
 
         logger?.LogInformation("[PictureHandler-Resize] Resizing picture to resolution: {resolution}...", resolution);
 

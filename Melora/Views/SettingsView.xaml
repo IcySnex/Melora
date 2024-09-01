@@ -25,7 +25,8 @@
                 <ToggleSwitch IsOn="{Binding Value, Mode=TwoWay}" />
             </ContentControl>
         </DataTemplate>
-        <DataTemplate x:Key="LongTemplate" x:DataType="plgm:PluginConfigItem">
+
+        <DataTemplate x:Key="IntTemplate" x:DataType="plgm:PluginConfigItem">
             <ContentControl
                 hlp:Attributes.Description="{x:Bind Description}"
                 hlp:Attributes.Title="{x:Bind Name}"
@@ -35,11 +36,26 @@
                     Width="112"
                     Height="32"
                     Maximum="9999"
-                    Minimum="1"
                     SpinButtonPlacementMode="Compact"
-                    Value="{Binding Value, Mode=TwoWay, Converter={StaticResource LongDoubleConverter}}" />
+                    Value="{Binding Value, Mode=TwoWay, Converter={StaticResource IntDoubleConverter}}" />
             </ContentControl>
         </DataTemplate>
+
+        <DataTemplate x:Key="DoubleTemplate" x:DataType="plgm:PluginConfigItem">
+            <ContentControl
+                hlp:Attributes.Description="{x:Bind Description}"
+                hlp:Attributes.Title="{x:Bind Name}"
+                Template="{StaticResource SettingsCard}">
+
+                <NumberBox
+                    Width="112"
+                    Height="32"
+                    Maximum="9999"
+                    SpinButtonPlacementMode="Compact"
+                    Value="{Binding Value, Mode=TwoWay}" />
+            </ContentControl>
+        </DataTemplate>
+
         <DataTemplate x:Key="StringTemplate" x:DataType="plgm:PluginConfigItem">
             <ContentControl
                 hlp:Attributes.Description="{x:Bind Description}"
@@ -49,6 +65,7 @@
                 <TextBox MaxWidth="300" Text="{Binding Value, Mode=TwoWay}" />
             </ContentControl>
         </DataTemplate>
+
         <DataTemplate x:Key="InvalidTemplate" x:DataType="plgm:PluginConfigItem">
             <ContentControl
                 hlp:Attributes.Description="{x:Bind Description}"
@@ -63,11 +80,13 @@
             </ContentControl>
         </DataTemplate>
 
+
         <hlp:ConfigItemTemplateSelector
             x:Key="ConfigItemTemplateSelector"
             BoolTemplate="{StaticResource BoolTemplate}"
+            DoubleTemplate="{StaticResource DoubleTemplate}"
+            IntTemplate="{StaticResource IntTemplate}"
             InvalidTemplate="{StaticResource InvalidTemplate}"
-            LongTemplate="{StaticResource LongTemplate}"
             StringTemplate="{StaticResource StringTemplate}" />
     </Page.Resources>
 

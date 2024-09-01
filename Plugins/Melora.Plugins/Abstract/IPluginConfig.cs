@@ -47,4 +47,24 @@ public static class PluginConfigExtensions
 
         return (T)item.Value;
     }
+
+    /// <summary>
+    /// Checks if the items match the given array.
+    /// </summary>
+    /// <param name="config">The initial config.</param>
+    /// <param name="items">The items to check for.</param>
+    /// <returns>A bool representing the comparison.</returns>
+    public static bool MatchesItemsOf(
+        this IPluginConfig config,
+        PluginConfigItem[] items) =>
+        config.Items.Length == items.Length && config.Items.All(item => items.Any(defaultItem =>
+        {
+            if (item.Name != defaultItem.Name)
+                return false;
+
+            if (item.Value is null || defaultItem.Value is null)
+                return true;
+
+            return item.Value.GetType() == defaultItem.Value.GetType();
+        }));
 }
