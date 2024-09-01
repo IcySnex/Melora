@@ -11,6 +11,9 @@
   ],
   "EntryPoint": "Melora.PlatformSupport.Spotify.dll",
   "Dependencies": [
-    "SpotifyAPI.Web.dll"
+    "SpotifyAPI.Web.dll",
+    "Newtonsoft.Json.dll",
+    "GeniusAPI.dll",
+    "HtmlAgilityPack.dll"
   ]
 }

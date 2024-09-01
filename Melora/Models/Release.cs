@@ -1,28 +1,44 @@
-﻿using Melora.Enums;
+﻿#pragma warning disable IDE0052 // Remove unread private members <= Thanks to dumb ahh System.Text.Json - doeesn't even support JsonProprty in constructor: Akschoully each parameter in the constr must bind... ☝️🤓 - SHUT UP BRO
+
+using Melora.Enums;
 using Melora.Services;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Melora.Models;
 
 public class Release(
-    [JsonProperty("tag_name")] string tag,
-    [JsonProperty("name")] string name,
-    [JsonProperty("published_at")] DateTime publishedAt,
-    [JsonProperty("author")] ReleaseUser author,
-    [JsonProperty("assets")] ReleaseAsset[] assets,
-    [JsonProperty("body")] string body)
+    string tag,
+    string name,
+    DateTime publishedAt,
+    ReleaseUser author,
+    ReleaseAsset[] assets,
+    string body)
 {
+    [JsonInclude]
+    [JsonPropertyName("tag_name")]
+    private readonly string tag = tag;
+
+    [JsonInclude]
+    [JsonPropertyName("assets")]
+    private readonly ReleaseAsset[] assets = assets;
+
+
+    [JsonPropertyName("name")]
     public string Name { get; } = name;
 
+    [JsonPropertyName("published_at")]
     public DateTime PublishedAt { get; } = publishedAt;
 
+    [JsonPropertyName("author")]
     public ReleaseUser Author { get; } = author;
 
+    [JsonPropertyName("body")]
     public string Body { get; } = body;
+
 
     public ReleaseAsset? Binary { get; } = assets.FirstOrDefault(asset => asset.ContentType == "application/zip" && asset.Name == $"Melora.win10.{UpdateManager.Architecture}.zip");
 
-    public Version Version { get; } = tag.Length < 6 ? new(1, 0, 0) : Version.Parse(tag.AsSpan(1, 5));
+    public Version Version { get; } = tag.Length < 6 ? new Version(1, 0, 0) : Version.Parse(tag.AsSpan(1, 5).ToString());
 
     public UpdateChannel Channel { get; } = tag.Length < 7 ? UpdateChannel.Stable : tag[7..] switch
     {
@@ -35,28 +51,39 @@ public class Release(
 
 
 public class ReleaseUser(
-    [JsonProperty("login")] string name)
+    string name)
 {
+    [JsonPropertyName("login")]
     public string Name { get; } = name;
 }
 
 public class ReleaseAsset(
-    [JsonProperty("name")] string name,
-    [JsonProperty("content_type")] string contentType,
-    [JsonProperty("download_count")] int totalDownloads,
-    [JsonProperty("size")] int sizeInBytes,
-    [JsonProperty("updated_at")] DateTime updatedAt,
-    [JsonProperty("browser_download_url")] string downloadUrl)
+    string name,
+    string contentType,
+    int totalDownloads,
+    int sizeInBytes,
+    DateTime updatedAt,
+    string downloadUrl)
 {
+    [JsonInclude]
+    [JsonPropertyName("size")]
+    private readonly int sizeInBytes = sizeInBytes;
+
+
+    [JsonPropertyName("name")]
     public string Name { get; } = name;
 
+    [JsonPropertyName("content_type")]
     public string ContentType { get; } = contentType;
 
+    [JsonPropertyName("download_count")]
     public int TotalDownloads { get; } = totalDownloads;
 
-    public double SizeInMb { get; } = sizeInBytes / 1000000.0;
-
+    [JsonPropertyName("updated_at")]
     public DateTime UpdatedAt { get; } = updatedAt;
 
+    [JsonPropertyName("browser_download_url")]
     public string DownloadUrl { get; } = downloadUrl;
+
+    public double SizeInMb { get; } = sizeInBytes / 1000000.0;
 }

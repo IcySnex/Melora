@@ -13,6 +13,9 @@
   "Dependencies": [
     "YoutubeExplode.dll",
     "AngleSharp.dll",
-    "YouTubeMusicAPI.dll"
+    "YouTubeMusicAPI.dll",
+    "Newtonsoft.Json.dll",
+    "GeniusAPI.dll",
+    "HtmlAgilityPack.dll"
   ]
 }

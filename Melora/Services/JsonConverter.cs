@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Melora.Services;
 
@@ -16,23 +16,17 @@ public class JsonConverter
     }
 
 
-    readonly JsonSerializerSettings settings = new()
-    {
-        TypeNameHandling = TypeNameHandling.Auto
-    };
-
-
     public string ToString(
         object input)
     {
         logger.LogInformation("[JsonConverter-ToString] Serializing object to string");
-        return JsonConvert.SerializeObject(input, settings);
+        return JsonSerializer.Serialize(input);
     }
 
     public T? ToObject<T>(
         string input)
     {
         logger.LogInformation("[JsonConverter-ToObject] Deserializing string to object");
-        return JsonConvert.DeserializeObject<T>(input, settings);
+        return JsonSerializer.Deserialize<T>(input);
     }
 }

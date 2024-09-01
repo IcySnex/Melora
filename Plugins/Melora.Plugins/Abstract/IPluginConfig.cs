@@ -1,11 +1,14 @@
 ﻿using Melora.Plugins.Exceptions;
 using Melora.Plugins.Models;
+using System.Text.Json.Serialization;
 
 namespace Melora.Plugins.Abstract;
 
 /// <summary>
 /// Describes a configuration for a plugin
 /// </summary>
+[JsonDerivedType(typeof(PlatformSupportPluginConfig), typeDiscriminator: "Melora.Plugins.Models.PlatformSupportPluginConfig")]
+[JsonDerivedType(typeof(MetadataPluginConfig), typeDiscriminator: "Melora.Plugins.Models.MetadataPluginConfig")]
 public interface IPluginConfig
 {
     /// <summary>
