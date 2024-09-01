@@ -118,10 +118,10 @@ public class Navigation
     public void SetCurrentItem(
         string key)
     {
-        NavigationViewItem? item = GetItem(key);
+        NavigationViewItem? item = GetItem(key.Replace(" ", ""));
         if (item is null)
         {
-            logger.LogError(new Exception($"There is no navigation view item with the name \"{key}\" in the current menu items."), "[Navigation-SetCurrentIndex] Failed to set current navigation item: Could not find item: {key}", key);
+            logger.LogError(new Exception($"There is no navigation view item with the name \"{key}\" in the current menu items."), "[Navigation-SetCurrentItem] Failed to set current navigation item: Could not find item: {key}", key);
             return;
         }
 
