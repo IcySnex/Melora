@@ -49,7 +49,7 @@ public class UpdateManager
     }
 
 
-    public async Task<Release> GetLatestReleaseAsync(
+    public async Task<Release?> GetLatestReleaseAsync(
         CancellationToken cancellationToken = default)
     {
         logger.LogInformation("[UpdateManager-GetLatestReleaseAsync] Checking for updates...");
@@ -59,7 +59,7 @@ public class UpdateManager
         return releases
             .Where(release => release.Channel == config.Updates.Channel && release.Binary is not null)
             .OrderByDescending(release => release.Version)
-            .FirstOrDefault() ?? throw new Exception($"No valid releases found for channel '{config.Updates.Channel}' with a downloadable binary for this architecture ({Architecture}).");
+            .FirstOrDefault();
     }
 
 

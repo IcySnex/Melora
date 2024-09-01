@@ -125,8 +125,8 @@ public partial class SettingsViewModel : ObservableObject
     {
         try
         {
-            Release release = await updateManager.GetLatestReleaseAsync();
-            if (release.Version <= UpdateManager.Version)
+            Release? release = await updateManager.GetLatestReleaseAsync();
+            if (release is null || release.Version <= UpdateManager.Version)
             {
                 logger.LogInformation("[SettingsViewModel-TryGetUpdatesAsync] Newest version is already installed");
                 return true;
