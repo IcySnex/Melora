@@ -24,7 +24,7 @@ Before you begin, it's **helpful** to organize your plugin bundle with the follo
    └─ <NAME>Plugin.cs
 ```
 - **Root:** It's recommended to place all plugins *(classes that implement IPlugin)* in the **root** of your plugin bundle. The manifest should also be here.
-- **Internal:** Any additional components *(like models, helper classes...)* required internally should be organized within an **internal** namespace.
+- **Internal:** Organize additional components *- such as models, helper classes -* within an **Internal** namespace.
 This structure keeps your plugin **organized** and ensures that your main functionalities are **easily accessible** while keeping auxiliary components **neatly separated**.
 
 
@@ -154,8 +154,8 @@ Especially since it's very easy to implement logging with Melora's plugin infras
 :::
 
 ### 4. Validate
-Before proceeding, ensure that everything is set up correctly. If you have followed the [Getting Started Guide]("/Melora/plugin-development/getting-started.html"), you should be able to validate your plugin as follows:
-- **Start Melora:** In Visual Studio, press the **"▶ Melora (Unpackaged)"** button. This will **launch** Melora with your plugin automatically loaded.
+Before proceeding, ensure that everything is set up correctly. If you have followed the [Getting Started Guide]("/Melora/plugin-development/getting-started.html") and cloned/forked the Melora Solution, you should be able to validate your plugin as follows:
+- **Start Melora:** In Visual Studio, press the **"⯈ Melora (Unpackaged)"** button. This will **launch** Melora with your plugin automatically loaded.
 - You should see a notification in the **bottom right corner** of Melora indicating that your plugin has been loaded.
 - On the right side of the Melora client, in the NavigationView, your plugin, including its icon, should be visible.
 
