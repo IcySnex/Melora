@@ -73,7 +73,8 @@ public partial class SettingsViewModel : ObservableObject
         {
             mainView.ShowNotification("Something went wrong!", "Could not set FFmpeg path.", NotificationLevel.Error, "It looks like this file does not exist. Please make sure you have downloaded the FFmpeg binary to this path.");
 
-            PathsFFmpegLocation = oldValue ?? "FFmpeg.exe";
+            if (oldValue is not null && File.Exists(oldValue))
+                PathsFFmpegLocation = oldValue;
             return;
         }
 
