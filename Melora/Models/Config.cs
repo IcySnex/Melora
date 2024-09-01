@@ -42,7 +42,7 @@ public class Config
         Paths.Filename = "{artists} - {title}";
         Paths.FFmpegLocation = "FFmpeg.exe";
 
-        Updates.ReleasesUrl = "https://api.github.com/repos/IcySnex/UpdateTests/releases";
+        Updates.ReleasesUrl = "https://api.github.com/repos/IcySnex/Melora/releases";
         Updates.Channel = UpdateChannel.Stable;
         Updates.AutomaticUpdateCheck = true;
 
