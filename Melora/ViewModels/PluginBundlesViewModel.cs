@@ -173,7 +173,6 @@ public partial class PluginBundlesViewModel : ObservableObject
         try
         {
             await PluginManager.LoadBundleAsync(path);
-            Config.Downloads.SelectedMetadatePlugin = PluginManager.GetLoadedOrDefault<MetadataPlugin>(Config.Downloads.SelectedMetadatePlugin)?.Name;
 
             mainView.ShowNotification("Success!", $"Loaded plugin bundle: {bundleFileName}.", NotificationLevel.Success);
             return true;
@@ -254,6 +253,7 @@ public partial class PluginBundlesViewModel : ObservableObject
             return;
         }
 
+        Config.Downloads.SelectedMetadatePlugin = PluginManager.GetLoadedOrDefault<MetadataPlugin>(Config.Downloads.SelectedMetadatePlugin)?.Name;
         logger.LogInformation("[PluginBundlesViewModel-ImportAsync] Plugin bundle was imported from file");
     }
 }

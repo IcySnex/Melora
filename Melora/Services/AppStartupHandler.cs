@@ -1,4 +1,5 @@
 ﻿using Melora.Models;
+using Melora.Plugins.Abstract;
 using Melora.ViewModels;
 using Melora.Views;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ public class AppStartupHandler
         ILogger<AppStartupHandler> logger,
         Config config,
         MainView mainView,
+        PluginManager pluginManager,
         Navigation navigation,
         PluginBundlesViewModel pluginBundlesViewModel,
         SettingsViewModel settingsViewModel)
@@ -20,6 +22,7 @@ public class AppStartupHandler
         {
             foreach (string path in Directory.GetFiles(PluginManager.PluginsDirectory, "*.mlr"))
                 await pluginBundlesViewModel.TryLoadAsync(path);
+            config.Downloads.SelectedMetadatePlugin = pluginManager.GetLoadedOrDefault<MetadataPlugin>(config.Downloads.SelectedMetadatePlugin)?.Name;
 
             if (config.Updates.AutomaticUpdateCheck)
                 await settingsViewModel.TryGetUpdatesAsync();
