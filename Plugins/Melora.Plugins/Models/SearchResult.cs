@@ -95,16 +95,16 @@ public static class SearchResultExtensions
     /// <param name="searchResult">The search result to get the item from.</param>
     /// <param name="name">The name of the requested item.</param>
     /// <returns>The requested item.</returns>
-    /// <exception cref="SearchResultInvalidItemException">Occurrs when the item could not be found or does not represent the requested type.</exception>
+    /// <exception cref="SearchResulItemException">Occurrs when the item could not be found or does not represent the requested type.</exception>
     public static T GetItem<T>(
         this SearchResult searchResult,
         string name)
     {
         if (!searchResult.Items.TryGetValue(name, out object? item))
-            throw new SearchResultInvalidItemException(name, searchResult, new("Name was not found."));
+            throw new SearchResulItemException(name, searchResult, new("Name was not found."));
 
         if (item is not T && item is not null)
-            throw new SearchResultInvalidItemException(name, searchResult, new("Item does not represent requested type."));
+            throw new SearchResulItemException(name, searchResult, new("Item does not represent requested type."));
 
         return (T)item!;
     }

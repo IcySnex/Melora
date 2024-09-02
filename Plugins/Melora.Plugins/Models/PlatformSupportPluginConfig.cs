@@ -3,6 +3,7 @@ using Melora.Plugins.Abstract;
 using Melora.Plugins.Enums;
 using Melora.Plugins.Exceptions;
 using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace Melora.Plugins.Models;
 
@@ -15,13 +16,20 @@ public partial class PlatformSupportPluginConfig : ObservableObject, IPluginConf
     /// Should not be used to initialize a new PlatformSupportPluginConfig. This constructor is only used for serializing.
     /// </summary>
     [Obsolete("Should not be used to initialize a new PlatformSupportPluginConfig. This constructor is only used for serializing.")]
-    public PlatformSupportPluginConfig()
+    [JsonConstructor]
+    public PlatformSupportPluginConfig(
+        IOption[] options,
+        Quality quality,
+        Format format,
+        int? searchResultsLimit,
+        Sorting searchResultsSorting,
+        bool searchResultsSortDescending) : this(options, quality, format, searchResultsLimit, searchResultsSorting, searchResultsSortDescending, null)
     { }
 
     /// <summary>
     /// Creates a new PlatformSupportPluginConfig
     /// </summary>
-    /// <param name="defaultItems">Default additional config items for the plugin.</param>
+    /// <param name="defaultOptions">Default additional config options for the plugin.</param>
     /// <param name="defaultQuality">The default quality in which tracks get downloaded.</param>
     /// <param name="defaultFormat">The default format in which tracks get downloaded.</param>
     /// <param name="defaultSearchResultsLimit">The default limit of search results to fetch.</param>
@@ -29,7 +37,7 @@ public partial class PlatformSupportPluginConfig : ObservableObject, IPluginConf
     /// <param name="defaultSearchResultsSortDescending">The default view options of the search page for the platform.</param>
     /// <param name="initialConfig">The config used for initializing if exists.</param>
     public PlatformSupportPluginConfig(
-        PluginConfigItem[] defaultItems,
+        IOption[] defaultOptions,
         Quality defaultQuality,
         Format defaultFormat,
         int? defaultSearchResultsLimit,
@@ -37,23 +45,33 @@ public partial class PlatformSupportPluginConfig : ObservableObject, IPluginConf
         bool defaultSearchResultsSortDescending,
         PlatformSupportPluginConfig? initialConfig = null)
     {
-        this.defaultItems = defaultItems;
+        // Set default values
+        this.defaultOptions = defaultOptions;
         this.defaultQuality = defaultQuality;
         this.defaultFormat = defaultFormat;
         this.defaultSearchResultsLimit = defaultSearchResultsLimit;
         this.defaultSearchResultsSorting = defaultSearchResultsSorting;
         this.defaultSearchResultsSortDescending = defaultSearchResultsSortDescending;
 
+        // No config passed, set config to default values
         if (initialConfig is null)
         {
+            Options = [.. defaultOptions];
+            foreach (IOption option in Options)
+                option.PropertyChanged += OnItemPropertyChanged;
+
             Reset();
             return;
         }
 
-        if (!initialConfig.MatchesItemsOf(defaultItems))
-            throw new PluginConfigInvalidException(this, new("Passed initial config does not match additional items requiered for the plugin."));
+        // Config passed, validate and set config to inital config values
+        if (!initialConfig.ContainsAll(defaultOptions))
+            throw new PluginConfigException(this, new("Passed initial config does not match additional options requiered for the plugin."));
 
-        Items = initialConfig.Items.Select(item => (PluginConfigItem)item.Clone()).ToArray();
+        Options = initialConfig.Options.Select((option, i) => defaultOptions[i].Copy(option.Value)).ToArray();
+        foreach (IOption option in Options)
+            option.PropertyChanged += OnItemPropertyChanged;
+
         Quality = initialConfig.Quality;
         Format = initialConfig.Format;
         SearchResultsLimit = initialConfig.SearchResultsLimit;
@@ -63,62 +81,49 @@ public partial class PlatformSupportPluginConfig : ObservableObject, IPluginConf
 
 
     void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
-        OnPropertyChanged(((PluginConfigItem)sender!).Name);
-
-    partial void OnItemsChanged(
-        PluginConfigItem[]? oldValue,
-        PluginConfigItem[] newValue)
-    {
-        if (oldValue is not null)
-            foreach (PluginConfigItem item in oldValue)
-                item.PropertyChanged -= OnItemPropertyChanged;
-
-        foreach (PluginConfigItem item in newValue)
-            item.PropertyChanged += OnItemPropertyChanged;
-    }
+        OnPropertyChanged(((IOption)sender!).Name);
 
 
     /// <summary>
-    /// Additional config items for the plugin.
+    /// Additional config options for the plugin.
     /// </summary>
-    [ObservableProperty]
-    PluginConfigItem[] items = default!;
-    readonly PluginConfigItem[] defaultItems = default!;
+    public IOption[] Options { get; } = default!;
+    readonly IOption[] defaultOptions;
 
     /// <summary>
     /// The quality in which tracks get downloaded.
     /// </summary>
     [ObservableProperty]
     Quality quality = default!;
-    readonly Quality defaultQuality = default!;
+    readonly Quality defaultQuality;
 
     /// <summary>
     /// The format in which tracks get downloaded.
     /// </summary>
     [ObservableProperty]
     Format format = default!;
-    readonly Format defaultFormat = default!;
+    readonly Format defaultFormat;
 
     /// <summary>
     /// The limit of search results to fetch.
     /// </summary>
     [ObservableProperty]
     int? searchResultsLimit = default!;
-    readonly int? defaultSearchResultsLimit = default!;
+    readonly int? defaultSearchResultsLimit;
 
     /// <summary>
     /// The sorting of search results.
     /// </summary>
     [ObservableProperty]
     Sorting searchResultsSorting = default!;
-    readonly Sorting defaultSearchResultsSorting = default!;
+    readonly Sorting defaultSearchResultsSorting;
 
     /// <summary>
     /// Weither search results are sorted descending or not.
     /// </summary>
     [ObservableProperty]
     bool searchResultsSortDescending = default!;
-    readonly bool defaultSearchResultsSortDescending = default!;
+    readonly bool defaultSearchResultsSortDescending;
 
 
     /// <summary>
@@ -126,7 +131,9 @@ public partial class PlatformSupportPluginConfig : ObservableObject, IPluginConf
     /// </summary>
     public void Reset()
     {
-        Items = defaultItems.Select(item => (PluginConfigItem)item.Clone()).ToArray();
+        for (int i = 0; i < Options.Length; i++)
+            Options[i].Value = defaultOptions[i].Value;
+
         Quality = defaultQuality;
         Format = defaultFormat;
         SearchResultsLimit = defaultSearchResultsLimit;

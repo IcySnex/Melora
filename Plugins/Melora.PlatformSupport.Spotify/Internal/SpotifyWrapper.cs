@@ -93,8 +93,8 @@ internal partial class SpotifyWrapper
 
     public void AuthenticateClient()
     {
-        string clientId = config.GetItem<string>("Client ID");
-        string clientSecret = config.GetItem<string>("Client Secret");
+        string clientId = config.GetStringOption("Client ID");
+        string clientSecret = config.GetStringOption("Client Secret");
 
         client = new(SpotifyClientConfig
             .CreateDefault()
@@ -105,7 +105,7 @@ internal partial class SpotifyWrapper
 
     public void AuthenticateGeniusClient()
     {
-        string geniusAccessToken = config.GetItem<string>("Genius Access Token");
+        string geniusAccessToken = config.GetStringOption("Genius Access Token");
 
         if (geniusClient is null)
             geniusClient = logger is null ? new(geniusAccessToken) : new(geniusAccessToken, logger);
@@ -237,7 +237,7 @@ internal partial class SpotifyWrapper
                         { "Explicit", track.Explicit },
                         { "ReleaseDate", track.Album.ReleaseDate },
                         { "ReleaseDatePrecision", track.Album.ReleaseDatePrecision },
-                        { "AlbumName", config.GetItem<bool>("Playlist As Album") ? playlist.Name : track.Album.Name },
+                        { "AlbumName", config.GetBoolOption("Playlist As Album") ? playlist.Name : track.Album.Name },
                         { "AlbumTotalTracks", track.Album.TotalTracks },
                         { "TrackNumber", track.TrackNumber },
                         { "FullArtwork", GetHighResArtworklUrl(track.Album.Images) }
@@ -255,7 +255,7 @@ internal partial class SpotifyWrapper
         progress.Report("Searching for artist...");
 
         FullArtist artist = await client.Artists.Get(id, cancellationToken);
-        ArtistsTopTracksResponse response = await client.Artists.GetTopTracks(id, new(config.GetItem<string>("Search Market")), cancellationToken);
+        ArtistsTopTracksResponse response = await client.Artists.GetTopTracks(id, new(config.GetStringOption("Search Market")), cancellationToken);
 
         string albumName = $"{artist.Name}'s Top Tracks";
 
@@ -271,7 +271,7 @@ internal partial class SpotifyWrapper
                 { "Explicit", track.Explicit },
                 { "ReleaseDate", track.Album.ReleaseDate },
                 { "ReleaseDatePrecision", track.Album.ReleaseDatePrecision },
-                { "AlbumName", config.GetItem<bool>("Playlist As Album") ? albumName : track.Album.Name },
+                { "AlbumName", config.GetBoolOption("Playlist As Album") ? albumName : track.Album.Name },
                 { "AlbumTotalTracks", track.Album.TotalTracks },
                 { "TrackNumber", track.TrackNumber },
                 { "FullArtwork", GetHighResArtworklUrl(track.Album.Images) }
@@ -289,7 +289,7 @@ internal partial class SpotifyWrapper
 
         SearchResponse response = await client.Search.Item(new(SearchRequest.Types.Track, query)
         {
-            Market = config.GetItem<string>("Search Market"),
+            Market = config.GetStringOption("Search Market"),
             Limit = Math.Min(config.SearchResultsLimit.GetValueOrDefault(int.MaxValue), 50),
         }, cancellationToken);
 
@@ -321,19 +321,16 @@ internal partial class SpotifyWrapper
         SearchResult searchResult,
         CancellationToken cancellationToken = default)
     {
-        bool saveLyrics = config.GetItem<bool>("Save Lyrics");
-        bool preferGeniusGenre = config.GetItem<bool>("Prefer Genius-Genre");
+        logger?.LogInformation("[SpotifyWrapper-PrepareDownloadAsync] Preparing track '{id}' for download...", searchResult.Id);
 
-        (string? lyrics, string? genre) = (null, null);
-        if (saveLyrics || preferGeniusGenre)
-            (lyrics, genre) = await GetGeniusTrackInfoAsync(searchResult.Title, searchResult.Artists.Split(',')[0], cancellationToken);
-        if (!preferGeniusGenre)
-            genre = await GetArtistGenreAsync(searchResult.GetItem<string>("PrimaryArtistId"), cancellationToken);
+        bool saveLyrics = config.GetBoolOption("Save Lyrics");
 
         string? fullArtwork = searchResult.GetItem<string?>("FullArtwork");
         bool @explicit = searchResult.GetItem<bool>("Explicit");
         DateTime releaseDate = GetDateTime(searchResult.GetItem<string>("ReleaseDate"), searchResult.GetItem<string>("ReleaseDatePrecision"));
         string albumName = searchResult.GetItem<string>("AlbumName");
+        string? genre = await GetArtistGenreAsync(searchResult.GetItem<string>("PrimaryArtistId"), cancellationToken);
+        string? lyrics = saveLyrics ? await GetLyricsAsync(searchResult.Title, searchResult.Artists.Split(',')[0], cancellationToken) : null;
         int trackNumber = searchResult.GetItem<int>("TrackNumber");
         int albumTotalTracks = searchResult.GetItem<int>("AlbumTotalTracks");
 
@@ -373,21 +370,18 @@ internal partial class SpotifyWrapper
         return genre;
     }
 
-    async Task<(string? lyrics, string? genre)> GetGeniusTrackInfoAsync(
+    async Task<string?> GetLyricsAsync(
         string title,
         string artist,
         CancellationToken cancellationToken = default)
     {
-        bool saveLyrics = config.GetItem<bool>("Save Lyrics");
-        bool preferGeniusGenre = config.GetItem<bool>("Prefer Genius-Genre");
-
         logger?.LogInformation("[SpotifyWrapper-GetGeniusTrackInfoAsync] Getting track info on Genius...");
 
         GeniusTrackInfo? trackInfo = await geniusClient.GetTrackInfoAsync(title, artist, cancellationToken);
         if (trackInfo is null)
-            return (null, null);
+            return null;
 
-        return (saveLyrics ? trackInfo.Lyrics : null, preferGeniusGenre ? trackInfo.Genres?.FirstOrDefault() : null);
+        return trackInfo.Lyrics;
     }
 
 

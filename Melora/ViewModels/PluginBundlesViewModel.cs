@@ -180,7 +180,7 @@ public partial class PluginBundlesViewModel : ObservableObject
         }
         catch (PluginNotLoadedException ex) when (
             ex.InnerException is not null &&
-            ex.InnerException.InnerException is PluginConfigInvalidException &&
+            ex.InnerException.InnerException is PluginConfigException &&
             ex.PluginType is not null)
         {
             mainView.ShowNotification("Warning!", $"Could not load plugin: {ex.PluginType.Name}.", NotificationLevel.Warning, async () =>

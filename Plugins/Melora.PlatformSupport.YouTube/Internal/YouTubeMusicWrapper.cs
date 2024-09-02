@@ -96,7 +96,7 @@ internal partial class YouTubeMusicWrapper
 
     public void AuthenticateClient()
     {
-        string geographicalLocation = config.GetItem<string>("Geographical Location");
+        string geographicalLocation = config.GetStringOption("Geographical Location");
 
         client = logger is null ? new(geographicalLocation) : new(logger, geographicalLocation);
 
@@ -105,7 +105,7 @@ internal partial class YouTubeMusicWrapper
 
     public void AuthenticateGeniusClient()
     {
-        string geniusAccessToken = config.GetItem<string>("Genius Access Token");
+        string geniusAccessToken = config.GetStringOption("Genius Access Token");
 
         if (geniusClient is null)
             geniusClient = logger is null ? new(geniusAccessToken) : new(geniusAccessToken, logger);
@@ -192,7 +192,7 @@ internal partial class YouTubeMusicWrapper
         string browseId = client.GetCommunityPlaylistBrowseId(id);
         CommunityPlaylistInfo playlist = await client.GetCommunityPlaylistInfoAsync(browseId, cancellationToken);
 
-        bool playlistAsAlbum = config.GetItem<bool>("Playlist As Album");
+        bool playlistAsAlbum = config.GetBoolOption("Playlist As Album");
 
         IEnumerable<SearchResult> results = playlist.Songs
             .Where(song => song.Id is not null)
@@ -227,7 +227,7 @@ internal partial class YouTubeMusicWrapper
         string browseId = client.GetCommunityPlaylistBrowseId(artist.AllSongsPlaylistId);
         CommunityPlaylistInfo playlist = await client.GetCommunityPlaylistInfoAsync(browseId, cancellationToken);
 
-        bool playlistAsAlbum = config.GetItem<bool>("Playlist As Album");
+        bool playlistAsAlbum = config.GetBoolOption("Playlist As Album");
 
         IEnumerable<SearchResult> results = playlist.Songs
             .Where(song => song.Id is not null)
@@ -278,8 +278,10 @@ internal partial class YouTubeMusicWrapper
         SearchResult searchResult,
         CancellationToken cancellationToken = default)
     {
-        bool saveLyrics = config.GetItem<bool>("Save Lyrics");
-        bool fetchGenre = config.GetItem<bool>("Fetch Genre");
+        logger?.LogInformation("[YouTubeMusicWrapper-PrepareDownloadAsync] Preparing song '{id}' for download...", searchResult.Id);
+
+        bool saveLyrics = config.GetBoolOption("Save Lyrics");
+        bool fetchGenre = config.GetBoolOption("Fetch Genre");
 
         (string? lyrics, string? genre) = (null, null);
         if (saveLyrics || fetchGenre)
@@ -316,8 +318,8 @@ internal partial class YouTubeMusicWrapper
         string artist,
         CancellationToken cancellationToken = default)
     {
-        bool saveLyrics = config.GetItem<bool>("Save Lyrics");
-        bool fetchGenre = config.GetItem<bool>("Fetch Genre");
+        bool saveLyrics = config.GetBoolOption("Save Lyrics");
+        bool fetchGenre = config.GetBoolOption("Fetch Genre");
 
         logger?.LogInformation("[SpotifyWrapper-GetGeniusTrackInfoAsync] Getting track info on Genius...");
 

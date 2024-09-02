@@ -3,6 +3,7 @@
     x:Class="Melora.Views.SettingsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:Melora.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:hlp="using:Melora.Helpers"
     xmlns:local="using:Melora.Views"
@@ -12,61 +13,99 @@
     xmlns:svc="using:Melora.Services"
     xmlns:sys="using:System"
     xmlns:vm="using:Melora.ViewModels"
+    xmlns:wing="using:Windows.Globalization.NumberFormatting"
     x:Name="Settings"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
-        <DataTemplate x:Key="BoolTemplate" x:DataType="plgm:PluginConfigItem">
+        <DataTemplate x:Key="StringTemplate" x:DataType="plgm:StringOption">
             <ContentControl
                 hlp:Attributes.Description="{x:Bind Description}"
                 hlp:Attributes.Title="{x:Bind Name}"
                 Template="{StaticResource SettingsCard}">
 
-                <ToggleSwitch IsOn="{Binding Value, Mode=TwoWay}" />
+                <Grid>
+                    <TextBox
+                        Width="300"
+                        MaxLength="{x:Bind MaxLenght}"
+                        PlaceholderText="{x:Bind Name}"
+                        Text="{x:Bind Value, Mode=TwoWay}"
+                        Visibility="{x:Bind IsObscured, Converter={StaticResource InverseBoolVisibilityConverter}}" />
+                    <PasswordBox
+                        Width="300"
+                        IsPasswordRevealButtonEnabled="False"
+                        MaxLength="{x:Bind MaxLenght}"
+                        Password="{x:Bind Value, Mode=TwoWay}"
+                        PlaceholderText="{x:Bind Name}"
+                        Visibility="{x:Bind IsObscured, Converter={StaticResource BoolVisibilityConverter}}" />
+                </Grid>
             </ContentControl>
         </DataTemplate>
 
-        <DataTemplate x:Key="IntTemplate" x:DataType="plgm:PluginConfigItem">
+        <DataTemplate x:Key="BoolTemplate" x:DataType="plgm:BoolOption">
+            <ContentControl
+                hlp:Attributes.Description="{x:Bind Description}"
+                hlp:Attributes.Title="{x:Bind Name}"
+                Template="{StaticResource SettingsCard}">
+
+                <ToggleSwitch IsOn="{x:Bind Value, Mode=TwoWay}" />
+            </ContentControl>
+        </DataTemplate>
+
+        <DataTemplate x:Key="IntTemplate" x:DataType="plgm:IntOption">
             <ContentControl
                 hlp:Attributes.Description="{x:Bind Description}"
                 hlp:Attributes.Title="{x:Bind Name}"
                 Template="{StaticResource SettingsCard}">
 
                 <NumberBox
-                    Width="112"
+                    Width="150"
                     Height="32"
-                    Maximum="9999"
+                    Maximum="{x:Bind Maximum}"
+                    Minimum="{x:Bind Minimum}"
+                    PlaceholderText="{x:Bind Name}"
                     SpinButtonPlacementMode="Compact"
-                    Value="{Binding Value, Mode=TwoWay, Converter={StaticResource IntDoubleConverter}}" />
+                    Value="{x:Bind Value, Mode=TwoWay, Converter={StaticResource IntDoubleConverter}}" />
             </ContentControl>
         </DataTemplate>
 
-        <DataTemplate x:Key="DoubleTemplate" x:DataType="plgm:PluginConfigItem">
+        <DataTemplate x:Key="DoubleTemplate" x:DataType="plgm:DoubleOption">
             <ContentControl
                 hlp:Attributes.Description="{x:Bind Description}"
                 hlp:Attributes.Title="{x:Bind Name}"
                 Template="{StaticResource SettingsCard}">
 
                 <NumberBox
-                    Width="112"
+                    Width="150"
                     Height="32"
-                    Maximum="9999"
+                    Maximum="{x:Bind Maximum}"
+                    Minimum="{x:Bind Minimum}"
+                    PlaceholderText="{x:Bind Name}"
                     SpinButtonPlacementMode="Compact"
-                    Value="{Binding Value, Mode=TwoWay}" />
+                    Value="{x:Bind Value, Mode=TwoWay, Converter={StaticResource DoubleDoubleConverter}}">
+                    <NumberBox.NumberFormatter>
+                        <wing:DecimalFormatter FractionDigits="4" IsDecimalPointAlwaysDisplayed="True" />
+                    </NumberBox.NumberFormatter>
+                </NumberBox>
             </ContentControl>
         </DataTemplate>
 
-        <DataTemplate x:Key="StringTemplate" x:DataType="plgm:PluginConfigItem">
+        <DataTemplate x:Key="SelectableTemplate" x:DataType="plgm:SelectableOption">
             <ContentControl
                 hlp:Attributes.Description="{x:Bind Description}"
                 hlp:Attributes.Title="{x:Bind Name}"
                 Template="{StaticResource SettingsCard}">
 
-                <TextBox MaxWidth="300" Text="{Binding Value, Mode=TwoWay}" />
+                <ComboBox
+                    Width="200"
+                    ItemsSource="{x:Bind Items}"
+                    PlaceholderText="{x:Bind Name}"
+                    SelectedItem="{x:Bind Value, Mode=TwoWay}" />
             </ContentControl>
         </DataTemplate>
 
-        <DataTemplate x:Key="InvalidTemplate" x:DataType="plgm:PluginConfigItem">
+
+        <DataTemplate x:Key="InvalidTemplate" x:DataType="plga:IOption">
             <ContentControl
                 hlp:Attributes.Description="{x:Bind Description}"
                 hlp:Attributes.Title="{x:Bind Name}"
@@ -76,17 +115,18 @@
                 <TextBlock
                     Foreground="{ThemeResource SystemFillColorCriticalBrush}"
                     HorizontalTextAlignment="Right"
-                    Text="This config ítem type is not supported!&#x0a;Please contact the plugin developer." />
+                    Text="This config ítem type is not supported!." />
             </ContentControl>
         </DataTemplate>
 
 
-        <hlp:ConfigItemTemplateSelector
-            x:Key="ConfigItemTemplateSelector"
+        <hlp:ConfigOptionTemplateSelector
+            x:Key="ConfigOptionTemplateSelector"
             BoolTemplate="{StaticResource BoolTemplate}"
             DoubleTemplate="{StaticResource DoubleTemplate}"
             IntTemplate="{StaticResource IntTemplate}"
             InvalidTemplate="{StaticResource InvalidTemplate}"
+            SelectableTemplate="{StaticResource SelectableTemplate}"
             StringTemplate="{StaticResource StringTemplate}" />
     </Page.Resources>
 
@@ -121,8 +161,8 @@
                             hlp:Attributes.Title="{x:Bind Name}"
                             Template="{StaticResource PluginSettingsExpander}">
                             <StackPanel Spacing="8">
-                                <!--  Config  -->
-                                <ItemsControl ItemTemplateSelector="{StaticResource ConfigItemTemplateSelector}" ItemsSource="{x:Bind Config.Items, Mode=OneWay}">
+                                <!--  Options  -->
+                                <ItemsControl ItemTemplateSelector="{StaticResource ConfigOptionTemplateSelector}" ItemsSource="{x:Bind Config.Options, Mode=OneWay}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Spacing="8" />
@@ -172,7 +212,7 @@
                                         Minimum="1"
                                         PlaceholderText="No Limit"
                                         SpinButtonPlacementMode="Compact"
-                                        Value="{x:Bind Config.SearchResultsLimit, Mode=TwoWay, Converter={StaticResource IntDoubleConverter}}" />
+                                        Value="{x:Bind Config.SearchResultsLimit, Mode=TwoWay, Converter={StaticResource IntDoubleNullConverter}}" />
                                 </ContentControl>
 
                                 <!--  Search Results > Sorting  -->
@@ -253,7 +293,7 @@
                             Template="{StaticResource PluginSettingsExpander}">
                             <StackPanel Spacing="8">
                                 <!--  Config  -->
-                                <ItemsControl ItemTemplateSelector="{StaticResource ConfigItemTemplateSelector}" ItemsSource="{x:Bind Config.Items, Mode=OneWay}">
+                                <ItemsControl ItemTemplateSelector="{StaticResource ConfigOptionTemplateSelector}" ItemsSource="{x:Bind Config.Options, Mode=OneWay}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Spacing="8" />
@@ -290,7 +330,7 @@
                 <StackPanel Spacing="8">
                     <!--  Genius Access Token  -->
                     <ContentControl
-                        hlp:Attributes.Description="The access token used to search and fetch track lyrics on Genius"
+                        hlp:Attributes.Description="The access token used to fetch track lyrics from Genius"
                         hlp:Attributes.Title="Genius Access Token"
                         Template="{StaticResource SettingsCard}">
                         <TextBox MaxWidth="300" Text="{x:Bind viewModel.Config.Lyrics.GeniusAccessToken, Mode=TwoWay}" />

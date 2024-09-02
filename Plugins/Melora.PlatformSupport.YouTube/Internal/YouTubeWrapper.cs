@@ -145,7 +145,7 @@ internal partial class YouTubeWrapper
         int totalVideosToBuffer = Math.Min(config.SearchResultsLimit.GetValueOrDefault(int.MaxValue), playlist.Count.GetValueOrDefault(0));
         string leftVideosToBuffer = totalVideosToBuffer != 0 ? $"/{totalVideosToBuffer}" : string.Empty;
 
-        bool playlistAsAlbum = config.GetItem<bool>("Playlist As Album");
+        bool playlistAsAlbum = config.GetBoolOption("Playlist As Album");
 
         return await SearchResult.BufferAsync(
             videos,
@@ -184,7 +184,7 @@ internal partial class YouTubeWrapper
         int totalVideosToBuffer = config.SearchResultsLimit.GetValueOrDefault(int.MaxValue);
         string leftVideosToBuffer = config.SearchResultsLimit.HasValue ? $"/{config.SearchResultsLimit}" : string.Empty;
 
-        bool playlistAsAlbum = config.GetItem<bool>("Playlist As Album");
+        bool playlistAsAlbum = config.GetBoolOption("Playlist As Album");
 
         return await SearchResult.BufferAsync(
             videos,
@@ -250,9 +250,10 @@ internal partial class YouTubeWrapper
         SearchResult searchResult,
         CancellationToken cancellationToken = default)
     {
-        bool saveDescription = config.GetItem<bool>("Save Description");
+        logger?.LogInformation("[YouTubeWrapper-PrepareDownloadAsync] Preparing video '{id}' for download...", searchResult.Id);
 
-        logger?.LogInformation("[YouTubeWrapper-PrepareDownloadAsync] Getting video...");
+        bool saveDescription = config.GetBoolOption("Save Description");
+
         Video video = await client.Videos.GetAsync(searchResult.Id, cancellationToken);
 
         string? highresThumbnailUrl = GetHighResThumbnailUrl(video.Thumbnails);

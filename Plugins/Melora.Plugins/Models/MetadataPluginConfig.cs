@@ -2,6 +2,7 @@
 using Melora.Plugins.Abstract;
 using Melora.Plugins.Exceptions;
 using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace Melora.Plugins.Models;
 
@@ -11,57 +12,56 @@ namespace Melora.Plugins.Models;
 public partial class MetadataPluginConfig : ObservableObject, IPluginConfig
 {
     /// <summary>
-    /// Should not be used to initialize a new MetadataPluginConfig. This constructor is only used for serializing.
+    /// Creates a new MetadataPluginConfig
     /// </summary>
-    [Obsolete("Should not be used to initialize a new MetadataPluginConfig. This constructor is only used for serializing.")]
-    public MetadataPluginConfig()
+    /// <param name="options">Additional config options for the plugin.</param>
+    [JsonConstructor]
+    public MetadataPluginConfig(
+        IOption[] options) : this(options, null)
     { }
 
     /// <summary>
     /// Creates a new MetadataPluginConfig
     /// </summary>
-    /// <param name="defaultItems">Default additional config items for the plugin.</param>
+    /// <param name="defaultOptions">Default additional config options for the plugin.</param>
     /// <param name="initialConfig">The config used for initializing if exists.</param>
     public MetadataPluginConfig(
-        PluginConfigItem[] defaultItems,
+        IOption[] defaultOptions,
         MetadataPluginConfig? initialConfig = null)
     {
-        this.defaultItems = defaultItems;
+        // Set default values
+        this.defaultOptions = defaultOptions;
 
+        // Inital config config passed: Set to default values
         if (initialConfig is null)
         {
+            Options = [.. defaultOptions];
+            foreach (IOption option in Options)
+                option.PropertyChanged += OnItemPropertyChanged;
+
             Reset();
             return;
         }
 
-        if (!initialConfig.MatchesItemsOf(defaultItems))
-            throw new PluginConfigInvalidException(this, new("Passed initial config does not match additional items requiered for the plugin."));
+        // Inital config passed: Validate and set to inital config values
+        if (!initialConfig.ContainsAll(defaultOptions))
+            throw new PluginConfigException(this, new("Passed initial config does not match additional items requiered for the plugin."));
 
-        Items = initialConfig.Items.Select(item => (PluginConfigItem)item.Clone()).ToArray();
+        Options = initialConfig.Options.Select((option, i) => defaultOptions[i].Copy(option.Value)).ToArray();
+        foreach (IOption option in Options)
+            option.PropertyChanged += OnItemPropertyChanged;
     }
 
 
     void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e) =>
-        OnPropertyChanged(((PluginConfigItem)sender!).Name);
+        OnPropertyChanged(((IOption)sender!).Name);
 
-    partial void OnItemsChanged(
-        PluginConfigItem[]? oldValue,
-        PluginConfigItem[] newValue)
-    {
-        if (oldValue is not null)
-            foreach (PluginConfigItem item in oldValue)
-                item.PropertyChanged -= OnItemPropertyChanged;
-
-        foreach (PluginConfigItem item in newValue)
-            item.PropertyChanged += OnItemPropertyChanged;
-    }
 
     /// <summary>
-    /// Additional config items for the plugin.
+    /// Additional config options for the plugin.
     /// </summary>
-    [ObservableProperty]
-    PluginConfigItem[] items = default!;
-    readonly PluginConfigItem[] defaultItems = default!;
+    public IOption[] Options { get; } = default!;
+    readonly IOption[] defaultOptions;
 
 
     /// <summary>
@@ -69,6 +69,7 @@ public partial class MetadataPluginConfig : ObservableObject, IPluginConfig
     /// </summary>
     public void Reset()
     {
-        Items = defaultItems.Select(item => (PluginConfigItem)item.Clone()).ToArray();
+        for (int i = 0; i < Options.Length; i++)
+            Options[i].Value = defaultOptions[i].Value;
     }
 }
