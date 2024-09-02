@@ -106,10 +106,10 @@ public SoundCloudPlugin(PlatformSupportPluginConfig? config, ILogger<IPlugin> lo
     name: "SoundCloud",
     iconPathData: "M219.8 390.3V133.6c0-8.2 2.5-13.1 7.4-14.6 82.2-19.4 165.3 37.9 172.9 124.4 80.4-33.9 150.3 68.4 88 129.8-15.8 15.6-34.7 23.4-56.8 23.4l-207.2-.2c-2.8-1.1-4.3-3.9-4.3-6.1h0zm-55.7-7.5c0 18.5 35.3 18.8 35.3 0v-247c0-23.4-35.3-23.3-35.3 0v247h0zm-54.8 0c0 18.1 35.2 18.8 35.2 0V237.2c0-23.4-35.2-23.3-35.2 0v145.6h0zm-54.5-7.6c0 18.7 35 19 35 0V215.7c0-22.6-35-22.9-35 0v159.5zM0 346c0 21.8 35 27.3 35 0v-68.4c0-23.2-35-23-35 0V346z",
     config: new(
-        defaultItems:
+        defaultOptions:
         [
-            new("Save Lyrics", "Whether to search & save lyrics", true),
-            new("Client ID", "The SoundCloud API client ID", "")
+            new BoolOption("Save Description", "Whether to save the description as the lyrics", true),
+            new StringOption("Client ID", "The SoundCloud API client ID", "", 50, true)
         ],
         defaultQuality: Quality._160kbps,
         defaultFormat: Format.mp3,
@@ -130,10 +130,10 @@ public SoundCloudPlugin(PlatformSupportPluginConfig? config) : base(
     name: "SoundCloud",
     iconPathData: "M219.8 390.3V133.6c0-8.2 2.5-13.1 7.4-14.6 82.2-19.4 165.3 37.9 172.9 124.4 80.4-33.9 150.3 68.4 88 129.8-15.8 15.6-34.7 23.4-56.8 23.4l-207.2-.2c-2.8-1.1-4.3-3.9-4.3-6.1h0zm-55.7-7.5c0 18.5 35.3 18.8 35.3 0v-247c0-23.4-35.3-23.3-35.3 0v247h0zm-54.8 0c0 18.1 35.2 18.8 35.2 0V237.2c0-23.4-35.2-23.3-35.2 0v145.6h0zm-54.5-7.6c0 18.7 35 19 35 0V215.7c0-22.6-35-22.9-35 0v159.5zM0 346c0 21.8 35 27.3 35 0v-68.4c0-23.2-35-23-35 0V346z",
     config: new(
-        defaultItems:
+        defaultOptions:
         [
-            new("Save Description", "Whether to save the description as the lyrics", true),
-            new("Client ID", "The SoundCloud API client ID", "")
+            new BoolOption("Save Description", "Whether to save the description as the lyrics", true),
+            new StringOption("Client ID", "The SoundCloud API client ID", "", 50, true)
         ],
         defaultQuality: Quality._160kbps,
         defaultFormat: Format.mp3,
@@ -294,7 +294,6 @@ public override async Task<IEnumerable<DownloadableTrack>> PrepareDownloadsAsync
             index =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
-
                 progress.Report($"Preparing downloads [{index}/{indexableSearchResults.Length}]...");
 
                 DownloadableTrack track = wrapper.PrepareDownload(indexableSearchResults[index]);

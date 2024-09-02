@@ -14,12 +14,12 @@ These specific configs implement the `IPluginConfig` interface, which looks like
 ```cs
 public interface IPluginConfig
 {
-    PluginConfigItem[] Items { get; set; }
+    IOption[] Options { get; set; }
 
     void Reset();
 }
 ```
-As you can see, a config **must** include a field for any additional config items you may want to add. More on that [later](/Melora/plugin-development/configs.html#custom-config-items). The interface also requires a method to **reset** the config. However, you typically don't need to implement this yourself, as the specific plugin classes handle all the heavy lifting.
+As you can see, a config **must** include a field for any additional options you may want to add. More on that [later](/Melora/plugin-development/configs.html#custom-options). The interface also requires a method to **reset** the config. However, you typically don't need to implement this yourself, as the specific plugin classes handle all the heavy lifting.
 
 
 #### Example:
@@ -30,7 +30,7 @@ When initializing your plugin, you can use the constructor of these configs. Thi
 Here’s what the constructor for a specific plugin config might look like:
 ```cs
 public PlatformSupportPluginConfig(
-    PluginConfigItem[] defaultItems,
+    IOption[] defaultOptions,
     Quality defaultQuality,
     Format defaultFormat,
     int? defaultSearchResultsLimit,
@@ -41,10 +41,10 @@ public PlatformSupportPluginConfig(
 And here's an example of how it could be initialized:
 ```cs
 PlatformSupportPluginConfig pluginConfig = new(
-    defaultItems:
+    defaultOptions:
     [
-      new("Save Lyrics", "Whether to search & save lyrics", true),
-      new("Access Token", "The access token required for xyz", "<SOME USER ACCESS TOKEN>")
+      new BoolOption("Save Lyrics", "Whether to search & save lyrics", true),
+      new StringOption("Access Token", "The access token required for xyz", "<SOME USER ACCESS TOKEN>", 50, true)
     ],
     defaultQuality: Quality._160kbps,
     defaultFormat: Format.mp3,
@@ -55,42 +55,79 @@ PlatformSupportPluginConfig pluginConfig = new(
 ```
 
 
-## Custom Config Items
-While the default plugin configs cover many useful properties (e.g., download quality, format, etc., in `PlatformSupportPluginConfig`), you might need to **add** settings **specific** to **your** plugin, such as an access token, API key, or **other unique setting fields**.
+## Custom Options
+While the default plugin configs cover many useful properties (e.g., download quality, format, etc., in `PlatformSupportPluginConfig`), you might need to **add** settings **specific** to **your** plugin, such as an access token, API key or anything else you can think of. 
 
-### What Are Custom Config Items?
-This is where the `PluginConfigItem` comes in. Every `IPluginConfig` includes an array of these items, allowing you to add **any custom** settings you need. When creating your config, simply pass the default values in the constructor. Melora will ensure these custom settings are populated in the user's config when your plugin is loaded.
-
-#### The `PluginConfigItem` Constructor:
-```cs
-public PluginConfigItem(
-    string name,
-    string description,
-    object value)
-```
-- **Name:** A short, clear name for your setting.
-- **Description:** A brief description of what this setting does and how it affects your plugin.
-- **Value:** The default value of your custom config item.
-
+This is where the `IOption` comes in. Every `IPluginConfig` includes an array of these items, allowing you to add **custom** settings you need.
 This approach allows you to extend the configuration options for your plugin, making it more **versatile** and **easier** for any users of your plugin.
 
-::: warning Note
-Melora currently supports only the following value types: `String`, `Int64`, and `Boolean`. Using other types could cause issues when displaying your config in the Melora settings menu.
-:::
+### Types of `IOption`
+There are **different types** of options you can implement like `StringOption`, `IntOption`, `DoubleOption`, `BoolOption` and `SelectableOption`. All of these implement the `IOption` interface but also include different parameters to restrict users.
+
+#### StringOption:
+```cs
+public StringOption(
+    string name, // The name of the option.
+    string description, // The description of the option.
+    string value, // The value of the option.
+    int maxLength = 0, // The max length of the value.
+    bool isObscured = false) // Whether the value should be obscured in the UI.
+```
+
+#### IntOption:
+```cs
+public IntOption(
+    string name, // The name of the option.
+    string description, // The description of the option.
+    int value, // The value of the option.
+    int minimum = int.MinValue, // The minimum the value needs to be.
+    int maximum = int.MaxValue) // The maximum the value can be.
+```
+
+#### DoubleOption:
+```cs
+public DoubleOption(
+    string name, // The name of the option.
+    string description, // The description of the option.
+    double value, // The value of the option.
+    double minimum = double.MinValue, // The minimum the value needs to be.
+    double maximum = double.MaxValue) // The maximum the value can be.
+```
+
+#### DoubleOption:
+```cs
+public DoubleOption(
+    string name, // The name of the option.
+    string description, // The description of the option.
+    bool value) // The value of the option.
+```
+
+#### SelectableOption:
+```cs
+public SelectableOption(
+    string name, // The name of the option.
+    string description, // The description of the option.
+    string value, // The value of the option.
+    string[] items) // The items from which can be selected.
+```
 
 ### How To Use Them?
-To access custom settings in your plugin code, use the extension method `GetItem<T>(string name)` from `IPluginConfig`. This method **retrieves** and **casts** the value to the specified type `T`. If the item is not found or the type does not match, it throws a `PluginConfigInvalidItemException`.
+When creating your config, simply pass the default options in the constructor. Melora will ensure these custom settings are populated in the user's config when your plugin is loaded. 
+
+To access custom settings in your plugin code, use the extension methods from `IPluginConfig`. This method **retrieves** and **casts** the value to the specified type. If the option is not found or the type does not match, it throws a `PluginOptionException`.
 
 ```cs
-string clientId = config.GetItem<string>("Client ID");
-long artworkResolution = config.GetItem<long>("Artwork Resolution");
-bool saveLyrics = config.GetItem<bool>("Save Lyrics");
+string accessToken = config.GetStringOption("Access Token");
+int artworkResolution = config.GetIntOption("Artwork Resolution");
+double artworkQuality = config.GetDoubleOption("Artwork Quality");
+bool saveLyrics = config.GetBoolOption("Save Lyrics");
+string mediaType = config.GetSelectableOption("Media Type");
 ```
 
 ## Handle Config Updates
 It may happen that users change some of your plugin settings. While dynamic use of config values is straightforward, you might need to **reinitialize** components based on updated config values (like a **client** with a new **Client ID**).
 
-To handle these situations, **all** specific plugin configs, such as `PlatformSupportPluginConfig` and `MetadataPluginConfig`, as well as `PluginConfigItem`, implement the `INotifyPropertyChanged` interface. This allows you to easily subscribe to property change events and update your plugin as needed.
+To handle these situations, **all** specific plugin configs, such as `PlatformSupportPluginConfig` and `MetadataPluginConfig`, as well as `IOption`, implement the `INotifyPropertyChanged` and `INotifyPropertyChanging` interface. This allows you to easily subscribe to property change events and update your plugin as needed.
 
 #### Example:
 ```cs{4,13,16}
@@ -106,10 +143,10 @@ void OnConfigPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         case "Client ID":
         case "Client Secret":
-            wrapper.ReAuthenticateClient();
+            wrapper.ReauthenticateClient();
             break;
         case "Genius Access Token":
-            wrapper.ReAuthenticateGeniusClient();
+            wrapper.ReauthenticateGeniusClient();
             break;
     }
 }
@@ -118,7 +155,7 @@ void OnConfigPropertyChanged(object? sender, PropertyChangedEventArgs e)
 - If certain settings change (e.g., **"Client ID"** or **"Client Secret"**), you can reinitialize or re-authenticate components as needed.
 
 ::: info Note
-You **don't need** to manually subscribe to each custom `PluginConfigItem`'s PropertyChanged event. They will automatically forward their `PropertyChanged` events, simplifying the process.
+You **don't need** to manually subscribe to each custom `IOption`'s PropertyChanged event. They will automatically forward their `PropertyChanged` events, simplifying the process.
 :::
 
 
