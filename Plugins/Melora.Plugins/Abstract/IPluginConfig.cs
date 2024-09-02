@@ -31,18 +31,19 @@ public static class PluginConfigExtensions
     /// <summary>
     /// Gets the value of the option with the given name.
     /// </summary>
+    /// <typeparam name="T">The type of the Option</typeparam>
     /// <param name="config">The config to get the option from.</param>
     /// <param name="name">The name of the requested option.</param>
     /// <returns>The requested options value.</returns>
     /// <exception cref="PluginOptionException">Occurrs when the option could not be found or the option value does not represent the requested type</exception>
     public static T GetOption<T>(
         this IPluginConfig config,
-        string name)
+        string name) where T : IOption
     {
         IOption? option = config.Options.FirstOrDefault(option => option.Name == name)
             ?? throw new PluginOptionException(name, new($"Option with given name '{name}' was not found."));
 
-        if (option.Value is not T result)
+        if (option is not T result)
             throw new PluginOptionException(name, new($"Value does not represent option type '{typeof(T).Name}'."));
 
         return result;
@@ -58,7 +59,7 @@ public static class PluginConfigExtensions
     public static string GetStringOption(
         this IPluginConfig config,
         string name) =>
-        config.GetOption<string>(name);
+        config.GetOption<StringOption>(name).Value;
 
     /// <summary>
     /// Gets the value of the int option with the given name.
@@ -70,7 +71,7 @@ public static class PluginConfigExtensions
     public static int GetIntOption(
         this IPluginConfig config,
         string name) =>
-        config.GetOption<int>(name);
+        config.GetOption<IntOption>(name).Value;
 
     /// <summary>
     /// Gets the value of the double option with the given name.
@@ -82,7 +83,7 @@ public static class PluginConfigExtensions
     public static double GetDoubleOption(
         this IPluginConfig config,
         string name) =>
-        config.GetOption<double>(name);
+        config.GetOption<DoubleOption>(name).Value;
 
     /// <summary>
     /// Gets the value of the bool option with the given name.
@@ -94,7 +95,7 @@ public static class PluginConfigExtensions
     public static bool GetBoolOption(
         this IPluginConfig config,
         string name) =>
-        config.GetOption<bool>(name);
+        config.GetOption<BoolOption>(name).Value;
 
     /// <summary>
     /// Gets the selected value of the selectable option with the given name.
@@ -106,7 +107,7 @@ public static class PluginConfigExtensions
     public static string GetSelectableOption(
         this IPluginConfig config,
         string name) =>
-        config.GetOption<string>(name);
+        config.GetOption<SelectableOption>(name).Value;
 
 
     /// <summary>
