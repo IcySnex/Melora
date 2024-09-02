@@ -71,20 +71,7 @@ public class MediaEncoder
             logger.LogInformation("[MediaEncoder-OnProcessorDataRecieved] Writing stream: {currentTime}", currentTime);
         });
 
-        cancellationToken.Register(async () =>
-        {
-            try
-            {
-                processor.Kill();
-                await Task.Delay(1000, CancellationToken.None);
-
-                File.Delete(filePath);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "[MediaEncoder-OnCancellationTokenCanceled] Failed to kill processor and delete file: {exception}", ex.Message);
-            }
-        });
+        cancellationToken.Register(processor.Kill);
 
         processor.Start();
         processor.BeginErrorReadLine();

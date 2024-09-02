@@ -128,6 +128,23 @@ public partial class DownloadsViewModel : ObservableObject
     {
         IProgress<TimeSpan> progress = new Progress<TimeSpan>(currentTime => download.Progress = (int)(currentTime / download.Track.Duration * 100));
         logger.LogInformation("[DownloadsViewModel-DownloadAsync] Starting download of track");
+
+        string? filePath = null;
+        async Task TryDeleteFile()
+        {
+            try
+            {
+                await Task.Delay(750, CancellationToken.None);
+
+                if (filePath is not null)
+                    File.Delete(filePath);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "[MediaEncoder-OnCancellationTokenCanceled] Failed to kill processor and delete file: {exception}", ex.Message);
+            }
+        }
+
         try
         {
             PlatformSupportPlugin plugin = PluginManager.GetLoaded<PlatformSupportPlugin>(download.PluginHash);
@@ -139,7 +156,7 @@ public partial class DownloadsViewModel : ObservableObject
                 .Replace("{album}", download.Track.Album)
                 .Replace("{release}", download.Track.ReleasedAt.ToString("MM-dd-yyyyy"))
                 .ToLegitFileName();
-            string filePath = Path.Combine(Config.Paths.DownloadLocation, Path.ChangeExtension(fileName, $".{plugin.Config.Format}"));
+            filePath = Path.Combine(Config.Paths.DownloadLocation, Path.ChangeExtension(fileName, $".{plugin.Config.Format}"));
 
             if (File.Exists(filePath))
                 switch (Config.Downloads.AlreadyExistsBehavior)
@@ -181,16 +198,18 @@ public partial class DownloadsViewModel : ObservableObject
         }
         catch (OperationCanceledException)
         {
-            download.Reset();
-
             logger.LogWarning("[DownloadsViewModel-DownloadAsync] Cancelled download of track {trackTitle}", download.Track.Title);
+
+            await TryDeleteFile();
+            download.Reset();
         }
         catch (Exception ex)
         {
-            download.Reset();
-
             mainView.ShowNotification("Something went wrong!", $"Failed to download track: {download.Track.Title}.", NotificationLevel.Error, ex.ToFormattedString());
             logger.LogError(ex, "[DownloadsViewModel-DownloadAsync] Failed to download track {trackTitle}: {exception}", download.Track.Title, ex.Message);
+
+            await TryDeleteFile();
+            download.Reset();
         }
     }
 
