@@ -27,14 +27,14 @@
                 <Grid>
                     <TextBox
                         Width="300"
-                        MaxLength="{x:Bind MaxLenght}"
+                        MaxLength="{x:Bind MaxLength}"
                         PlaceholderText="{x:Bind Name}"
                         Text="{x:Bind Value, Mode=TwoWay}"
                         Visibility="{x:Bind IsObscured, Converter={StaticResource InverseBoolVisibilityConverter}}" />
                     <PasswordBox
                         Width="300"
                         IsPasswordRevealButtonEnabled="False"
-                        MaxLength="{x:Bind MaxLenght}"
+                        MaxLength="{x:Bind MaxLength}"
                         Password="{x:Bind Value, Mode=TwoWay}"
                         PlaceholderText="{x:Bind Name}"
                         Visibility="{x:Bind IsObscured, Converter={StaticResource BoolVisibilityConverter}}" />

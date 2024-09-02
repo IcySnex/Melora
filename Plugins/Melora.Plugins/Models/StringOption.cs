@@ -13,13 +13,13 @@ namespace Melora.Plugins.Models;
 /// <param name="name">The name of the option.</param>
 /// <param name="description">The description of the option.</param>
 /// <param name="value">The value of the option.</param>
-/// <param name="maxLenght">The max lenght of the value</param>
+/// <param name="maxLength">The max length of the value</param>
 /// <param name="isObscured">Weither the value should be obscured in the UI.</param>
 public partial class StringOption(
     string name,
     string description,
     string value,
-    int maxLenght = 0,
+    int maxLength = 0,
     bool isObscured = false) : ObservableObject, IOption
 {
     /// <summary>
@@ -42,10 +42,10 @@ public partial class StringOption(
     }
 
     /// <summary>
-    /// The max lenght of the value.
+    /// The max length of the value.
     /// </summary>
     [JsonIgnore]
-    public int MaxLenght { get; } = maxLenght;
+    public int MaxLength { get; } = maxLength;
 
     /// <summary>
     /// Weither the value should be obscured in the UI.
@@ -64,6 +64,6 @@ public partial class StringOption(
         if (value is not string typedValue)
             throw new Exception("Value does not represent option type 'String'.");
 
-        return new StringOption(Name, Description, typedValue, MaxLenght, IsObscured);
+        return new StringOption(Name, Description, typedValue, MaxLength, IsObscured);
     }
 }
