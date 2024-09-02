@@ -119,7 +119,7 @@ public partial class PlatformSupportPluginConfig : ObservableObject, IPluginConf
     readonly Sorting defaultSearchResultsSorting;
 
     /// <summary>
-    /// Weither search results are sorted descending or not.
+    /// Whether search results are sorted descending or not.
     /// </summary>
     [ObservableProperty]
     bool searchResultsSortDescending = default!;

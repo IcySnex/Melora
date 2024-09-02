@@ -9,7 +9,7 @@ namespace Melora.Plugins.Models;
 /// <param name="artists">The artists of the downloadable track.</param>
 /// <param name="duration">The duration of the downloadable track.</param>
 /// <param name="artworkUrl">The url to the artwork of the downloadable track.</param>
-/// <param name="isExplicit">Weither the downloadable track is explicit or not.</param>
+/// <param name="isExplicit">Whether the downloadable track is explicit or not.</param>
 /// <param name="releasedAt">The date and time when the downloadable track was released.</param>
 /// <param name="album">The album of the downloadable track.</param>
 /// <param name="genre">The genre of the downloadable track.</param>

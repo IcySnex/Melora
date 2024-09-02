@@ -230,7 +230,7 @@
 
                                 <!--  Search Results > Sort Descending  -->
                                 <ContentControl
-                                    hlp:Attributes.Description="Weither search results are sorted descending or not"
+                                    hlp:Attributes.Description="Whether search results are sorted descending or not"
                                     hlp:Attributes.Title="Search Results &gt; Sort Descending"
                                     Template="{StaticResource SettingsCard}">
                                     <ToggleSwitch IsOn="{x:Bind Config.SearchResultsSortDescending, Mode=TwoWay}" />
@@ -350,7 +350,7 @@
 
                     <!--  Search Results > Sort Descending  -->
                     <ContentControl
-                        hlp:Attributes.Description="Weither search results are sorted descending or not"
+                        hlp:Attributes.Description="Whether search results are sorted descending or not"
                         hlp:Attributes.Title="Search Results &gt; Sort Descending"
                         Template="{StaticResource SettingsCard}">
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.Lyrics.SearchResultsSortDescending, Mode=TwoWay}" />
@@ -392,7 +392,7 @@
 
                     <!--  Sort Descending  -->
                     <ContentControl
-                        hlp:Attributes.Description="Weither downloads are sorted descending or not"
+                        hlp:Attributes.Description="Whether downloads are sorted descending or not"
                         hlp:Attributes.Title="Sort Descending"
                         Template="{StaticResource SettingsCard}">
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.Downloads.SortDescending, Mode=TwoWay}" />
@@ -488,7 +488,7 @@
 
                     <!--  Automatic Update Check  -->
                     <ContentControl
-                        hlp:Attributes.Description="Weither to check for updates automatically at startup"
+                        hlp:Attributes.Description="Whether to check for updates automatically at startup"
                         hlp:Attributes.Title="Automatic Update Check"
                         Template="{StaticResource SettingsCard}">
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.Updates.AutomaticUpdateCheck, Mode=TwoWay}" />
@@ -505,7 +505,7 @@
                 <StackPanel Spacing="8">
                     <!--  Show Installed  -->
                     <!--<ContentControl
-                        hlp:Attributes.Description="Weither to show currently installed plugin bundles or not"
+                        hlp:Attributes.Description="Whether to show currently installed plugin bundles or not"
                         hlp:Attributes.Title="Show Installed"
                         Template="{StaticResource SettingsCard}">
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.PluginBundles.ShowInstalled, Mode=TwoWay}" />
@@ -514,7 +514,7 @@
                     -->
                     <!--  Show Avaibale  -->
                     <!--<ContentControl
-                        hlp:Attributes.Description="Weither to show available plugin bundles or not"
+                        hlp:Attributes.Description="Whether to show available plugin bundles or not"
                         hlp:Attributes.Title="Show Available"
                         Template="{StaticResource SettingsCard}">
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.PluginBundles.ShowAvailable, Mode=TwoWay}" />
@@ -522,7 +522,7 @@
 
                     <!--  Show Platform Support  -->
                     <ContentControl
-                        hlp:Attributes.Description="Weither to show plugin bundles that contain Platform Support Plugins or not"
+                        hlp:Attributes.Description="Whether to show plugin bundles that contain Platform Support Plugins or not"
                         hlp:Attributes.Title="Show of kind Platform Support"
                         Template="{StaticResource SettingsCard}">
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.PluginBundles.ShowOfKindPlatformSupport, Mode=TwoWay}" />
@@ -530,7 +530,7 @@
 
                     <!--  Show Metadata  -->
                     <ContentControl
-                        hlp:Attributes.Description="Weither to show plugin bundles that contain Metada Plugins or not"
+                        hlp:Attributes.Description="Whether to show plugin bundles that contain Metada Plugins or not"
                         hlp:Attributes.Title="Show of kind Metadata"
                         Template="{StaticResource SettingsCard}">
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.PluginBundles.ShowOfKindMetadata, Mode=TwoWay}" />
@@ -551,7 +551,7 @@
 
                     <!--  Sort Descending  -->
                     <ContentControl
-                        hlp:Attributes.Description="Weither plugin bundles are sorted descending or not"
+                        hlp:Attributes.Description="Whether plugin bundles are sorted descending or not"
                         hlp:Attributes.Title="Sort Descending"
                         Template="{StaticResource SettingsCard}">
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.PluginBundles.SortDescending, Mode=TwoWay}" />

@@ -14,7 +14,7 @@ namespace Melora.Plugins.Models;
 /// <param name="description">The description of the option.</param>
 /// <param name="value">The value of the option.</param>
 /// <param name="maxLength">The max length of the value</param>
-/// <param name="isObscured">Weither the value should be obscured in the UI.</param>
+/// <param name="isObscured">Whether the value should be obscured in the UI.</param>
 public partial class StringOption(
     string name,
     string description,
@@ -48,7 +48,7 @@ public partial class StringOption(
     public int MaxLength { get; } = maxLength;
 
     /// <summary>
-    /// Weither the value should be obscured in the UI.
+    /// Whether the value should be obscured in the UI.
     /// </summary>
     [JsonIgnore]
     public bool IsObscured { get; } = isObscured;
