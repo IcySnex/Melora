@@ -22,6 +22,7 @@ export default hopeTheme({
   footer: "Made with ♥️ in Germany",
   copyright: "<a href='/Melora/license.html'>Copyright (C) 2024 IcySnex</a>",
   displayFooter: true,
+  breadcrumb: false,
 
 
   plugins: {

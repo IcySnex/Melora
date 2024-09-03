@@ -23,17 +23,16 @@ export default navbar([
     icon: "mingcute:plugin-2-fill",
     link: "/plugin-collection/",
     activeMatch: "^/plugin-collection/",
-    prefix: "/plugin-collection/",
     children: [
       {
         text: "Platform-Support",
         icon: "fe:music",
-        link: "platform-support",
+        link: "/plugin-collection/platform-support",
       },
       {
         text: "Metadata",
         icon: "tabler:tag-filled",
-        link: "metadata",
+        link: "/plugin-collection/metadata",
       },
     ]
   }
