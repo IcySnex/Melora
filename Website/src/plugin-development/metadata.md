@@ -30,7 +30,7 @@ This structure keeps your plugin **organized** and ensures that your main functi
 
 ## Implementing Your Plugin
 
-### 1. The Manifest
+### Step 1: The Manifest
 To ensure Melora understands what your plugin bundle does, you first need to provide some essential information via a **manifest file**.
 This file tells Melora about your plugin’s purpose, author, and more. For instructions on adding the manifest to your project, refer to the [Getting Started Guide](/Melora/plugin-development/getting-started.html#create-a-plugin-manifest).
 
@@ -55,7 +55,7 @@ This file tells Melora about your plugin’s purpose, author, and more. For inst
 }
 ```
 
-### 2. The Plugin Class
+### Step 2: The Plugin Class
 - Create a new class called `<NAME>Plugin.cs` in the root of your project.
 - This class should inherit from `MetadataPlugin`, which itself implements the `IPlugin` interface.
 ```cs
@@ -74,7 +74,7 @@ public class ITunesPlugin : MetadataPlugin
 | --- | --- |
 | `WriteAsync` | Writes the metadata for the `DownloadableTrack` to the audio file located at the `filePath`. |
 
-### 3. The Constructors
+### Step 3: The Constructors
 The `Metadata` class **requires** a few key pieces of information from your plugin, which are passed through its constructor. Here’s a breakdown of the parameters:
 | Parameter | Description |
 | --- | --- |
@@ -139,7 +139,7 @@ It is **always recommended** to use logging in your plugin. This makes debugging
 Especially since it's very easy to implement logging with Melora's plugin infrastructure.
 :::
 
-### 4. Validate
+### Step 4: Validate
 Before proceeding, ensure that everything is set up correctly. If you have followed the [Getting Started Guide]("/Melora/plugin-development/getting-started.html") and cloned/forked the Melora Solution, you should be able to validate your plugin as follows:
 - **Start Melora:** In Visual Studio, press the **"⯈ Melora (Unpackaged)"** button. This will **launch** Melora with your plugin automatically loaded.
 - You should see a notification in the **bottom right corner** of Melora indicating that your plugin has been loaded.
@@ -147,7 +147,7 @@ Before proceeding, ensure that everything is set up correctly. If you have follo
 
 ![](/plugin-development/metadata1.webp)
 
-### 5. Writing Metadata
+### Step 5: Writing Metadata
 Now lets get to the actual coding part. To implement metadata writing, you need to override the `WriteAsync` method in your plugin class. This method will handle embedding metadata into the downloaded audio file. This method provides:
 | Parameter | Description |
 | --- | --- |
@@ -217,7 +217,7 @@ public override async Task WriteAsync(
 }
 ```
 
-### 6. Validate
+### Step 6: Validate
 To make sure your Metadata Plugin works as expected, you can use Metadata editors like [Mp3tag](https://www.mp3tag.de/en/()). This allows you to easily check the metadata tags for all kind of audio formats.
 
 ![](/plugin-development/metadata2.webp)

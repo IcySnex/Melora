@@ -22,8 +22,9 @@ Submitting your Melora plugin is straightforward. Follow these steps:
 To ensure the Plugin Collection always displays the **latest information** about your plugin bundle, you need to **host** the manifest file **online**.
 
 If you’ve uploaded your plugin’s source code to GitHub, you should already have a manifest URL for the plugin bundle. For example, your manifest URL might look like this:
-
-`https://raw.githubusercontent.com/<Username>/<RepoName>/main/<SolutionName>/Manifest.json`.
+```md
+https://raw.githubusercontent.com/<Username>/<RepoName>/main/<SolutionName>/Manifest.json
+```
 
 ### Step 2: Create a Pull Request
 - Visit the [Melora GitHub repository](https://github.com/IcySnex/Melora).
@@ -36,4 +37,4 @@ After submitting your pull request, it will be **reviewed**. Once it’s merged,
 ## Updating
 Since you have hosted the Plugin Bundle Manifest online, **any changes** you make to it will be reflected **instantly** in the Melora Plugin Collection.
 
-This means you can update your plugin's information, features, or dependencies, and users will see the latest version **without** needing to **resubmit** the plugin.
+This means you can update your plugin's information, version, or dependencies, and users will see the latest version **without** needing to **resubmit** the plugin.

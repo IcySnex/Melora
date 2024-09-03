@@ -30,7 +30,7 @@ This structure keeps your plugin **organized** and ensures that your main functi
 
 ## Implementing Your Plugin
 
-### 1. The Manifest
+### Step 1: The Manifest
 To ensure Melora understands what your plugin bundle does, you first need to provide some essential information via a **manifest file**.
 This file tells Melora about your plugin’s purpose, author, and more. For instructions on adding the manifest to your project, refer to the [Getting Started Guide](/Melora/plugin-development/getting-started.html#create-a-plugin-manifest).
 
@@ -54,7 +54,7 @@ This file tells Melora about your plugin’s purpose, author, and more. For inst
 }
 ```
 
-### 2. The Plugin Class
+### Step 2: The Plugin Class
 - Create a new class called `<NAME>Plugin.cs` in the root of your project.
 - This class should inherit from `PlatformSupportPlugin`, which itself implements the `IPlugin` interface.
 ```cs
@@ -86,7 +86,7 @@ public class SoundCloudPlugin : PlatformSupportPlugin
 | `PrepareDownloadsAsync` | This method will convert the selected `SearchResult`'s to proper `DownloadableTrack`'s. |
 | `GetStreamAsync` | Responsible for downloading the track and returning an audio stream. The stream's format doesn't matter, as it will be re-encoded later on. |
 
-### 3. The Constructors
+### Step 3: The Constructors
 The `PlatformSupportPlugin` class **requires** a few key pieces of information from your plugin, which are passed through its constructor. Here’s a breakdown of the parameters:
 | Parameter | Description |
 | --- | --- |
@@ -153,7 +153,7 @@ It is **always recommended** to use logging in your plugin. This makes debugging
 Especially since it's very easy to implement logging with Melora's plugin infrastructure.
 :::
 
-### 4. Validate
+### Step 4: Validate
 Before proceeding, ensure that everything is set up correctly. If you have followed the [Getting Started Guide]("/Melora/plugin-development/getting-started.html") and cloned/forked the Melora Solution, you should be able to validate your plugin as follows:
 - **Start Melora:** In Visual Studio, press the **"⯈ Melora (Unpackaged)"** button. This will **launch** Melora with your plugin automatically loaded.
 - You should see a notification in the **bottom right corner** of Melora indicating that your plugin has been loaded.
@@ -161,7 +161,7 @@ Before proceeding, ensure that everything is set up correctly. If you have follo
 
 ![](/plugin-development/platformsupport1.webp)
 
-### 5. Searching
+### Step 5: Searching
 Once your plugin is set up and you have validated it loads in Melora, you can finally start coding the search functionality for your platform-support plugin.
 
 The `PlatformSupportPlugin` class requires you to override the `SearchAsync()` method. This method provides:
@@ -238,7 +238,7 @@ If you did everything correct, you should now be able to use the Melora UI to se
 
 ![](/plugin-development/platformsupport2.webp)
 
-### 6. Preparing For Download
+### Step 6: Preparing For Download
 In the previous step, you returned a `SearchResult` model, which **only** contains the **basic information** needed to display tracks in the Melora client UI. However, when the user decides to download a track, you’ll need to convert this `SearchResult` into a `DownloadableTrack`. This conversion allows you to **fetch additional information**, such as lyrics, genres, or any other data you may want to add.
 
 This approach offers **significant** performance benefits. Instead of gathering all possible information during the search phase *- which might slow down the process —* you're only fetching detailed data when it's truly needed, i.e., when the user selects a track for download.
@@ -311,7 +311,7 @@ If you did everything correct, you should now be able to use the **Download** bu
 
 ![](/plugin-development/platformsupport3.webp)
 
-### 7. Downloading
+### Step 7: Downloading
 The final step in completing your Platform-Support plugin is implementing the **download functionality**. For this, you'll need to override the `GetStreamAsync` method in your `PlatformSupportPlugin` class. This method is responsible for providing a stream of the audio data that the user wants to download.
 
 This method should return a `Stream` containing the audio data for the given `DownloadableTrack`. The format of this stream (e.g., MP3, OGG) is not important, as the audio will be **reencoded** with [FFmpeg](https://www.ffmpeg.org/ffmpeg-codecs.html#Audio-Decoders) later.
