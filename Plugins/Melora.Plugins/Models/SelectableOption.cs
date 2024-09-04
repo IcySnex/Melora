@@ -31,6 +31,9 @@ public partial class SelectableOption(
     [JsonIgnore]
     public string Description { get; } = description;
 
+    /// <summary>
+    /// The value of the option.
+    /// </summary>
     [ObservableProperty]
     string value = value;
     object IOption.Value
@@ -49,7 +52,9 @@ public partial class SelectableOption(
     /// <summary>
     /// Creates a new object that is a copy of the current instance with the new value.
     /// </summary>
+    /// <param name="value">The new value of the copy.</param>
     /// <returns>A new object that is a copy of this instance with the new value.</returns>
+    /// <exception cref="Exception">Occurrs when the value does not represent a string.</exception>
     public IOption Copy(
         object value)
     {

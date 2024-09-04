@@ -33,7 +33,9 @@ public interface IOption : INotifyPropertyChanged, INotifyPropertyChanging
     /// <summary>
     /// Creates a new object that is a copy of the current instance with the new value.
     /// </summary>
+    /// <param name="value">The new value of the copy.</param>
     /// <returns>A new object that is a copy of this instance with the new value.</returns>
+    /// <exception cref="Exception">Occurrs when the value does not represent the option kind.</exception>
     public IOption Copy(
         object value);
 }
