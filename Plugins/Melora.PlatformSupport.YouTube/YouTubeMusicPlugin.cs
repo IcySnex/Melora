@@ -19,11 +19,9 @@ public class YouTubeMusicPlugin : PlatformSupportPlugin
             new(
                 defaultOptions:
                 [
-                    new BoolOption("Save Lyrics", "Whether to search & save lyrics from Genius automatically", true),
-                    new BoolOption("Fetch Genre", "Whether to fetch the track genre from Genius", true),
+                    //new BoolOption("Save Lyrics", "Whether to search & save lyrics from Genius automatically", true),
                     new BoolOption("Playlist As Album", "Whether to set the playlist name as the album if possible", false),
                     new StringOption("Geographical Location", "The region for the YouTube Music search payload", "US", 2),
-                    new StringOption("Genius Access Token", "The access token used to fetch track lyrics/genres from Genius", "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr", 50, true)
                 ],
                 defaultQuality: Quality._160kbps,
                 defaultFormat: Format.mp3,
@@ -49,9 +47,6 @@ public class YouTubeMusicPlugin : PlatformSupportPlugin
         {
             case "Geographical Location":
                 wrapper.AuthenticateClient();
-                break;
-            case "Genius Access Token":
-                wrapper.AuthenticateGeniusClient();
                 break;
         }
     }
