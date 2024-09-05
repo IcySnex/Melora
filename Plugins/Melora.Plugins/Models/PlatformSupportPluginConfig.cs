@@ -13,9 +13,14 @@ namespace Melora.Plugins.Models;
 public partial class PlatformSupportPluginConfig : ObservableObject, IPluginConfig
 {
     /// <summary>
-    /// Should not be used to initialize a new PlatformSupportPluginConfig. This constructor is only used for serializing.
+    /// Creates a new PlatformSupportPluginConfig
     /// </summary>
-    [Obsolete("Should not be used to initialize a new PlatformSupportPluginConfig. This constructor is only used for serializing.")]
+    /// <param name="options">Additional config options for the plugin.</param>
+    /// <param name="quality">The quality in which tracks get downloaded.</param>
+    /// <param name="format">The format in which tracks get downloaded.</param>
+    /// <param name="searchResultsLimit">The limit of search results to fetch.</param>
+    /// <param name="searchResultsSorting">The sorting of search results.</param>
+    /// <param name="searchResultsSortDescending">The view options of the search page for the platform.</param>
     [JsonConstructor]
     public PlatformSupportPluginConfig(
         IOption[] options,
