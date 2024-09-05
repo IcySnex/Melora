@@ -24,5 +24,11 @@ Plugins/Melora.PlatformSupport.Spotify/obj/
 Plugins/Melora.PlatformSupport.YouTube/bin/
 Plugins/Melora.PlatformSupport.YouTube/obj/
 
-Plugins/Melora.MetaData.Default/bin/
-Plugins/Melora.MetaData.Default/obj/
+Plugins/Melora.PlatformSupport.SoundCloud/bin/
+Plugins/Melora.PlatformSupport.SoundCloud/obj/
+
+Plugins/Melora.Metadata.Default/bin/
+Plugins/Melora.Metadata.Default/obj/
+
+Plugins/Melora.Metadata.ITunes/bin/
+Plugins/Melora.Metadata.ITunes/obj/

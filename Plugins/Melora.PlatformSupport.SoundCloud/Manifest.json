@@ -1,0 +1,16 @@
+{
+  "Name": "SoundCloud",
+  "Description": "Adds support to search & download tracks, sets & users from SoundCloud.",
+  "Author": "IcySnex",
+  "ApiVersion": "1.0.0",
+  "LastUpdatedAt": "2024-08-28T14:26:00Z",
+  "SourceUrl": "https://github.com/IcySnex/Melora/tree/main/Plugins/Melora.PlatformSupport.SoundCloud",
+  "DownloadUrl": "https://github.com/IcySnex/Melora/releases/download/v1.0.0-stable/Melora.PlatformSupport.SoundCloud.mlr",
+  "PluginKinds": [
+    0
+  ],
+  "EntryPoint": "Melora.PlatformSupport.SoundCloud.dll",
+  "Dependencies": [
+    "SoundCloudExplode.dll"
+  ]
+}

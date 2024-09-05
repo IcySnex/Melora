@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<!--  General  -->
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<EnableDynamicLoading>true</EnableDynamicLoading>
+	</PropertyGroup>
+
+	<!--  Dependencies  -->
+	<ItemGroup>
+		<ProjectReference Include="..\Melora.Plugins\Melora.Plugins.csproj">
+			<Private>false</Private>
+			<ExcludeAssets>runtime</ExcludeAssets>
+		</ProjectReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="System.Drawing.Common" Version="8.0.7" />
+		<PackageReference Include="z440.atl.core" Version="6.1.0" />
+	</ItemGroup>
+
+	<!--  Resources  -->
+	<ItemGroup>
+		<Content Include="Manifest.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<!--  Copy to Melora Plugins directory  -->
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath '$(TargetDir)\PluginArchive.zip' -Force" />
+		<Exec Command="powershell New-Item -ItemType Directory -Path '$(SolutionDir)\Melora\bin\x64\$(Configuration)\net8.0-windows10.0.19041.0\Plugins' -Force" />
+		<Exec Command="powershell Copy-Item -Path '$(TargetDir)\PluginArchive.zip' -Destination '$(SolutionDir)\Melora\bin\x64\$(Configuration)\net8.0-windows10.0.19041.0\Plugins\$(ProjectName).mlr' -Force" />
+	</Target>
+</Project>

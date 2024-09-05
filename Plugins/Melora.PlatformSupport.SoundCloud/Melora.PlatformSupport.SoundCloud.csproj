@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<!--  General  -->
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		
+		<Nullable>enable</Nullable>
+
+		<EnableDynamicLoading>true</EnableDynamicLoading>
+	</PropertyGroup>
+	
+	<!--  Dependencies  -->
+	<ItemGroup>
+		<ProjectReference Include="..\Melora.Plugins\Melora.Plugins.csproj">
+			<Private>false</Private>
+			<ExcludeAssets>runtime</ExcludeAssets>
+		</ProjectReference>
+	</ItemGroup>
+	
+	<!--  Resources  -->
+	<ItemGroup>
+		<Content Include="Manifest.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="SoundCloudExplode" Version="1.6.5" />
+	</ItemGroup>
+
+
+	<!--  Copy to Melora Plugins directory  -->
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="powershell Compress-Archive -Path '$(TargetDir)*' -DestinationPath '$(TargetDir)\PluginArchive.zip' -Force" />
+		<Exec Command="powershell New-Item -ItemType Directory -Path '$(SolutionDir)\Melora\bin\x64\$(Configuration)\net8.0-windows10.0.19041.0\Plugins' -Force" />
+		<Exec Command="powershell Copy-Item -Path '$(TargetDir)\PluginArchive.zip' -Destination '$(SolutionDir)\Melora\bin\x64\$(Configuration)\net8.0-windows10.0.19041.0\Plugins\$(ProjectName).mlr' -Force" />
+	</Target>
+</Project>
