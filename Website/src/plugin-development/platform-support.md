@@ -56,7 +56,7 @@ This file tells Melora about your plugin’s purpose, author, and more. For inst
 
 ### Step 2: The Plugin Class
 - Create a new class called `<NAME>Plugin.cs` in the root of your project.
-- This class should inherit from `PlatformSupportPlugin`, which itself implements the `IPlugin` interface.
+- This class should inherit from [`PlatformSupportPlugin`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/PlatformSupportPlugin.html), which itself implements the [`IPlugin`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/IPlugin.html) interface.
 ```cs
 public class SoundCloudPlugin : PlatformSupportPlugin
 {
@@ -87,7 +87,7 @@ public class SoundCloudPlugin : PlatformSupportPlugin
 | `GetStreamAsync` | Responsible for downloading the track and returning an audio stream. The stream's format doesn't matter, as it will be re-encoded later on. |
 
 ### Step 3: The Constructors
-The `PlatformSupportPlugin` class **requires** a few key pieces of information from your plugin, which are passed through its constructor. Here’s a breakdown of the parameters:
+The [`PlatformSupportPlugin`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/PlatformSupportPlugin.html) class **requires** a few key pieces of information from your plugin, which are passed through its constructor. Here’s a breakdown of the parameters:
 | Parameter | Description |
 | --- | --- |
 | `string` name | The name of the plugin. This will be used to display your plugin in the Melora client UI. |
@@ -95,7 +95,7 @@ The `PlatformSupportPlugin` class **requires** a few key pieces of information f
 | `PlatformSupportPluginConfig` config | The config the plugin gets initialized with. Learn more about plugin configs [here](/Melora/plugin-development/configs.html). |
 | `ILogger<IPlugin>?` logger | An optional logger. |
 
-- Your plugin's constructor will need to pass these parameters when calling the **base class constructor** to properly initialize the `PlatformSupportPlugin`.
+- Your plugin's constructor will need to pass these parameters when calling the **base class constructor** to properly initialize the [`PlatformSupportPlugin`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/PlatformSupportPlugin.html).
 
 #### Example:
 The Melora client will attempt to use various constructors based on your implementation and if a config is already saved for your plugin. Thats why you need to implement multiple constructors.
@@ -164,7 +164,7 @@ Before proceeding, ensure that everything is set up correctly. If you have follo
 ### Step 5: Searching
 Once your plugin is set up and you have validated it loads in Melora, you can finally start coding the search functionality for your platform-support plugin.
 
-The `PlatformSupportPlugin` class requires you to override the `SearchAsync()` method. This method provides:
+The [`PlatformSupportPlugin`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/PlatformSupportPlugin.html) class requires you to override the [`SearchAsync()`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/PlatformSupportPlugin.html#searchasync) method. This method provides:
 | Parameter | Description |
 | --- | --- |
 | `string` query | The search query entered by the user. |
@@ -181,9 +181,9 @@ For better organization and clarity, it’s recommended to create a "Wrapper" cl
 :::
 
 #### What to Return:
-Each platform may return different result types, like `Track` models from Spotify or `Video` models from YouTube. In Melora, you need to convert these models to the `SearchResult` model to handle everything uniformly. This also benefits memory usage and performance, as it avoids unnecessary processing of tracks that the user may not end up downloading.
+Each platform may return different result types, like `Track` models from Spotify or `Video` models from YouTube. In Melora, you need to convert these models to the [`SearchResult`](/Melora/plugin-api-reference/Melora.Plugins/Models/SearchResult.html) model to handle everything uniformly. This also benefits memory usage and performance, as it avoids unnecessary processing of tracks that the user may not end up downloading.
 
-You can use the `Melora.Plugins` API’s static method in the `SearchResult` class to convert and buffer `IAsyncEnumerable<T>` to `IEnumerable<SearchResult>`:
+You can use the [static helper method](/Melora/plugin-api-reference/Melora.Plugins/Models/SearchResult.html#bufferasync) in the [`SearchResult`](/Melora/plugin-api-reference/Melora.Plugins/Models/SearchResult.html) class to convert and buffer [`IAsyncEnumerable`](https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1) to [`IEnumerable<SearchResult>`](https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1):
 ```cs
 public static async Task<IEnumerable<SearchResult>> BufferAsync<T>(
     IAsyncEnumerable<T> source,
@@ -192,7 +192,7 @@ public static async Task<IEnumerable<SearchResult>> BufferAsync<T>(
     CancellationToken cancellationToken)
 ```
 
-If your platform API doesn’t use `IAsyncEnumerable`, you can use the LINQ `Select` method to achieve similar results:
+If your platform API doesn’t use [`IAsyncEnumerable`](https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1), you can use the LINQ [`Select` method](https://learn.microsoft.com/dotnet/api/system.linq.enumerable.select) to achieve similar results:
 ```cs
 public static IEnumerable<TResult> Select<TSource, TResult>(
     this IEnumerable<TSource> source,
@@ -239,7 +239,7 @@ If you did everything correct, you should now be able to use the Melora UI to se
 ![](/plugin-development/platformsupport2.webp)
 
 ### Step 6: Preparing For Download
-In the previous step, you returned a `SearchResult` model, which **only** contains the **basic information** needed to display tracks in the Melora client UI. However, when the user decides to download a track, you’ll need to convert this `SearchResult` into a `DownloadableTrack`. This conversion allows you to **fetch additional information**, such as lyrics, genres, or any other data you may want to add.
+In the previous step, you returned a [`SearchResult`](/Melora/plugin-api-reference/Melora.Plugins/Models/SearchResult.html) model, which **only** contains the **basic information** needed to display tracks in the Melora client UI. However, when the user decides to download a track, you’ll need to convert this [`SearchResult`](/Melora/plugin-api-reference/Melora.Plugins/Models/SearchResult.html) into a [`DownloadableTrack`](/Melora/plugin-api-reference/Melora.Plugins/Models/DownloadableTrack.html). This conversion allows you to **fetch additional information**, such as lyrics, genres, or any other data you may want to add.
 
 This approach offers **significant** performance benefits. Instead of gathering all possible information during the search phase *- which might slow down the process —* you're only fetching detailed data when it's truly needed, i.e., when the user selects a track for download.
 
@@ -248,7 +248,7 @@ Since you may have to process a lot of tracks, using **parallelism** is suggeste
 :::
 
 #### Avoid Duplicate Requests:
-The intermediate step of using `SearchResult` models is useful, but what if your initial search request **already contains** some the information you need for your `DownloadableTrack`? To avoid redundant requests, you can store **additional data** directly within the `SearchResult` model. This data can then be accessed later when converting the `SearchResult` to a `DownloadableTrack`, **preventing unnecessary** API calls.
+The intermediate step of using [`SearchResult`](/Melora/plugin-api-reference/Melora.Plugins/Models/SearchResult.html) models is useful, but what if your initial search request **already contains** some the information you need for your [`DownloadableTrack`](/Melora/plugin-api-reference/Melora.Plugins/Models/DownloadableTrack.html)? To avoid redundant requests, you can store **additional data** directly within the [`SearchResult`](/Melora/plugin-api-reference/Melora.Plugins/Models/SearchResult.html) model. This data can then be accessed later when converting the [`SearchResult`](/Melora/plugin-api-reference/Melora.Plugins/Models/SearchResult.html) to a [`DownloadableTrack`](/Melora/plugin-api-reference/Melora.Plugins/Models/DownloadableTrack.html), **preventing unnecessary** API calls.
 
 Here’s how you might implement this in your search method:
 ```cs
@@ -267,7 +267,7 @@ SearchResult result = new(
     });
 ```
 
-When preparing the download, you can use the `GetItem<T>` method to easily access these stored items:
+When preparing the download, you can use the [`GetItem<T>` method](/Melora/plugin-api-reference/Melora.Plugins/Models/SearchResultExtensions.html#getitem) to easily access these stored items:
 ```cs
 DateTime releaseDate = searchResult.GetItem<DateTime>("ReleaseDate");
 string albumName = searchResult.GetItem<string>("AlbumName");
@@ -276,7 +276,7 @@ string? artworkFullRes = searchResult.GetItem<string?>("ArtworkFullRes");
 ```
 
 #### Example
-Since this example **doesn't need** to send additional requests, the parallel processing is wrapped in `Task.Run` to **avoid blocking** the UI. For an example that requires async preparing of `DownloadableTrack`'s, please take a look at [this example](https://github.com/IcySnex/Melora/blob/main/Plugins/Melora.PlatformSupport.Spotify/SpotifyPlugin.cs#L101-L126).
+Since this example **doesn't need** to send additional requests, the parallel processing is wrapped in `Task.Run` to **avoid blocking** the UI. For an example that requires async preparing of [`DownloadableTrack`](/Melora/plugin-api-reference/Melora.Plugins/Models/DownloadableTrack.html)'s, please take a look at [this example](https://github.com/IcySnex/Melora/blob/main/Plugins/Melora.PlatformSupport.Spotify/SpotifyPlugin.cs#L101-L126).
 ```cs
 public override async Task<IEnumerable<DownloadableTrack>> PrepareDownloadsAsync(
     IEnumerable<SearchResult> searchResults,
@@ -312,9 +312,9 @@ If you did everything correct, you should now be able to use the **Download** bu
 ![](/plugin-development/platformsupport3.webp)
 
 ### Step 7: Downloading
-The final step in completing your Platform-Support plugin is implementing the **download functionality**. For this, you'll need to override the `GetStreamAsync` method in your `PlatformSupportPlugin` class. This method is responsible for providing a stream of the audio data that the user wants to download.
+The final step in completing your Platform-Support plugin is implementing the **download functionality**. For this, you'll need to override the [`GetStreamAsync` method](/Melora/plugin-api-reference/Melora.Plugins/Abstract/PlatformSupportPlugin.html#getstreamasync) in your [`PlatformSupportPlugin`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/PlatformSupportPlugin.html) class. This method is responsible for providing a stream of the audio data that the user wants to download.
 
-This method should return a `Stream` containing the audio data for the given `DownloadableTrack`. The format of this stream (e.g., MP3, OGG) is not important, as the audio will be **reencoded** with [FFmpeg](https://www.ffmpeg.org/ffmpeg-codecs.html#Audio-Decoders) later.
+This method should return a [`Stream`](https://learn.microsoft.com/dotnet/api/system.io.stream) containing the audio data for the given [`DownloadableTrack`](/Melora/plugin-api-reference/Melora.Plugins/Models/DownloadableTrack.html). The format of this stream (e.g., MP3, OGG) is not important, as the audio will be **reencoded** with [FFmpeg](https://www.ffmpeg.org/ffmpeg-codecs.html#Audio-Decoders) later.
 
 #### Example:
 Since the wrapper class handles the heavy lifting class in our little SoundCloud example, this method will just pass the track Id to the wrapper:

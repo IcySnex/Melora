@@ -8,9 +8,9 @@ When building a plugin, you may need to store settings that users can customize.
 
 
 ## What Is A Config?
-When initializing your plugin class, you need to provide a corresponding config to the base class (e.g. `PlatformSupportPlugin` requires a `PlatformSupportPluginConfig` , `MetadataPlugin` requires a `MetadataPluginConfig`, etc.).
+When initializing your plugin class, you need to provide a corresponding config to the base class (e.g. [`PlatformSupportPlugin`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/PlatformSupportPlugin.html) requires a [`PlatformSupportPluginConfig`](/Melora/plugin-api-reference/Melora.Plugins/Models/PlatformSupportPluginConfig.html), [`MetadataPlugin`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/MetadataPlugin.html) requires a [`MetadataPluginConfig`](/Melora/plugin-api-reference/Melora.Plugins/Models/MetadataPluginConfig.html), etc.).
 
-These specific configs implement the `IPluginConfig` interface, which looks like this:
+These specific configs implement the [`IPluginConfig`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/IPluginConfig.html) interface, which looks like this:
 ```cs
 public interface IPluginConfig
 {
@@ -23,7 +23,7 @@ As you can see, a config **must** include a field for any additional options you
 
 
 #### Example:
-For instance, `PlatformSupportPluginConfig` **requires** a few parameters, such as the download quality, format, etc., which you **must** include.
+For instance, [`PlatformSupportPluginConfig`](/Melora/plugin-api-reference/Melora.Plugins/Models/PlatformSupportPluginConfig.html) **requires** a few parameters, such as the download quality, format, etc., which you **must** include.
 
 When initializing your plugin, you can use the constructor of these configs. This allows you to pass in your **default config values** (used if the Melora client can't find any existing configs for your plugin or when the user resets your plugin config) and an **instance of an existing config** (if it exists).
 
@@ -56,13 +56,13 @@ PlatformSupportPluginConfig pluginConfig = new(
 
 
 ## Custom Options
-While the default plugin configs cover many useful properties (e.g., download quality, format, etc., in `PlatformSupportPluginConfig`), you might need to **add** settings **specific** to **your** plugin, such as an access token, API key or anything else you can think of. 
+While the default plugin configs cover many useful properties (e.g., download quality, format, etc., in [`PlatformSupportPluginConfig`](/Melora/plugin-api-reference/Melora.Plugins/Models/PlatformSupportPluginConfig.html)), you might need to **add** settings **specific** to **your** plugin, such as an access token, API key or anything else you can think of. 
 
-This is where the `IOption` comes in. Every `IPluginConfig` includes an array of these items, allowing you to add **custom** settings you need.
+This is where the [`IOption`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/IOption.html) comes in. Every [`IPluginConfig`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/IPluginConfig.html) includes an array of these items, allowing you to add **custom** settings you need.
 This approach allows you to extend the configuration options for your plugin, making it more **versatile** and **easier** for any users of your plugin.
 
 ### Types of `IOption`
-There are **different types** of options you can implement like `StringOption`, `IntOption`, `DoubleOption`, `BoolOption` and `SelectableOption`. All of these implement the `IOption` interface but also include different parameters to restrict users.
+There are **different types** of options you can implement like [`StringOption`](/Melora/plugin-api-reference/Melora.Plugins/Models/StringOption.html), [`IntOption`](/plugin-api-reference/Melora.Plugins/Models/IntOption.html), [`DoubleOption`](/Melora/plugin-api-reference/Melora.Plugins/Models/DoubleOption.html), [`BoolOption`](/Melora/plugin-api-reference/Melora.Plugins/Models/BoolOption.html) and [`SelectableOption`](Melora/plugin-api-reference/Melora.Plugins/Models/SelectableOption.html). All of these implement the [`IOption`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/IOption.html) interface but also include different parameters to restrict users from setting out of bound values.
 
 #### StringOption:
 ```cs
@@ -114,7 +114,7 @@ public SelectableOption(
 ### How To Use Them?
 When creating your config, simply pass the default options in the constructor. Melora will ensure these custom settings are populated in the user's config when your plugin is loaded. 
 
-To access custom settings in your plugin code, use the extension methods from `IPluginConfig`. This method **retrieves** and **casts** the value to the specified type. If the option is not found or the type does not match, it throws a `PluginOptionException`.
+To access custom settings in your plugin code, use the [extension methods](/Melora/plugin-api-reference/Melora.Plugins/Abstract/PluginConfigExtensions.html) for [`IPluginConfig`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/IPluginConfig.html). This method **retrieves** and **casts** the value to the specified type. If the option is not found or the type does not match, it throws a [`PluginOptionException`](/Melora/plugin-api-reference/Melora.Plugins/Exceptions/PluginOptionException.html).
 
 ```cs
 string accessToken = config.GetStringOption("Access Token");
@@ -127,7 +127,7 @@ string mediaType = config.GetSelectableOption("Media Type");
 ## Handle Config Updates
 It may happen that users change some of your plugin settings. While dynamic use of config values is straightforward, you might need to **reinitialize** components based on updated config values (like a **client** with a new **Client ID**).
 
-To handle these situations, **all** specific plugin configs, such as `PlatformSupportPluginConfig` and `MetadataPluginConfig`, as well as `IOption`, implement the `INotifyPropertyChanged` and `INotifyPropertyChanging` interface. This allows you to easily subscribe to property change events and update your plugin as needed.
+To handle these situations, **all** specific plugin configs, such as [`PlatformSupportPluginConfig`](/Melora/plugin-api-reference/Melora.Plugins/Models/PlatformSupportPluginConfig.html) and [`MetadataPlugin`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/MetadataPlugin.html), as well as [`IOption`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/IOption.html), implement the [`INotifyPropertyChanged`](https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanged) and [`INotifyPropertyChanging`](https://learn.microsoft.com/dotnet/api/system.componentmodel.inotifypropertychanging) interface. This allows you to easily subscribe to property change events and update your plugin as needed.
 
 #### Example:
 ```cs{4,13,16}

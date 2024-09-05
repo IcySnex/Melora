@@ -57,7 +57,7 @@ This file tells Melora about your plugin’s purpose, author, and more. For inst
 
 ### Step 2: The Plugin Class
 - Create a new class called `<NAME>Plugin.cs` in the root of your project.
-- This class should inherit from `MetadataPlugin`, which itself implements the `IPlugin` interface.
+- This class should inherit from [`MetadataPlugin`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/MetadataPlugin.html), which itself implements the [`IPlugin`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/IPlugin.html) interface.
 ```cs
 public class ITunesPlugin : MetadataPlugin
 {
@@ -75,7 +75,7 @@ public class ITunesPlugin : MetadataPlugin
 | `WriteAsync` | Writes the metadata for the `DownloadableTrack` to the audio file located at the `filePath`. |
 
 ### Step 3: The Constructors
-The `Metadata` class **requires** a few key pieces of information from your plugin, which are passed through its constructor. Here’s a breakdown of the parameters:
+The [`MetadataPlugin`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/MetadataPlugin.html) class **requires** a few key pieces of information from your plugin, which are passed through its constructor. Here’s a breakdown of the parameters:
 | Parameter | Description |
 | --- | --- |
 | `string` name | The name of the plugin. This will be used to display your plugin in the Melora client UI. |
@@ -83,7 +83,7 @@ The `Metadata` class **requires** a few key pieces of information from your plug
 | `MetadataPlugin` config | The config the plugin gets initialized with. Learn more about plugin configs [here](/Melora/plugin-development/configs.html). |
 | `ILogger<IPlugin>?` logger | An optional logger. |
 
-- Your plugin's constructor will need to pass these parameters when calling the **base class constructor** to properly initialize the `MetadataPlugin`.
+- Your plugin's constructor will need to pass these parameters when calling the **base class constructor** to properly initialize the [`MetadataPlugin`](/Melora/plugin-api-reference/Melora.Plugins/Abstract/MetadataPlugin.html).
 
 #### Example:
 The Melora client will attempt to use various constructors based on your implementation and if a config is already saved for your plugin. Thats why you need to implement multiple constructors.
@@ -148,7 +148,7 @@ Before proceeding, ensure that everything is set up correctly. If you have follo
 ![](/plugin-development/metadata1.webp)
 
 ### Step 5: Writing Metadata
-Now lets get to the actual coding part. To implement metadata writing, you need to override the `WriteAsync` method in your plugin class. This method will handle embedding metadata into the downloaded audio file. This method provides:
+Now lets get to the actual coding part. To implement metadata writing, you need to override the [`WriteAsync` method](/Melora/plugin-api-reference/Melora.Plugins/Abstract/MetadataPlugin.html#writeasync) in your plugin class. This method will handle embedding metadata into the downloaded audio file. This method provides:
 | Parameter | Description |
 | --- | --- |
 | `string` filePath | The path to the audio file. |
@@ -176,9 +176,7 @@ public override async Task WriteAsync(
 
     string mediaType = Config.GetSelectableOption("Media Type");
     string account = Config.GetStringOption("Account");
-    string owner = Config.GetStringOption("Owner");
-    bool currentDateAsRelease = Config.GetBoolOption("Current Date as Release");
-    bool saveArtwork = Config.GetBoolOption("Save Artwork");
+    ...
 
     // Default fields
     file.Title = track.Title;

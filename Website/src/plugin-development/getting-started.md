@@ -9,7 +9,7 @@ This guide will walk you through preparing a new project for creating a Melora p
 For simplicity this guide will only show screenshots of **Visual Studio 2022**, but the process should be similar on other IDEs.
 
 ## Requirements
-- An IDE with support for **.NET WinUI app development**
+- An IDE with support for **.NET** and **WinUI app development**
 - Windows SDK version **10.0.17763.0** or **higher**
 
 **➔ Suggestion:** Visual Studio 2022
@@ -26,7 +26,7 @@ For simplicity, the following steps assume you're developing within the Melora s
 ### Step 2: Create a new Project
 Start by creating a new project of type [Class Library](https://learn.microsoft.com/en-us/dotnet/core/tutorials/library-with-visual-studio?pivots=dotnet-8-0) that targets **.NET 8.0** inside the **"Plugins"** folder *- next to the already developed plugins*.
 
-You can choose any name for your project, but it's recommend following the naming pattern: `Melora.{PlatformKind}.{Name}`. Here, `{PlatformKind}` indicates the type of plugin (e.g., [PlatformSupport](/Melora/guide/platform-support.html), [MetaData](/Melora/guide/metadata.html)), and `{Name}` is a unique identifier for your plugin.
+You can choose any name for your project, but it's recommend following the naming pattern: `Melora.{PlatformKind}.{Name}`. Here, `{PlatformKind}` indicates the type of plugin (e.g., "PlatformSupport", "MetaData", ...), and `{Name}` is a unique identifier for your plugin.
 
 ![](/plugin-development/createnewproject.webp)
 
@@ -55,7 +55,7 @@ To see how a manifest should be structured and what it should contain, please se
 
 ### Step 5: Modify the .csproj File
 - **Add `<EnableDynamicLoading />`**: This setting allows your assembly to be dynamically loaded by Melora.
-- **Exclude `Melora.Plugins` assets:** Ensure that **Melora.Plugins** is excluded from the build to avoid including it in your plugin.
+- **Exclude `Melora.Plugins` assets:** Ensure that **Melora.Plugins** is excluded from the build, since the client will provide this API.
 - **(Optional) Add Post-Build script:** This script automatically creates the **.mlr** plugin bundle and moves it to the Melora Plugins directory, saving you from manually doing that each time you modify your plugin code. **Please note that this will only work if you have the cloned/forked Melora project in the steps before!**
 ```xml{9,15-16,28-32}
 <Project Sdk="Microsoft.NET.Sdk">
@@ -99,11 +99,13 @@ So you don't have to manually click the **Build** button in Visual Studio every 
 
 To do this just right click on the "Melora" Solution, press "Properties" on the bottom. A new popup will appear, under "Common Properties" select "Project Dependencies" and check the box for your plugin project.
 
-**Please note that this will only work if you have the cloned/forked Melora project in the steps before!**
+::: info Note
+Please note that this will only work if you have the cloned/forked Melora project in the steps before!
+:::
 
 ![](/plugin-development/automaticallybuild.webp)
 
 ## That's it!
 You’ve made it! As you can see, creating a custom Melora plugin isn’t too difficult. Now you’re all set to start developing your own plugin and to expand Melora’s capabilities!
 
-To add support for any new sources, check out the [Creating a Platform-Support Plugin Guide](/Melora/plugin-development/platform-support). If you want to customize track metadata, refer to the [Creating a Metadata Plugin Guide](/Melora/plugin-development/platform-support).
+To add support for any new sources, check out the [Creating a Platform-Support Plugin Guide](/Melora/plugin-development/platform-support.html). If you want to customize track metadata, refer to the [Creating a Metadata Plugin Guide](/Melora/plugin-development/platform-support.html).

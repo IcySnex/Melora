@@ -31,7 +31,7 @@ Each plugin bundle has to contain a so called Manifest. This contains all the ne
 | `LastUpdatedAt` | Indicates when your plugin was last updated. |
 | `SourceUrl` | A link to the plugin's source code, website, or any relevant online resource. |
 | `DownloadUrl` | Used only if you're publishing your plugin bundle to the [official Melora Plugin Collection](/Melora/plugin-collection/). This should be the **direct** download link.. |
-| `PluginKinds` | Describes the types of plugins your bundle contains. For a list of plugin types and their corresponding indexes, see [here](https://github.com/IcySnex/Melora/blob/main/Plugins/Melora.Plugins/Enums/PluginKind.cs) |
+| `PluginKinds` | Describes the types of plugins your bundle contains. For a list of plugin types and their corresponding keys, see [here](/Melora/plugin-api-reference/Melora.Plugins/Enums/PluginKind.html) |
 | `EntryPoint` | The **main assembly** of your plugin bundle. This assembly is loaded by the Melora client and should contain all your public plugins. |
 | `Dependencies` | Lists any **additional** libraries used by your plugins. These will be loaded **alongside** the entry point by the Melora client. |
 
@@ -43,7 +43,7 @@ Bundling different types together reduces flexibility for users who might only w
 
 
 ## Example
-This is the official manifest of the [Spotify Plugin]() for Melora:
+This is the official manifest of the [Spotify Plugin](https://github.com/IcySnex/Melora/blob/main/Plugins/Melora.PlatformSupport.Spotify/Manifest.json) for Melora:
 ```json
 {
   "Name": "Spotify",
