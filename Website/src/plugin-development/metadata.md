@@ -50,7 +50,9 @@ This file tells Melora about your plugin’s purpose, author, and more. For inst
   "EntryPoint": "Melora.Metadata.ITunes.dll",
   "Dependencies": [
     "ATL.dll",
-    "System.Drawing.Common.dll"
+    "Ude.NetStandard.dll",
+    "System.Drawing.Common.dll",
+    "Microsoft.Win32.SystemEvents.dll"
   ]
 }
 ```

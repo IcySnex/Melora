@@ -9,13 +9,20 @@ After finishing your Melora plugin, you'll likely want to **share** it with othe
 While you can simply upload it to GitHub, there's also the option to **add** your plugin to the [official Melora Plugin Collection](/Melora/plugin-collection/). This collection features **safe**, **high-quality** plugins that are easily accessible to all Melora users.
 
 
-## Requirements
-Before submitting your plugin to the official Melora Plugin Collection, please thoroughly test it to ensure everything works as expected. This helps prevent issues and ensures a smooth experience for users.
+## Plugin Bundle File
+So other people can import your new plugin, you will have to create a **Plugin Bundle** file. This contains all the plugins in your assembly.
 
-Also make sure your plugin bundle includes a valid [Manifest](/Melora/plugin-development/manifest.html) with a **direct download link** set.
+A Plugin Bundle has the file extension ".mlr" but under the hood its just a normal ZIP-archive.
+
+This ZIP-Archive should contain your [Manifest](/Melora/plugin-development/manifest.html), the entry point assembly and all other dependency assemblies listed in your manifest file. You can also include debug symbols if you want.
 
 
 ## Submitting
+::: info Note
+Before submitting your plugin, please thoroughly test it to ensure everything works as expected.
+
+Also make sure your plugin bundle includes a valid [Manifest](/Melora/plugin-development/manifest.html) with a **direct download link** set.
+:::
 Submitting your Melora plugin is straightforward. Follow these steps:
 
 ### Step 1: Host Your Manifest
