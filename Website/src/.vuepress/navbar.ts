@@ -19,6 +19,12 @@ export default navbar([
     activeMatch: "^/plugin-development/"
   },
   {
+    text: "Plugin API Reference",
+    icon: "ooui:reference",
+    link: "/plugin-api-reference/",
+    activeMatch: "^/plugin-api-reference/",
+  },
+  {
     text: "Plugin Collection",
     icon: "mingcute:plugin-2-fill",
     link: "/plugin-collection/",
@@ -35,5 +41,5 @@ export default navbar([
         link: "/plugin-collection/metadata",
       },
     ]
-  }
+  },
 ]);

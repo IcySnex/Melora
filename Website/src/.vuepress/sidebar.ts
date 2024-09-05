@@ -7,5 +7,6 @@ const separator = {
 export default sidebar({
   "/guide": "structure",
   "/plugin-collection": "structure",
-  "/plugin-development": "structure"
+  "/plugin-development": "structure",
+  "/plugin-api-reference": "structure"
 });
