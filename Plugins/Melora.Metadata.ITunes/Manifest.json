@@ -12,6 +12,8 @@
   "EntryPoint": "Melora.Metadata.ITunes.dll",
   "Dependencies": [
     "ATL.dll",
-    "System.Drawing.Common.dll"
+    "Ude.NetStandard.dll",
+    "System.Drawing.Common.dll",
+    "Microsoft.Win32.SystemEvents.dll"
   ]
 }

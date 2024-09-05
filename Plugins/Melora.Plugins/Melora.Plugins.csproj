@@ -27,7 +27,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageTags>melora;music;downloader;music-downloadr;spotify;youtube;youtube-music</PackageTags>
-		<PackageReleaseNotes />
+		<PackageReleaseNotes>- Initial Release</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<!--  Dependencies  -->

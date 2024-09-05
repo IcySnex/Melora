@@ -1,0 +1,25 @@
+<member name="N:Melora.Plugins">
+    <summary>
+    The root namespace for the Melora plugin system.
+    </summary>
+</member>
+<member name="N:Melora.Plugins.Abstract">
+    <summary>
+    Contains abstract base classes and interfaces for defining plugin contracts.
+    </summary>
+</member>
+<member name="N:Melora.Plugins.Exceptions">
+    <summary>
+    Contains custom exception types.
+    </summary>
+</member>
+<member name="N:Melora.Plugins.Models">
+    <summary>
+    Contains different data models and structures.
+    </summary>
+</member>
+<member name="N:Melora.Plugins.Enums">
+    <summary>
+    Contains types that define various states and options.
+    </summary>
+</member>
