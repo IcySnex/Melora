@@ -65,7 +65,10 @@
             Padding="18"
             VerticalAlignment="Top"
             Background="{ThemeResource CardBackgroundAcrylicBrush}"
-            CornerRadius="8">
+            BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Translation="0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="8" />
@@ -76,6 +79,9 @@
                 <ColumnDefinition Width="2" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            <Grid.Shadow>
+                <ThemeShadow />
+            </Grid.Shadow>
 
             <!--  Search  -->
             <TextBox

@@ -155,7 +155,7 @@
                 BorderBrush="{ThemeResource ContentDialogBorderBrush}"
                 BorderThickness="1"
                 CornerRadius="8"
-                Translation="0,0,64">
+                Translation="0,0,128">
                 <Grid.Shadow>
                     <ThemeShadow />
                 </Grid.Shadow>

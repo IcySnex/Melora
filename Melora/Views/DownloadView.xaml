@@ -163,7 +163,10 @@
             Padding="18"
             VerticalAlignment="Top"
             Background="{ThemeResource CardBackgroundAcrylicBrush}"
-            CornerRadius="8">
+            BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Translation="0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="26" />
@@ -177,6 +180,9 @@
                 <ColumnDefinition Width="4" />
                 <ColumnDefinition Width="32" />
             </Grid.ColumnDefinitions>
+            <Grid.Shadow>
+                <ThemeShadow />
+            </Grid.Shadow>
 
             <!--  Search  -->
             <TextBox PlaceholderText="Search for downloads..." Text="{x:Bind viewModel.Query, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />

@@ -81,7 +81,10 @@
             Padding="18"
             VerticalAlignment="Top"
             Background="{ThemeResource CardBackgroundAcrylicBrush}"
-            CornerRadius="8">
+            BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
+            BorderThickness="1"
+            CornerRadius="8"
+            Translation="0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="2" />
@@ -94,6 +97,9 @@
                 <ColumnDefinition Width="2" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            <Grid.Shadow>
+                <ThemeShadow />
+            </Grid.Shadow>
 
             <!--  Search  -->
             <TextBox
@@ -156,9 +162,12 @@
             Padding="18"
             VerticalAlignment="Bottom"
             Background="{ThemeResource CardBackgroundAcrylicBrush}"
+            BorderBrush="{ThemeResource ControlStrokeColorSecondaryBrush}"
+            BorderThickness="1"
             CornerRadius="8"
             IsHitTestVisible="False"
-            Opacity="0">
+            Opacity="0"
+            Translation="0,0,16">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="4" />
@@ -169,6 +178,9 @@
             <Grid.OpacityTransition>
                 <ScalarTransition />
             </Grid.OpacityTransition>
+            <Grid.Shadow>
+                <ThemeShadow />
+            </Grid.Shadow>
 
             <!--  Quality  -->
             <ContentControl hlp:Attributes.Title="Quality" Template="{StaticResource WithHeader}">
