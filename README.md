@@ -7,7 +7,7 @@
 </h1>
 <p align="center">
   <a href="https://github.com/IcySnex/Melora/releases/latest">
-    <img alt="GitHub Downloads (all assets, latest release)" src="https://img.shields.io/github/downloads/IcySnex/UpdateTests/latest/total?style=for-the-badge&color=%23D68FF6">
+    <img alt="GitHub Downloads (all assets, latest release)" src="https://img.shields.io/github/downloads/IcySnex/Melora/latest/total?style=for-the-badge&color=%23D68FF6">
   </a>
 </p>
 
