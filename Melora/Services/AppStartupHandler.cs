@@ -21,7 +21,7 @@ public class AppStartupHandler
         ((FrameworkElement)mainView.Content).Loaded += async (s, e) =>
         {
             foreach (string path in Directory.GetFiles(PluginManager.PluginsDirectory, "*.mlr"))
-                await pluginBundlesViewModel.TryLoadAsync(path);
+                await pluginBundlesViewModel.TryLoadAsync(path, config.PluginBundles.ShowLoadedNotification);
             config.Downloads.SelectedMetadatePlugin = pluginManager.GetLoadedOrDefault<MetadataPlugin>(config.Downloads.SelectedMetadatePlugin)?.Name;
 
             if (config.Updates.AutomaticUpdateCheck)

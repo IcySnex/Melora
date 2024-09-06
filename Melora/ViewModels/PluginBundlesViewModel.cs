@@ -167,14 +167,16 @@ public partial class PluginBundlesViewModel : ObservableObject
 
 
     public async Task<bool> TryLoadAsync(
-        string path)
+        string path,
+        bool showNotification = true)
     {
         string bundleFileName = Path.GetFileNameWithoutExtension(path);
         try
         {
             await PluginManager.LoadBundleAsync(path);
+            if (showNotification)
+                mainView.ShowNotification("Success!", $"Loaded plugin bundle: {bundleFileName}.", NotificationLevel.Success);
 
-            mainView.ShowNotification("Success!", $"Loaded plugin bundle: {bundleFileName}.", NotificationLevel.Success);
             return true;
         }
         catch (PluginNotLoadedException ex) when (

@@ -62,6 +62,7 @@ public class Config
 
         //PluginBundles.ShowInstalled = true;
         //PluginBundles.ShowAvailable = true;
+        PluginBundles.ShowLoadedNotification = false;
         PluginBundles.ShowOfKindPlatformSupport = true;
         PluginBundles.ShowOfKindMetadata = true;
         PluginBundles.Sorting = Sorting.Default;
@@ -131,6 +132,9 @@ public partial class ConfigPluginBundles : ObservableObject
     //[ObservableProperty]
     //bool showAvailable = default!;
 
+    [ObservableProperty]
+    bool showLoadedNotification = default!;
+    
     [ObservableProperty]
     bool showOfKindPlatformSupport = default!;
 

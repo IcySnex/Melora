@@ -520,6 +520,14 @@
                         <ToggleSwitch IsOn="{x:Bind viewModel.Config.PluginBundles.ShowAvailable, Mode=TwoWay}" />
                     </ContentControl>-->
 
+                    <!--  Show Loaded Notification  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Whether to show a 'Loaded plugin bundle' notification at startup"
+                        hlp:Attributes.Title="Show Loaded Notification"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.PluginBundles.ShowLoadedNotification, Mode=TwoWay}" />
+                    </ContentControl>
+
                     <!--  Show Platform Support  -->
                     <ContentControl
                         hlp:Attributes.Description="Whether to show plugin bundles that contain Platform Support Plugins or not"
