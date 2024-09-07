@@ -21,7 +21,7 @@
 
 <h3 align="center">
   <a href="https://icysnex.github.io/Melora/guide/getting-started.html">
-    <img alt="Static Badge" src="https://img.shields.io/badge/Getting%20Started-695473?style=for-the-badge">
+    <img alt="Static Badge" src="https://img.shields.io/badge/Guide-695473?style=for-the-badge">
   </a>
   <span> ˙ </span>
   <a href="https://icysnex.github.io/Melora/plugin-development/getting-started.html">
