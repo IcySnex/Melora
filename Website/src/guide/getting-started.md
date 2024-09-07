@@ -12,9 +12,9 @@ order: 2
 
 
 ## Installation
-- **Step 1:** Go to the [GitHub Releases](https://github.com/IcySnex/Melora/releases) page.
-- **Step 2:** Download the latest installer for your architecture and follow the setup wizard.
-- **Step 3:** If FFmpeg is not already installed on your system, download the [Windows binaries](https://ffbinaries.com/downloads) as well.
+- **Step 1:** Go to the Melora [GitHub Releases](https://github.com/IcySnex/Melora/releases) page.
+- **Step 2:** Download the latest version for your architecture and extract it to a Melora folder.
+- **Step 3:** If FFmpeg is not already installed on your system, download the [Windows binaries](https://github.com/System233/ffmpeg-msvc-prebuilt/releases/latest) as well.
 
 
 ## Post-Install Setup
