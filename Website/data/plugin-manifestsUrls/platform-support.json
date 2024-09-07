@@ -1,4 +1,5 @@
 [
   "https://raw.githubusercontent.com/IcySnex/Melora/main/Plugins/Melora.PlatformSupport.Spotify/Manifest.json",
-  "https://raw.githubusercontent.com/IcySnex/Melora/main/Plugins/Melora.PlatformSupport.YouTube/Manifest.json"
+  "https://raw.githubusercontent.com/IcySnex/Melora/main/Plugins/Melora.PlatformSupport.YouTube/Manifest.json",
+  "https://raw.githubusercontent.com/IcySnex/Melora/main/Plugins/Melora.PlatformSupport.SoundCloud/Manifest.json"
 ]
