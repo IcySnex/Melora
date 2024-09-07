@@ -15,15 +15,10 @@
 
     const fetchManifests = async (start = 0, limit = 10) => {
         const urlsToFetch = props.manifestUrls.slice(start, start + limit);
-        const fetchOptions = {
-          headers: {
-            'User-Agent': 'Melora-Website/1.0.0'
-          }
-        }
 
         const fetchedManifests = await Promise.all(
             urlsToFetch.map(async (url) => {
-                const response = await fetch(url, fetchOptions);
+                const response = await fetch(url);
                 return await response.json();
             })
         );
