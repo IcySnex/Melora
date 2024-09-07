@@ -25,3 +25,8 @@ highlights:
 
       - title: User-Friendly Interface
         details: A sleek and intuitive interface to manage your downloads
+---
+
+<p align="center">
+  <img alt="Screenshots Image" src="/screenshots.webp">
+</p>
