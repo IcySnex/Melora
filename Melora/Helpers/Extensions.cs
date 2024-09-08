@@ -43,7 +43,7 @@ public static class Extensions
     public static string ToLegitFileName(
         this string input)
     {
-        foreach (char c in Path.GetInvalidFileNameChars())
+        foreach (char c in Path.GetInvalidFileNameChars().Except(['\\']))
             input = input.Replace(c, '_');
 
         return input;
