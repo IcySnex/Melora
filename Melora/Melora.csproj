@@ -25,8 +25,8 @@
 			<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 			<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
 
-		<AssemblyVersion>1.0.0</AssemblyVersion>
-		<FileVersion>1.0.0</FileVersion>
+		<AssemblyVersion>1.0.1</AssemblyVersion>
+		<FileVersion>1.0.1</FileVersion>
 
 		<Title>Melora</Title>
 		<Version>$(AssemblyVersion)</Version>
@@ -42,7 +42,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageTags>melora;music;downloader;music-downloadr;spotify;youtube;youtube-music</PackageTags>
-		<PackageReleaseNotes />
+		<PackageReleaseNotes>- Fixed Issue with Creating Subfolders from Filename Format</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<!--  Additional  -->
