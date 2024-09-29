@@ -5,7 +5,7 @@
   "ApiVersion": "1.0.0",
   "LastUpdatedAt": "2024-09-05T15:45:00Z",
   "SourceUrl": "https://github.com/IcySnex/Melora/tree/main/Plugins/Melora.PlatformSupport.SoundCloud",
-  "DownloadUrl": "https://github.com/IcySnex/Melora/releases/download/v1.0.0-stable/Melora.PlatformSupport.SoundCloud.mlr",
+  "DownloadUrl": "https://github.com/IcySnex/Melora/releases/download/v0.0.0/Melora.PlatformSupport.SoundCloud.mlr",
   "PluginKinds": [
     0
   ],

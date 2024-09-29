@@ -5,7 +5,7 @@
   "ApiVersion": "1.0.0",
   "LastUpdatedAt": "2024-09-05T15:45:00Z",
   "SourceUrl": "https://github.com/IcySnex/Melora/tree/main/Plugins/Melora.Metadata.ITunes",
-  "DownloadUrl": "https://github.com/IcySnex/Melora/releases/download/v1.0.0-stable/Melora.Metadata.ITunes.mlr",
+  "DownloadUrl": "https://github.com/IcySnex/Melora/releases/download/v0.0.0/Melora.Metadata.ITunes.mlr",
   "PluginKinds": [
     1
   ],
