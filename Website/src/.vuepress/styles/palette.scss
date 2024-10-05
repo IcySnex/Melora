@@ -1,17 +1,62 @@
-// you can change colors here
-$theme-color: #c39fe6;
+$vp-c-accent: (
+  light: #8968aa,
+  dark: #c39fe6,
+);
 
-$bg-color: (
+$vp-c-accent-hover: (
+  light: #ad84d6,
+  dark: #a586c4,
+);
+
+$vp-c-accent-bg: (
+  light: #9a75c0,
+  dark: #c39fe6,
+);
+
+$vp-c-accent-text: (
+  light: #5b4572,
+  dark: #2f2638,
+);
+
+$vp-c-accent-soft: (
+  light: #ded2ec,
+  dark: #251e2c,
+);
+
+
+$vp-c-bg: (
   light: #ffffff,
   dark: #100d17,
 );
 
-$bg-color-secondary: (
+$vp-c-bg-alt: (
   light: #ebebeb,
   dark: #1c1827,
 );
 
-$bg-color-tertiary: (
-  light: #c9c9c9,
-  dark: #272233,
+$vp-c-bg-elv: (
+  light: #d4d4d4,
+  dark: #181420,
+);
+
+
+$vp-c-border: (
+  light: #b7aec0,
+  dark: #3c393f,
+);
+
+$vp-c-gutter: (
+  light: #b7aec0,
+  dark: #3c393f,
+);
+
+
+$vp-c-text: (
+  light: #23172b,
+  dark: #9e9e9e,
+);
+
+$vp-c-text-mute: (
+  light: #31213b,
+  dark: #8a8a8a,
 );

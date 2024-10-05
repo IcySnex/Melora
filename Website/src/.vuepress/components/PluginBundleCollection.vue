@@ -112,17 +112,16 @@
     .card {
         padding: 1rem;
         border-radius: 0.5rem;
-        border: 2px solid var(--theme-color);
+        border: 2px solid var(--vp-c-accent);
         box-shadow: 0px 4px 8px var(--card-shadow);
         cursor: pointer;
 
         transition:
-            box-shadow var(--color-transition),
-            box-shadow var(--transform-transition);
+            box-shadow 100ms linear;
   
         &:hover {
-            background-color: var(--bg-color-secondary);
-            box-shadow: 0 4px 32px var(--bg-color-tertiary);
+            background-color: var(--vp-c-bg-alt);
+            box-shadow: 0 4px 32px var(--vp-c-accent-text);
         }
     }
 
@@ -132,7 +131,7 @@
         align-items: center;
         
         transition:
-            transform var(--transform-transition);
+            transform 100ms linear;
         
         &:hover {
             transform: scale(1.1);

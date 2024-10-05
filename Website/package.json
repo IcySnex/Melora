@@ -11,11 +11,11 @@
     "docs:update-package": "npx vp-update"
   },
   "devDependencies": {
-    "@vuepress/bundler-vite": "2.0.0-rc.14",
-    "@vuepress/plugin-search": "^2.0.0-rc.41",
-    "@vuepress/plugin-shiki": "^2.0.0-rc.42",
-    "vue": "^3.4.31",
-    "vuepress": "2.0.0-rc.14",
-    "vuepress-theme-hope": "2.0.0-rc.52"
+    "@vuepress/bundler-vite": "2.0.0-rc.17",
+    "@vuepress/plugin-search": "^2.0.0-rc.52",
+    "@vuepress/plugin-shiki": "^2.0.0-rc.52",
+    "vue": "^3.5.11",
+    "vuepress": "2.0.0-rc.17",
+    "vuepress-theme-hope": "2.0.0-rc.58"
   }
 }
