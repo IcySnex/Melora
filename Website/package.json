@@ -11,6 +11,7 @@
     "docs:update-package": "npx vp-update"
   },
   "devDependencies": {
+    "sass-embedded": "^1.79.4",
     "@vuepress/bundler-vite": "2.0.0-rc.17",
     "@vuepress/plugin-search": "^2.0.0-rc.52",
     "@vuepress/plugin-shiki": "^2.0.0-rc.52",
