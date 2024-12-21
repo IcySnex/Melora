@@ -3,11 +3,11 @@ using Melora.Plugins.Models;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text.RegularExpressions;
-using YoutubeExplode;
-using YoutubeExplode.Videos.Streams;
 using YouTubeMusicAPI.Client;
 using YouTubeMusicAPI.Models;
 using YouTubeMusicAPI.Models.Info;
+using YouTubeMusicAPI.Models.Search;
+using YouTubeMusicAPI.Models.Streaming;
 
 namespace Melora.PlatformSupport.YouTube.Internal;
 
@@ -74,7 +74,6 @@ internal partial class YouTubeMusicWrapper
     readonly ILogger<IPlugin>? logger;
 
     YouTubeMusicClient client = default!;
-    YoutubeClient youTubeClient = default!;
 
     public YouTubeMusicWrapper(
         PlatformSupportPluginConfig config,
@@ -84,7 +83,6 @@ internal partial class YouTubeMusicWrapper
         this.logger = logger;
 
         AuthenticateClient();
-        AuthenticateYouTubeClient();
 
         logger?.LogInformation("[YouTubeMusicWrapper-.ctor] YouTubeMusicWrapper has been initialized");
     }
@@ -97,13 +95,6 @@ internal partial class YouTubeMusicWrapper
         client = logger is null ? new(geographicalLocation) : new(logger, geographicalLocation);
 
         logger?.LogInformation("[YouTubeMusicWrapper-AuthenticateClient] Client has been authenticated.");
-    }
-
-    public void AuthenticateYouTubeClient()
-    {
-        youTubeClient = new();
-
-        logger?.LogInformation("[SpotifyWrapper-AuthenticateYouTubeClient] YouTube client has been authenticated.");
     }
 
 
@@ -239,7 +230,7 @@ internal partial class YouTubeMusicWrapper
         logger?.LogInformation("[YouTubeMusicWrapper-SearchQueryAsync] Searching for query...");
         progress.Report("Searching for query...");
 
-        IEnumerable<Song> songs = await client.SearchAsync<Song>(query, 20, cancellationToken);
+        IEnumerable<SongSearchResult> songs = await client.SearchAsync<SongSearchResult>(query, 20, cancellationToken);
 
         IEnumerable<SearchResult> results = songs.Select(song => new SearchResult(
             title: song.Name,
@@ -298,13 +289,16 @@ internal partial class YouTubeMusicWrapper
         CancellationToken cancellationToken = default)
     {
         logger?.LogInformation("[YouTubeMusicWrapper-GetStreamAsync] Getting songVideo stream...");
-        StreamManifest manifest = await youTubeClient.Videos.Streams.GetManifestAsync(id, cancellationToken);
+        StreamingData streamingData = await client.GetStreamingDataAsync(id, cancellationToken);
 
-        AudioOnlyStreamInfo? stream = manifest
-            .GetAudioOnlyStreams()
-            .MinBy(streamInfo => Math.Abs((int)config.Quality - streamInfo.Bitrate.KiloBitsPerSecond))
-            ?? throw new("Could not find any suitable audio only streams in the streams manifest.");
+        if (streamingData.IsLiveContent)
+            throw new Exception("Live content is not supported.");
 
-        return await youTubeClient.Videos.Streams.GetAsync(stream, cancellationToken);
+        AudioStreamInfo? stream = streamingData.StreamInfo
+            .OfType<AudioStreamInfo>()
+            .MinBy(streamInfo => Math.Abs((int)config.Quality - streamInfo.Bitrate / 1000))
+            ?? throw new("Could not find any suitable audio streams in streaming data."); ;
+
+        return await stream.GetStreamAsync(cancellationToken);
     }
 }
