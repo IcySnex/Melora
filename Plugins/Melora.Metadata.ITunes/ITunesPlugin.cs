@@ -47,7 +47,7 @@ public class ITunesPlugin : MetadataPlugin
 
         Track file = new(filePath);
         if (file.AudioFormat.ShortName != "MPEG-4")
-            throw new Exception("This Metadata Plugin only support writing audio files in 'MPEG-4' format.", new("Please select '4a' as the download format in your Platform-Support Plugin."));
+            throw new Exception("This Metadata Plugin only support writing audio files in 'MPEG-4' format.", new("Please select 'm4a' as the download format in your Platform-Support Plugin."));
 
         string mediaType = Config.GetSelectableOption("Media Type");
         string account = Config.GetStringOption("Account");

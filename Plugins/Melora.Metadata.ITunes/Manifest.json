@@ -3,7 +3,7 @@
   "Description": "Writes specific metadata focues on iTunes support.",
   "Author": "IcySnex",
   "ApiVersion": "1.0.0",
-  "LastUpdatedAt": "2024-09-05T15:45:00Z",
+  "LastUpdatedAt": "2024-12-21T21:00:00Z",
   "SourceUrl": "https://github.com/IcySnex/Melora/tree/main/Plugins/Melora.Metadata.ITunes",
   "DownloadUrl": "https://github.com/IcySnex/Melora/releases/download/v0.0.0/Melora.Metadata.ITunes.mlr",
   "PluginKinds": [
