@@ -22,6 +22,7 @@ public class SpotifyPlugin : PlatformSupportPlugin
                     new BoolOption("Save Lyrics", "Whether to search & save lyrics from Genius automatically", true),
                     new BoolOption("Playlist As Album", "Whether to set the playlist name as the album if possible", false),
                     new StringOption("Search Market", "The region code for the Spotify search market", "US", 2),
+                    new StringOption("YTM Search Format", "The format used to search on YouTube Music. Embeds: {title}, {album}, {artists}, {year}", "{title} {artists}", 100),
                     new StringOption("Client ID", "The client ID for the Spotify Web API", "75e1749b48dd4466858cf28ab32b1c8a", 50, true),
                     new StringOption("Client Secret", "The client secret for the Spotify Web API", "b884202c63af4bcbbcac91cfcf16e6c8", 50, true),
                     new StringOption("Genius Access Token", "The access token used to fetch track lyrics from Genius", "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr", 50, true)
@@ -54,6 +55,9 @@ public class SpotifyPlugin : PlatformSupportPlugin
                 break;
             case "Genius Access Token":
                 wrapper.AuthenticateGeniusClient();
+                break;
+            case "Search Market":
+                wrapper.AuthenticatsYtmClient();
                 break;
         }
     }
