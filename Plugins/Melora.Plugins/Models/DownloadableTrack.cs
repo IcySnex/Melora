@@ -114,15 +114,18 @@ public partial class DownloadableTrack(
     /// <summary>
     /// An optional comment from the plugin.
     /// </summary>
-    public string? Comment { get; } = comment;
+    [ObservableProperty]
+    string? comment = comment;
 
     /// <summary>
     /// The url of the downloadable track.
     /// </summary>
-    public string Url { get; } = url;
+    [ObservableProperty]
+    string url = url;
 
     /// <summary>
     /// The Id of the downloadable track.
     /// </summary>
-    public string Id { get; } = id;
+    [ObservableProperty]
+    string id = id;
 }
