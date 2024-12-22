@@ -5,6 +5,7 @@ using Melora.Plugins.Models;
 using Microsoft.Extensions.Logging;
 using SpotifyAPI.Web;
 using System.Globalization;
+using System.Net;
 using System.Text.RegularExpressions;
 using YouTubeMusicAPI.Client;
 using YouTubeMusicAPI.Models.Search;
@@ -16,6 +17,9 @@ internal partial class SpotifyWrapper
 {
     [GeneratedRegex(@"^(?:http(s)?:\/\/open\.spotify\.com\/(?:user\/[a-zA-Z0-9]+\/)?(?:track|album|playlist|artist)\/|spotify:(?:user:[a-zA-Z0-9]+:)?(?:track|album|playlist|artist):)([a-zA-Z0-9]+)")]
     private static partial Regex SpotifyUrlRegex();
+
+    [GeneratedRegex(@"(?:music\.youtube\.com/watch.*?v=)([^&/?]+)(?:&|/|$)")]
+    private static partial Regex YtmSongVideoIdRegex();
 
     private static readonly TextInfo TextInfo = new CultureInfo("en-US", false).TextInfo;
 
@@ -30,6 +34,10 @@ internal partial class SpotifyWrapper
             _ => DateTime.MinValue
         };
 
+
+    public static bool IsValidYtmSongVideoId(
+        string songVideoId) =>
+        songVideoId.Length == 11 && songVideoId.All(c => char.IsLetterOrDigit(c) || c is '_' or '-');
 
     public static string? GetId(
         string url)
@@ -395,12 +403,21 @@ internal partial class SpotifyWrapper
         string id,
         CancellationToken cancellationToken = default)
     {
-        logger?.LogInformation("[SpotifyWrapper-GetStreamAsync] Searching track on YouTube Music...");
-        SongSearchResult searchResult = (await ytmClient.SearchAsync<SongSearchResult>(id, 1, cancellationToken)).FirstOrDefault()
-            ?? throw new Exception("Could not find track on YouTube Music.");
+        logger?.LogInformation("[SpotifyWrapper-GetStreamAsync] Checking YouTube Music SongVideo ID...");
+        Match videoIdMatch = YtmSongVideoIdRegex().Match(id);
+        string? ytmId = videoIdMatch.Success ? WebUtility.UrlDecode(videoIdMatch.Groups[1].Value) : null;
+
+        if (string.IsNullOrWhiteSpace(ytmId) || !IsValidYtmSongVideoId(ytmId))
+        {
+            logger?.LogInformation("[SpotifyWrapper-GetStreamAsync] Searching track on YouTube Music...");
+            SongSearchResult searchResult = (await ytmClient.SearchAsync<SongSearchResult>(id, 1, cancellationToken)).FirstOrDefault()
+                ?? throw new Exception("Could not find track on YouTube Music.");
+
+            ytmId = searchResult.Id;
+        }
 
         logger?.LogInformation("[SpotifyWrapper-GetStreamAsync] Getting songVideo stream...");
-        StreamingData streamingData = await ytmClient.GetStreamingDataAsync(searchResult.Id, cancellationToken);
+        StreamingData streamingData = await ytmClient.GetStreamingDataAsync(ytmId, cancellationToken);
 
         if (streamingData.IsLiveContent)
             throw new Exception("Live content is not supported.");
