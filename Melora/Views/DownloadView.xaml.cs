@@ -9,13 +9,13 @@ namespace Melora.Views;
 
 public sealed partial class DownloadsView : Page
 {
-    readonly DownloadsViewModel viewModel = App.Provider.GetRequiredService<DownloadsViewModel>();
+    public DownloadsViewModel ViewModel { get; } = App.Provider.GetRequiredService<DownloadsViewModel>();
 
     public DownloadsView()
     {
         InitializeComponent();
 
-        viewModel.PluginManager.Subscribe<PlatformSupportPlugin>(
+        ViewModel.PluginManager.Subscribe<PlatformSupportPlugin>(
             plugin =>
             {
                 int pluginHash = plugin.GetHashCode();
@@ -28,21 +28,21 @@ public sealed partial class DownloadsView : Page
                 };
                 pluginFlyoutItem.Click += (s, e) =>
                 {
-                    viewModel.ShowTracksFrom[pluginHash] = ((ToggleMenuFlyoutItem)s).IsChecked;
-                    viewModel.Downloads.Refresh();
+                    ViewModel.ShowTracksFrom[pluginHash] = ((ToggleMenuFlyoutItem)s).IsChecked;
+                    ViewModel.Downloads.Refresh();
                 };
 
                 ToolTipService.SetToolTip(pluginFlyoutItem, $"Show tracks from {plugin.Name}");
                 ShowTracksFromFlyout.Items.Add(pluginFlyoutItem);
 
-                viewModel.ShowTracksFrom[pluginHash] = true;
+                ViewModel.ShowTracksFrom[pluginHash] = true;
             },
             plugin =>
             {
                 ToggleMenuFlyoutItem? pluginFlyoutItem = ShowTracksFromFlyout.Items.OfType<ToggleMenuFlyoutItem>().FirstOrDefault(item => item.Text == plugin.Name);
                 ShowTracksFromFlyout.Items.Remove(pluginFlyoutItem);
 
-                viewModel.ShowTracksFrom.Remove(plugin.GetHashCode());
+                ViewModel.ShowTracksFrom.Remove(plugin.GetHashCode());
             });
     }
 
@@ -56,24 +56,30 @@ public sealed partial class DownloadsView : Page
     void OnDownloadClick(object sender, RoutedEventArgs _)
     {
         DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
-        viewModel.DownloadCommand.Execute(download);
+        ViewModel.DownloadCommand.Execute(download);
     }
 
     void OnTrackInfoClick(object sender, RoutedEventArgs _)
     {
         DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
-        viewModel.ShowTrackInfoCommand.Execute(download);
+        ViewModel.ShowTrackInfoCommand.Execute(download);
+    }
+    
+    void OnChangeTrackIdClick(object sender, RoutedEventArgs _)
+    {
+        DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
+        ViewModel.ChangeTrackIdCommand.Execute(download);
     }
 
     void OnRemoveClick(object sender, RoutedEventArgs _)
     {
         DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
-        viewModel.RemoveCommand.Execute(download);
+        ViewModel.RemoveCommand.Execute(download);
     }
 
     void OnOpenSourceClick(object sender, RoutedEventArgs _)
     {
         DownloadContainer download = (DownloadContainer)((MenuFlyoutItem)sender).DataContext;
-        viewModel.OpenTrackSourceCommand.Execute(download);
+        ViewModel.OpenTrackSourceCommand.Execute(download);
     }
 }

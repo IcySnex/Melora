@@ -377,6 +377,14 @@
                         </ComboBox>
                     </ContentControl>
 
+                    <!--  Allow Changing Track ID  -->
+                    <ContentControl
+                        hlp:Attributes.Description="Whether it's allowed to change a tracks ID"
+                        hlp:Attributes.Title="Allow Changing Track ID"
+                        Template="{StaticResource SettingsCard}">
+                        <ToggleSwitch IsOn="{x:Bind viewModel.Config.Downloads.AllowChangingTrackId, Mode=TwoWay}" />
+                    </ContentControl>
+
                     <!--  Sorting  -->
                     <ContentControl
                         hlp:Attributes.Description="The sorting of downloads"

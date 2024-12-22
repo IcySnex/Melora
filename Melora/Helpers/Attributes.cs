@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using System.Diagnostics;
 using System.Windows.Input;
 using Windows.System;
 
@@ -24,6 +25,12 @@ public class Attributes : DependencyObject
 
     public static readonly DependencyProperty EnterKeyCommandProperty = DependencyProperty.RegisterAttached(
         "EnterKeyCommand", typeof(ICommand), typeof(Attributes), new(null, OnEnterKeyCommandChanged));
+
+    public static readonly DependencyProperty IsVisible1Property = DependencyProperty.RegisterAttached(
+        "IsVisible1", typeof(bool), typeof(Attributes), new(null, OnIsVisibleChanged));
+
+    public static readonly DependencyProperty IsVisible2Property = DependencyProperty.RegisterAttached(
+        "IsVisible2", typeof(bool), typeof(Attributes), new(null, OnIsVisibleChanged));
 
 
     public static void SetTitle(
@@ -97,5 +104,32 @@ public class Attributes : DependencyObject
 
             command.Execute(null);
         };
+    }
+
+
+    public static void SetIsVisible1(
+        UIElement target,
+        bool value) =>
+        target.SetValue(IsVisible1Property, value);
+
+    public static bool GetIsVisible1(
+        UIElement target) =>
+        (bool)target.GetValue(IsVisible1Property);
+    
+    public static void SetIsVisible2(
+        UIElement target,
+        bool value) =>
+        target.SetValue(IsVisible2Property, value);
+
+    public static bool GetIsVisible2(
+        UIElement target) =>
+        (bool)target.GetValue(IsVisible2Property);
+
+    static void OnIsVisibleChanged(DependencyObject target, DependencyPropertyChangedEventArgs e)
+    {
+        UIElement control = (UIElement)target;
+        bool isVisible = GetIsVisible1(control) && GetIsVisible2(control);
+
+        control.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
     }
 }

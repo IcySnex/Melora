@@ -76,12 +76,13 @@ public partial class DownloadsViewModel : ObservableObject
                     Sorting.Duration => download => download.Track.Duration,
                     _ => null
                 };
+                logger.LogInformation("[DownloadsViewModel-OnConfigPropertyChanged] Reordered search results");
                 break;
             case "SortDescending":
                 Downloads.Descending = Config.Downloads.SortDescending;
+                logger.LogInformation("[DownloadsViewModel-OnConfigPropertyChanged] Reordered search results");
                 break;
         }
-        logger.LogInformation("[DownloadsViewModel-OnConfigPropertyChanged] Reordered search results");
     }
 
 
@@ -100,6 +101,14 @@ public partial class DownloadsViewModel : ObservableObject
 
         await mainView.AlertAsync(new DownloadableTrackInfoView(viewModel));
         logger.LogInformation("[DownloadsViewModel-ShowTrackInfoAsync] Showed download track info");
+    }
+    
+    [RelayCommand]
+    async Task ChangeTrackIdAsync(
+        DownloadContainer download)
+    {
+        await mainView.AlertAsync(new DownloadableChangeIdView(download.Track));
+        logger.LogInformation("[DownloadsViewModel-ShowTrackInfoAsync] Showed change track ID");
     }
 
     [RelayCommand]

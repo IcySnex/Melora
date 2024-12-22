@@ -75,12 +75,13 @@ public partial class PlatformViewModel : ObservableObject
                     Sorting.Duration => track => track.Duration,
                     _ => null
                 };
+                logger.LogInformation("[PlatformViewModel-OnViewOptionsPropertyChanged] Reordered search results");
                 break;
             case "SearchResultsSortDescending":
                 SearchResults.Descending = Plugin.Config.SearchResultsSortDescending;
+                logger.LogInformation("[PlatformViewModel-OnViewOptionsPropertyChanged] Reordered search results");
                 break;
         }
-        logger.LogInformation("[PlatformViewModel-OnViewOptionsPropertyChanged] Reordered search results");
     }
 
 

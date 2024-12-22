@@ -49,6 +49,7 @@ public class Config
 
         Downloads.SelectedMetadatePlugin = null;
         Downloads.AlreadyExistsBehavior = AlreadyExistsBehavior.Ask;
+        Downloads.AllowChangingTrackId = false;
         Downloads.Sorting = Sorting.Default;
         Downloads.SortDescending = false;
 
@@ -90,6 +91,9 @@ public partial class ConfigDownloads : ObservableObject
 
     [ObservableProperty]
     AlreadyExistsBehavior alreadyExistsBehavior = default!;
+
+    [ObservableProperty]
+    bool allowChangingTrackId = default!;
 
     [ObservableProperty]
     Sorting sorting = default!;
