@@ -329,7 +329,7 @@
                                 Text="{TemplateBinding hlp:Attributes.Title}"
                                 TextTrimming="CharacterEllipsis" />
                             <TextBlock
-                                Margin="46,20,0,0"
+                                Margin="46,22,0,0"
                                 Opacity="0.7"
                                 Text="{TemplateBinding hlp:Attributes.Description}"
                                 TextTrimming="CharacterEllipsis" />
@@ -355,7 +355,7 @@
                                 Text="{TemplateBinding hlp:Attributes.Title}"
                                 TextTrimming="CharacterEllipsis" />
                             <TextBlock
-                                Margin="46,20,0,0"
+                                Margin="46,22,0,0"
                                 Opacity="0.7"
                                 Text="{TemplateBinding hlp:Attributes.Description}"
                                 TextTrimming="CharacterEllipsis" />
@@ -393,7 +393,7 @@
                         TextTrimming="CharacterEllipsis" />
                     <TextBlock
                         Grid.Column="2"
-                        Margin="0,20,0,0"
+                        Margin="0,22,0,0"
                         Opacity="0.7"
                         Text="{TemplateBinding hlp:Attributes.Description}"
                         TextTrimming="CharacterEllipsis" />
@@ -425,7 +425,7 @@
                         Text="{TemplateBinding hlp:Attributes.Title}"
                         TextTrimming="CharacterEllipsis" />
                     <TextBlock
-                        Margin="0,18,0,0"
+                        Margin="0,22,0,0"
                         Opacity="0.7"
                         Text="{TemplateBinding hlp:Attributes.Description}"
                         TextTrimming="CharacterEllipsis" />
