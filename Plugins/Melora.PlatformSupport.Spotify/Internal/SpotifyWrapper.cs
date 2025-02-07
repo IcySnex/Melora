@@ -128,8 +128,20 @@ internal partial class SpotifyWrapper
     public void AuthenticatsYtmClient()
     {
         string geographicalLocation = config.GetStringOption("Search Market");
+        string visitorData = config.GetStringOption("YTM Visitor Data");
+        string poToken = config.GetStringOption("YTM Po Token");
 
-        ytmClient = logger is null ? new(geographicalLocation) : new(logger, geographicalLocation);
+        if (ytmClient is null)
+            ytmClient = new(
+                geographicalLocation,
+                string.IsNullOrWhiteSpace(visitorData) ? null : visitorData,
+                string.IsNullOrWhiteSpace(poToken) ? null : poToken);
+        else
+        {
+            ytmClient.GeographicalLocation = geographicalLocation;
+            ytmClient.VisitorData = string.IsNullOrWhiteSpace(visitorData) ? null : visitorData;
+            ytmClient.PoToken = string.IsNullOrWhiteSpace(poToken) ? null : poToken;
+        }
 
         logger?.LogInformation("[SpotifyWrapper-AuthenticatsYtmClient] YouTube Music client has been authenticated.");
     }

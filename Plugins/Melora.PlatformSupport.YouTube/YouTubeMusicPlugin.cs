@@ -22,6 +22,8 @@ public class YouTubeMusicPlugin : PlatformSupportPlugin
                     //new BoolOption("Save Lyrics", "Whether to search & save lyrics from Genius automatically", true),
                     new BoolOption("Playlist As Album", "Whether to set the playlist name as the album if possible", false),
                     new StringOption("Geographical Location", "The region for the YouTube Music search payload", "US", 2),
+                    new StringOption("Visitor Data", "The persistent visitor data used for YouTube Music session tailoring", "", 0, true),
+                    new StringOption("Po Token", "The Proof of Origin Token for YouTube Music attestation", "", 0, true),
                 ],
                 defaultQuality: Quality._160kbps,
                 defaultFormat: Format.mp3,
@@ -46,6 +48,8 @@ public class YouTubeMusicPlugin : PlatformSupportPlugin
         switch (e.PropertyName)
         {
             case "Geographical Location":
+            case "Visitor Data":
+            case "Po Token":
                 wrapper.AuthenticateClient();
                 break;
         }
