@@ -156,8 +156,10 @@ public partial class DownloadsViewModel : ObservableObject
 
         try
         {
-            PlatformSupportPlugin plugin = PluginManager.GetLoaded<PlatformSupportPlugin>(download.PluginHash);
-            MetadataPlugin metadataPlugin = PluginManager.GetLoaded<MetadataPlugin>(Config.Downloads.SelectedMetadatePlugin);
+            PlatformSupportPlugin plugin = PluginManager.GetLoadedOrDefault<PlatformSupportPlugin>(download.PluginHash)
+                ?? throw new Exception($"Could not get PlatformSupport plugin ({download.PluginHash}).", new("Please make sure the plugin is still loaded and was not removed."));
+            MetadataPlugin metadataPlugin = PluginManager.GetLoadedOrDefault<MetadataPlugin>(Config.Downloads.SelectedMetadatePlugin)
+                ?? throw new Exception($"Could not get Metadata plugin ({Config.Downloads.SelectedMetadatePlugin}).", new("Please make sure a plugin is loaded and selected (https://icysnex.github.io/Melora/guide/metadata.html#selecting-a-metadata-plugin)."));
 
             string fileName = Config.Paths.Filename
                 .Replace("{title}", download.Track.Title)
