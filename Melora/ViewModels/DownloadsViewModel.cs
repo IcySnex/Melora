@@ -132,7 +132,7 @@ public partial class DownloadsViewModel : ObservableObject
 
 
     [RelayCommand]
-    async Task DownloadAsync(
+    async Task<Exception?> DownloadAsync(
         DownloadContainer download)
     {
         IProgress<TimeSpan> progress = new Progress<TimeSpan>(currentTime => download.Progress = (int)(currentTime / download.Track.Duration * 100));
@@ -174,11 +174,11 @@ public partial class DownloadsViewModel : ObservableObject
                 {
                     case AlreadyExistsBehavior.Ask:
                         if (await mainView.AlertAsync("A track with the same file name already exists in the download location. Would you like to overwrite this file?", "Warning!", "No", "Yes") != ContentDialogResult.Primary)
-                            return;
+                            return null;
                         break;
                     case AlreadyExistsBehavior.Skip:
                         mainView.ShowNotification("Warning!", $"Skipped download of track: {download.Track.Title}.", NotificationLevel.Warning, "A track with the same file name already exists in the download location and the 'Already Exists Behaviour' is set to skip.");
-                        return;
+                        return null;
                     case AlreadyExistsBehavior.Overwrite:
                         break;
                 }
@@ -206,6 +206,7 @@ public partial class DownloadsViewModel : ObservableObject
 
             mainView.ShowNotification("Success!", $"Finished downloading track: {download.Track.Title}.", NotificationLevel.Success);
             logger.LogInformation("[DownloadsViewModel-DownloadAsync] Finished download of track");
+            return null;
         }
         catch (OperationCanceledException)
         {
@@ -213,6 +214,7 @@ public partial class DownloadsViewModel : ObservableObject
 
             await TryDeleteFile();
             download.Reset();
+            return null;
         }
         catch (Exception ex)
         {
@@ -221,6 +223,7 @@ public partial class DownloadsViewModel : ObservableObject
 
             await TryDeleteFile();
             download.Reset();
+            return ex;
         }
     }
 
@@ -258,10 +261,23 @@ public partial class DownloadsViewModel : ObservableObject
 
             await DownloadCommand.ExecuteAsync(download);
             await registration.DisposeAsync();
+
+            if (((Task<Exception?>?)DownloadCommand.ExecutionTask)?.Result is Exception ex)
+                switch (Config.Downloads.ErrorBehavior)
+                {
+                    case ErrorBehavior.Ask:
+                        if (await mainView.AlertAsync($"A track failed to download. Would you like to continue downloading the queue or stop?\n\n{ex.ToFormattedString()}", "Warning!", "Stop", "Continue") != ContentDialogResult.Primary)
+                            return;
+                        break;
+                    case ErrorBehavior.Stop:
+                        return;
+                    case ErrorBehavior.Ignore:
+                        continue;
+                }
         }
         logger.LogInformation("[DownloadsViewModel-DownloadAsync] Finished downloading all tracks");
 
-        if (await mainView.AlertAsync("All tracks have finished to download.\nDo you want to open the download location in the file explorer?", "Finished successfully!", "No", "Yes") == ContentDialogResult.Primary)
+        if (await mainView.AlertAsync("All tracks have finished to download.\nDo you want to open the download location in the file explorer?", "Queue finished!", "No", "Yes") == ContentDialogResult.Primary)
             await Launcher.LaunchFolderPathAsync(Config.Paths.DownloadLocation);
     }
 

@@ -377,6 +377,18 @@
                         </ComboBox>
                     </ContentControl>
 
+                    <!--  Error behavior  -->
+                    <ContentControl
+                        hlp:Attributes.Description="What happens when an error occurrs while downloading the queue"
+                        hlp:Attributes.Title="Error behavior"
+                        Template="{StaticResource SettingsCard}">
+                        <ComboBox Width="160" SelectedIndex="{x:Bind viewModel.Config.Downloads.ErrorBehavior, Mode=TwoWay, Converter={StaticResource EnumIndexConverter}}">
+                            <ComboBoxItem Content="Ask each time" />
+                            <ComboBoxItem Content="Stop" />
+                            <ComboBoxItem Content="Ignore" />
+                        </ComboBox>
+                    </ContentControl>
+
                     <!--  Allow Changing Track ID  -->
                     <ContentControl
                         hlp:Attributes.Description="Whether it's allowed to change a tracks ID"
