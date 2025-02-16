@@ -28,6 +28,7 @@ public class SpotifyPlugin : PlatformSupportPlugin
                     new StringOption("Genius Access Token", "The access token used to fetch track lyrics from Genius", "u_s2DsG-ewN4YDxgLZxzpo01mZaWSePOilc5rkBcylAYZ29cl93UzA7OEuPxWOCr", 50, true),
                     new StringOption("YTM Visitor Data", "The persistent visitor data used for YouTube Music session tailoring", "", 0, true),
                     new StringOption("YTM Po Token", "The Proof of Origin Token for YouTube Music attestation", "", 0, true),
+                    new StringOption("YTM Cookies", "The cookies header for logging into an YouTube Music account", "", 0, true),
                 ],
                 defaultQuality: Quality._160kbps,
                 defaultFormat: Format.mp3,
@@ -61,6 +62,7 @@ public class SpotifyPlugin : PlatformSupportPlugin
             case "Search Market":
             case "YTM Visitor Data":
             case "YTM Po Token":
+            case "YTM Cookies":
                 wrapper.AuthenticatsYtmClient();
                 break;
         }

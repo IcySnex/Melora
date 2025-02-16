@@ -130,18 +130,17 @@ internal partial class SpotifyWrapper
         string geographicalLocation = config.GetStringOption("Search Market");
         string visitorData = config.GetStringOption("YTM Visitor Data");
         string poToken = config.GetStringOption("YTM Po Token");
+        string cookies = config.GetStringOption("YTM Cookies");
 
-        if (ytmClient is null)
-            ytmClient = new(
-                geographicalLocation,
-                string.IsNullOrWhiteSpace(visitorData) ? null : visitorData,
-                string.IsNullOrWhiteSpace(poToken) ? null : poToken);
-        else
-        {
-            ytmClient.GeographicalLocation = geographicalLocation;
-            ytmClient.VisitorData = string.IsNullOrWhiteSpace(visitorData) ? null : visitorData;
-            ytmClient.PoToken = string.IsNullOrWhiteSpace(poToken) ? null : poToken;
-        }
+        ytmClient = new(
+            geographicalLocation,
+            string.IsNullOrWhiteSpace(visitorData) ? null : visitorData,
+            string.IsNullOrWhiteSpace(poToken) ? null : poToken,
+            string.IsNullOrWhiteSpace(cookies) ? null : cookies.Split(';').Select(cookieString =>
+            {
+                string[] parts = cookieString.Split("=");
+                return new Cookie(parts[0], parts[1]) { Domain = ".youtube.com" };
+            }));
 
         logger?.LogInformation("[SpotifyWrapper-AuthenticatsYtmClient] YouTube Music client has been authenticated.");
     }

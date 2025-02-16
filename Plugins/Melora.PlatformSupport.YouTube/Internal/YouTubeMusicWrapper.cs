@@ -93,18 +93,17 @@ internal partial class YouTubeMusicWrapper
         string geographicalLocation = config.GetStringOption("Geographical Location");
         string visitorData = config.GetStringOption("Visitor Data");
         string poToken = config.GetStringOption("Po Token");
+        string cookies = config.GetStringOption("Cookies");
 
-        if (client is null)
-            client = new(
-                geographicalLocation,
-                string.IsNullOrWhiteSpace(visitorData) ? null : visitorData,
-                string.IsNullOrWhiteSpace(poToken) ? null : poToken);
-        else
-        {
-            client.GeographicalLocation = geographicalLocation;
-            client.VisitorData = string.IsNullOrWhiteSpace(visitorData) ? null : visitorData;
-            client.PoToken = string.IsNullOrWhiteSpace(poToken) ? null : poToken;
-        }
+        client = new(
+            geographicalLocation,
+            string.IsNullOrWhiteSpace(visitorData) ? null : visitorData,
+            string.IsNullOrWhiteSpace(poToken) ? null : poToken,
+            string.IsNullOrWhiteSpace(cookies) ? null : cookies.Split(';').Select(cookieString =>
+            {
+                string[] parts = cookieString.Split("=");
+                return new Cookie(parts[0], parts[1]) { Domain = ".youtube.com" };
+            }));
 
         logger?.LogInformation("[YouTubeMusicWrapper-AuthenticateClient] Client has been authenticated.");
     }

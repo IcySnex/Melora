@@ -24,6 +24,7 @@ public class YouTubeMusicPlugin : PlatformSupportPlugin
                     new StringOption("Geographical Location", "The region for the YouTube Music search payload", "US", 2),
                     new StringOption("Visitor Data", "The persistent visitor data used for YouTube Music session tailoring", "", 0, true),
                     new StringOption("Po Token", "The Proof of Origin Token for YouTube Music attestation", "", 0, true),
+                    new StringOption("Cookies", "The cookies header for logging into an account", "", 0, true),
                 ],
                 defaultQuality: Quality._160kbps,
                 defaultFormat: Format.mp3,
@@ -50,6 +51,7 @@ public class YouTubeMusicPlugin : PlatformSupportPlugin
             case "Geographical Location":
             case "Visitor Data":
             case "Po Token":
+            case "Cookies":
                 wrapper.AuthenticateClient();
                 break;
         }
