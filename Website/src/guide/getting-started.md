@@ -44,3 +44,11 @@ When you attempt to download a track that already exists with the same name, Mel
 - **Overwrite track:** The existing track will be automatically overwritten, and the download queue will proceed without pausing.
 
 ![](/guide/getting-started-alreadyexists.webp)
+
+---
+
+::: warning Please notice
+Plugins are required for Melora to function. They handle **searching**, **track downloads**, and **metadata writing**.
+
+Without plugins, you won’t be able to use Melora. To learn more, refer to the [Plugins Guide](/Melora/guide/plugins.html) to get started.
+:::
