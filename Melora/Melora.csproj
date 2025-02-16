@@ -25,8 +25,8 @@
 			<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 			<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
 
-		<AssemblyVersion>1.1.0</AssemblyVersion>
-		<FileVersion>1.1.0</FileVersion>
+		<AssemblyVersion>1.2.0</AssemblyVersion>
+		<FileVersion>1.2.0</FileVersion>
 
 		<Title>Melora</Title>
 		<Version>$(AssemblyVersion)</Version>
@@ -42,9 +42,10 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageTags>melora;music;downloader;music-downloadr;spotify;youtube;youtube-music</PackageTags>
-		<PackageReleaseNotes>- Introduced ability to set custom download ID's for tracks in queue
-- Minor UI Improvements on Settings Page
-- Updated to latest Melora Plugins API (v1.0.1)</PackageReleaseNotes>
+		<PackageReleaseNotes>- Added options to configure what happens when track fails to download during queue
+- Improved error message when trying to download track without Metadata plugin
+- Updated dependencies
+		</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<!--  Additional  -->
@@ -65,16 +66,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="GeniusAPI" Version="1.1.1" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240802000" />
-		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
-		<PackageReference Include="Serilog" Version="4.0.1" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250205002" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
+		<PackageReference Include="Serilog" Version="4.2.0" />
 		<PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+		<PackageReference Include="System.Text.Json" Version="8.0.5" />
 		
 		<Manifest Include="$(ApplicationManifest)" />
 	</ItemGroup>
