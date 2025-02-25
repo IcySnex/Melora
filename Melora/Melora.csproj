@@ -25,8 +25,8 @@
 			<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 			<GenerateDocumentationFile>true</GenerateDocumentationFile>-->
 
-		<AssemblyVersion>1.2.0</AssemblyVersion>
-		<FileVersion>1.2.0</FileVersion>
+		<AssemblyVersion>1.2.1</AssemblyVersion>
+		<FileVersion>1.2.1</FileVersion>
 
 		<Title>Melora</Title>
 		<Version>$(AssemblyVersion)</Version>
@@ -42,10 +42,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageTags>melora;music;downloader;music-downloadr;spotify;youtube;youtube-music</PackageTags>
-		<PackageReleaseNotes>- Added options to configure what happens when track fails to download during queue
-- Improved error message when trying to download track without Metadata plugin
-- Updated dependencies
-		</PackageReleaseNotes>
+		<PackageReleaseNotes>- Fixed filename being trimmed if it contains a dot (.) character</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<!--  Additional  -->
