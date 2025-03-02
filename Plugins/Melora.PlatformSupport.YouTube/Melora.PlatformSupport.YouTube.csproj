@@ -19,7 +19,7 @@
 	
 	<ItemGroup>
 		<PackageReference Include="YoutubeExplode" Version="6.5.3" />
-		<PackageReference Include="YouTubeMusicAPI" Version="2.2.4" />
+		<PackageReference Include="YouTubeMusicAPI" Version="2.2.6" />
 	</ItemGroup>
 
 	<!--  Resources  -->
