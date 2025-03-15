@@ -446,7 +446,7 @@
 
                     <!--  Filename  -->
                     <ContentControl
-                        hlp:Attributes.Description="Replacements: {title}, {artists}, {album}, {release} - Use '\' to create a Folder"
+                        hlp:Attributes.Description="Replacements: {title}, {artists}, {album}, {release}, {trackNumber}, {totalTracks}, {discNumber}, {totalDiscs} - Use '\' to create a Folder"
                         hlp:Attributes.Title="Filename"
                         Template="{StaticResource SettingsCard}">
                         <TextBox Width="300" Text="{x:Bind viewModel.Config.Paths.Filename, Mode=TwoWay}" />

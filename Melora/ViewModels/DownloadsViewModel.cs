@@ -163,10 +163,15 @@ public partial class DownloadsViewModel : ObservableObject
 
             string fileName = Config.Paths.Filename
                 .Replace("{title}", download.Track.Title)
-                .Replace("{artists}", download.Track.Artists)
+                .Replace("{artists}", download.Track.Artists.Split(", ")[0])
                 .Replace("{album}", download.Track.Album)
                 .Replace("{release}", download.Track.ReleasedAt.ToString("MM-dd-yyyyy"))
-                .ToLegitFileName();
+                .Replace("{trackNumber}", download.Track.TrackNumber.ToString())
+                .Replace("{totalTracks}", download.Track.TotalTracks.ToString())
+                .Replace("{discNumber}", download.Track.DiscNumber.ToString())
+                .Replace("{totalDiscs}", download.Track.TotalDiscs.ToString())
+                .ToLegitFileName()
+                .Trim('\\');
             filePath = Path.Combine(Config.Paths.DownloadLocation, Path.ChangeExtension(fileName, $".{plugin.Config.Format}"));
 
             if (File.Exists(filePath))
