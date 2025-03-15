@@ -15,7 +15,9 @@ namespace Melora.Plugins.Models;
 /// <param name="genre">The genre of the downloadable track.</param>
 /// <param name="lyrics">The lyrics of the downloadable track.</param>
 /// <param name="trackNumber">The track number of the downloadable track.</param>
-/// <param name="totalTracks">The total tracks of the downloadable tracks album.</param>
+/// <param name="totalTracks">The total tracks of the downloadable track's album.</param>
+/// <param name="discNumber">The disc number of the downloadable track.</param>
+/// <param name="totalDiscs">The total discs of the downloadable track's album.</param>
 /// <param name="copyright">The copyright of the downloadable tracks.</param>
 /// <param name="comment">An optional comment from the plugin.</param>
 /// <param name="url">The url of the downloadable track.</param>
@@ -35,6 +37,8 @@ public partial class DownloadableTrack(
     string? lyrics,
     int trackNumber,
     int totalTracks,
+    int discNumber,
+    int totalDiscs,
     string copyright,
     string? comment,
     string url,
@@ -104,6 +108,18 @@ public partial class DownloadableTrack(
     /// </summary>
     [ObservableProperty]
     int totalTracks = totalTracks;
+    
+    /// <summary>
+    /// The disc number of the downloadable track's.
+    /// </summary>
+    [ObservableProperty]
+    int discNumber = discNumber;
+
+    /// <summary>
+    /// The total discs of the downloadable track's album.
+    /// </summary>
+    [ObservableProperty]
+    int totalDiscs = totalDiscs;
 
     /// <summary>
     /// The copyright of the downloadable track's album.
