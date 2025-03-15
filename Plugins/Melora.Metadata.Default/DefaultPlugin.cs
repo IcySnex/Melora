@@ -56,6 +56,8 @@ public class DefaultPlugin : MetadataPlugin
         file.Lyrics.UnsynchronizedLyrics = track.Lyrics ?? string.Empty;
         file.TrackNumber = track.TrackNumber;
         file.TrackTotal = track.TotalTracks;
+        file.DiscNumber = track.DiscNumber;
+        file.DiscTotal = track.TotalDiscs;
         file.Copyright = track.Copyright;
         file.Comment = track.Comment ?? string.Empty;
         file.AudioSourceUrl = track.Url;
