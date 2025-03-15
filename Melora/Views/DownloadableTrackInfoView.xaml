@@ -106,9 +106,13 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="12" />
-                <ColumnDefinition Width="101" />
+                <ColumnDefinition Width="93" />
                 <ColumnDefinition Width="2" />
-                <ColumnDefinition Width="101" />
+                <ColumnDefinition Width="93" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="93" />
+                <ColumnDefinition Width="2" />
+                <ColumnDefinition Width="93" />
                 <ColumnDefinition Width="12" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
@@ -118,14 +122,6 @@
                 <CalendarDatePicker Date="{x:Bind viewModel.Track.ReleasedAt, Mode=TwoWay, Converter={StaticResource DateTimeDateTimeOffsetConverter}}" />
             </ContentControl>
 
-            <!--  Is Explicit  -->
-            <ContentControl
-                Grid.Column="6"
-                hlp:Attributes.Title="Is Explicit"
-                Template="{StaticResource WithHeader}">
-                <ToggleSwitch IsOn="{x:Bind viewModel.Track.IsExplicit, Mode=TwoWay}" />
-            </ContentControl>
-
             <!--  Track Numer/Total Tracks  -->
             <ContentControl
                 Grid.Column="2"
@@ -133,14 +129,13 @@
                 Template="{StaticResource WithHeader}">
                 <NumberBox
                     CornerRadius="4,0,0,4"
-                    Maximum="{x:Bind viewModel.Track.TotalTracks, Mode=OneWay}"
                     Minimum="0"
                     SpinButtonPlacementMode="Compact"
                     Value="{x:Bind viewModel.Track.TrackNumber, Mode=TwoWay}" />
             </ContentControl>
             <ContentControl
                 Grid.Column="4"
-                hlp:Attributes.Title="Total"
+                hlp:Attributes.Title="Total Tracks"
                 Template="{StaticResource WithHeader}">
                 <NumberBox
                     CornerRadius="0,4,4,0"
@@ -148,6 +143,37 @@
                     Minimum="0"
                     SpinButtonPlacementMode="Compact"
                     Value="{x:Bind viewModel.Track.TotalTracks, Mode=TwoWay}" />
+            </ContentControl>
+
+            <!--  Disc Number/Total Discs  -->
+            <ContentControl
+                Grid.Column="6"
+                hlp:Attributes.Title="Disc"
+                Template="{StaticResource WithHeader}">
+                <NumberBox
+                    CornerRadius="4,0,0,4"
+                    Minimum="0"
+                    SpinButtonPlacementMode="Compact"
+                    Value="{x:Bind viewModel.Track.DiscNumber, Mode=TwoWay}" />
+            </ContentControl>
+            <ContentControl
+                Grid.Column="8"
+                hlp:Attributes.Title="Total Discs"
+                Template="{StaticResource WithHeader}">
+                <NumberBox
+                    CornerRadius="0,4,4,0"
+                    Maximum="999"
+                    Minimum="0"
+                    SpinButtonPlacementMode="Compact"
+                    Value="{x:Bind viewModel.Track.TotalDiscs, Mode=TwoWay}" />
+            </ContentControl>
+
+            <!--  Is Explicit  -->
+            <ContentControl
+                Grid.Column="10"
+                hlp:Attributes.Title="Is Explicit"
+                Template="{StaticResource WithHeader}">
+                <ToggleSwitch IsOn="{x:Bind viewModel.Track.IsExplicit, Mode=TwoWay}" />
             </ContentControl>
         </Grid>
 

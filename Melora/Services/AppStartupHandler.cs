@@ -29,7 +29,7 @@ public class AppStartupHandler
         };
 
         mainView.SetSize(1100, 559);
-        mainView.SetMinSize(700, 525);
+        mainView.SetMinSize(800, 525);
         mainView.SetIcon("icon.ico");
         mainView.Activate();
 
