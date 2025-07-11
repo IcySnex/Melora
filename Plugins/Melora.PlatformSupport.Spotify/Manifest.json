@@ -16,6 +16,7 @@
     "GeniusAPI.dll",
     "HtmlAgilityPack.dll",
     "YouTubeMusicAPI.dll",
+    "Microsoft.Bcl.AsyncInterfaces.dll",
     "Jint.dll",
     "Acornima.dll"
   ]
