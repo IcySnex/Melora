@@ -220,14 +220,13 @@ internal partial class YouTubeWrapper
         IAsyncEnumerable<VideoSearchResult> videos = client.Search.GetVideosAsync(query, cancellationToken);
 
         int totalVideosToBuffer = Math.Min(config.SearchResultsLimit.GetValueOrDefault(int.MaxValue), 50);
-        string leftVideosToBuffer = config.SearchResultsLimit.HasValue ? $"/{config.SearchResultsLimit}" : $"/50";
 
         return await SearchResult.BufferAsync(
             videos,
             totalVideosToBuffer,
             (VideoSearchResult video, int index) =>
             {
-                progress.Report($"Buffering videos {index}{leftVideosToBuffer}...");
+                progress.Report($"Buffering videos {index}/{totalVideosToBuffer}...");
 
                 return new SearchResult(
                     title: video.Title,

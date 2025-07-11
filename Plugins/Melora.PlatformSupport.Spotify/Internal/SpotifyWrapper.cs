@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using YouTubeMusicAPI.Client;
 using YouTubeMusicAPI.Models.Search;
 using YouTubeMusicAPI.Models.Streaming;
+using SearchResult = Melora.Plugins.Models.SearchResult;
 
 namespace Melora.PlatformSupport.Spotify.Internal;
 
@@ -429,8 +430,9 @@ internal partial class SpotifyWrapper
         if (string.IsNullOrWhiteSpace(ytmId) || !IsValidYtmSongVideoId(ytmId))
         {
             logger?.LogInformation("[SpotifyWrapper-GetStreamAsync] Searching track on YouTube Music...");
-            SongSearchResult searchResult = (await ytmClient.SearchAsync<SongSearchResult>(id, 1, cancellationToken)).FirstOrDefault()
-                ?? throw new Exception("Could not find track on YouTube Music.");
+
+            IReadOnlyList<YouTubeMusicAPI.Models.Search.SearchResult> songs = await ytmClient.SearchAsync(id, SearchCategory.Songs).FetchItemsAsync(0, 1, cancellationToken);
+            SongSearchResult searchResult = songs.OfType<SongSearchResult>().FirstOrDefault() ?? throw new Exception("Could not find track on YouTube Music.");
 
             ytmId = searchResult.Id;
         }

@@ -3,11 +3,14 @@ using Melora.Plugins.Models;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text.RegularExpressions;
+using YoutubeExplode.Playlists;
 using YouTubeMusicAPI.Client;
 using YouTubeMusicAPI.Models;
 using YouTubeMusicAPI.Models.Info;
 using YouTubeMusicAPI.Models.Search;
 using YouTubeMusicAPI.Models.Streaming;
+using YouTubeMusicAPI.Pagination;
+using SearchResult = Melora.Plugins.Models.SearchResult;
 
 namespace Melora.PlatformSupport.YouTube.Internal;
 
@@ -177,25 +180,35 @@ internal partial class YouTubeMusicWrapper
 
         string browseId = client.GetCommunityPlaylistBrowseId(id);
         CommunityPlaylistInfo playlist = await client.GetCommunityPlaylistInfoAsync(browseId, cancellationToken);
+        PaginatedAsyncEnumerable<CommunityPlaylistSong> songs = client.GetCommunityPlaylistSongsAsync(browseId);
+
+        int totalSongsToBuffer = Math.Min(config.SearchResultsLimit.GetValueOrDefault(int.MaxValue), playlist.SongCount);
+        string leftSongsToBuffer = totalSongsToBuffer != 0 ? $"/{totalSongsToBuffer}" : string.Empty;
 
         bool playlistAsAlbum = config.GetBoolOption("Playlist As Album");
 
-        IEnumerable<SearchResult> results = playlist.Songs
-            .Where(song => song.Id is not null)
-            .Select(song => new SearchResult(
-                title: song.Name,
-                artists: string.Join(", ", song.Artists.Select(artist => artist.Name)),
-                duration: song.Duration,
-                imageUrl: GetLowResThumbnailUrl(song.Thumbnails),
-                id: song.Id!,
-                items: new()
-                {
-                    { "Explicit", song.IsExplicit },
-                    { "AlbumName", playlistAsAlbum ? playlist.Name : song.Album?.Name },
-                    { "TrackNumber", playlistAsAlbum ? Array.IndexOf(playlist.Songs, song) : 0 },
-                    { "TotalTracks", playlistAsAlbum ? playlist.SongCount : 0 }
-                }));
-        return config.SearchResultsLimit.HasValue ? results.Take(config.SearchResultsLimit.Value) : results;
+        return await SearchResult.BufferAsync(
+            songs,
+            totalSongsToBuffer,
+            (CommunityPlaylistSong song, int index) =>
+            {
+                progress.Report($"Buffering videos {index}{leftSongsToBuffer}...");
+
+                return new SearchResult(
+                    title: song.Name,
+                    artists: string.Join(", ", song.Artists.Select(artist => artist.Name)),
+                    duration: song.Duration,
+                    imageUrl: GetLowResThumbnailUrl(song.Thumbnails),
+                    id: song.Id,
+                    items: new()
+                    {
+                        { "Explicit", song.IsExplicit },
+                        { "AlbumName", playlistAsAlbum ? playlist.Name : song.Album?.Name },
+                        { "TrackNumber", index + 1 },
+                        { "TotalTracks", playlistAsAlbum ? playlist.SongCount : 0 }
+                    });
+            },
+            cancellationToken);
     }
 
     public async Task<IEnumerable<SearchResult>> SearchArtistAsync(
@@ -212,25 +225,35 @@ internal partial class YouTubeMusicWrapper
 
         string browseId = client.GetCommunityPlaylistBrowseId(artist.AllSongsPlaylistId);
         CommunityPlaylistInfo playlist = await client.GetCommunityPlaylistInfoAsync(browseId, cancellationToken);
+        PaginatedAsyncEnumerable<CommunityPlaylistSong> songs = client.GetCommunityPlaylistSongsAsync(browseId);
+
+        int totalSongsToBuffer = Math.Min(config.SearchResultsLimit.GetValueOrDefault(int.MaxValue), playlist.SongCount);
+        string leftSongsToBuffer = totalSongsToBuffer != 0 ? $"/{totalSongsToBuffer}" : string.Empty;
 
         bool playlistAsAlbum = config.GetBoolOption("Playlist As Album");
 
-        IEnumerable<SearchResult> results = playlist.Songs
-            .Where(song => song.Id is not null)
-            .Select(song => new SearchResult(
-                title: song.Name,
-                artists: string.Join(", ", song.Artists.Select(artist => artist.Name)),
-                duration: song.Duration,
-                imageUrl: GetLowResThumbnailUrl(song.Thumbnails),
-                id: song.Id!,
-                items: new()
-                {
-                    { "Explicit", song.IsExplicit },
-                    { "AlbumName", playlistAsAlbum ? $"{artist.Name}'s Songs" : song.Album?.Name },
-                    { "TrackNumber", playlistAsAlbum ? Array.IndexOf(playlist.Songs, song) : 0 },
-                    { "TotalTracks", playlistAsAlbum ? playlist.SongCount : 0 }
-                }));
-        return config.SearchResultsLimit.HasValue ? results.Take(config.SearchResultsLimit.Value) : results;
+        return await SearchResult.BufferAsync(
+            songs,
+            totalSongsToBuffer,
+            (CommunityPlaylistSong song, int index) =>
+            {
+                progress.Report($"Buffering videos {index}{leftSongsToBuffer}...");
+
+                return new SearchResult(
+                    title: song.Name,
+                    artists: string.Join(", ", song.Artists.Select(artist => artist.Name)),
+                    duration: song.Duration,
+                    imageUrl: GetLowResThumbnailUrl(song.Thumbnails),
+                    id: song.Id,
+                    items: new()
+                    {
+                        { "Explicit", song.IsExplicit },
+                        { "AlbumName", playlistAsAlbum ? playlist.Name : song.Album?.Name },
+                        { "TrackNumber", index + 1 },
+                        { "TotalTracks", playlistAsAlbum ? playlist.SongCount : 0 }
+                    });
+            },
+            cancellationToken);
     }
 
     public async Task<IEnumerable<SearchResult>> SearchQueryAsync(
@@ -241,22 +264,35 @@ internal partial class YouTubeMusicWrapper
         logger?.LogInformation("[YouTubeMusicWrapper-SearchQueryAsync] Searching for query...");
         progress.Report("Searching for query...");
 
-        IEnumerable<SongSearchResult> songs = await client.SearchAsync<SongSearchResult>(query, 20, cancellationToken);
+        PaginatedAsyncEnumerable<YouTubeMusicAPI.Models.Search.SearchResult> songs = client.SearchAsync(query, SearchCategory.Songs);
 
-        IEnumerable<SearchResult> results = songs.Select(song => new SearchResult(
-            title: song.Name,
-            artists: string.Join(", ", song.Artists.Select(artist => artist.Name)),
-            duration: song.Duration,
-            imageUrl: GetLowResThumbnailUrl(song.Thumbnails),
-            id: song.Id,
-            items: new()
+        int totalSongsToBuffer = Math.Min(config.SearchResultsLimit.GetValueOrDefault(int.MaxValue), 50);
+
+        return await SearchResult.BufferAsync(
+            songs,
+            totalSongsToBuffer,
+            (YouTubeMusicAPI.Models.Search.SearchResult searchResult, int index) =>
             {
-                { "Explicit", song.IsExplicit },
-                { "AlbumName", song.Album?.Name },
-                { "TrackNumber", 0 },
-                { "TotalTracks", 0 }
-            }));
-        return config.SearchResultsLimit.HasValue ? results.Take(config.SearchResultsLimit.Value) : results;
+                progress.Report($"Buffering videos {index}/{totalSongsToBuffer}...");
+
+                if (searchResult is not SongSearchResult song)
+                    return null;
+
+                return new SearchResult(
+                    title: song.Name,
+                    artists: string.Join(", ", song.Artists.Select(artist => artist.Name)),
+                    duration: song.Duration,
+                    imageUrl: GetLowResThumbnailUrl(song.Thumbnails),
+                    id: song.Id,
+                    items: new()
+                    {
+                        { "Explicit", song.IsExplicit },
+                        { "AlbumName", song.Album?.Name },
+                        { "TrackNumber", 0 },
+                        { "TotalTracks", 0 }
+                    });
+            },
+            cancellationToken);
     }
 
 
