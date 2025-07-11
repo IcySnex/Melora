@@ -2,8 +2,8 @@
   "Name": "Default",
   "Description": "Writes the default metadata for any downloaded track.",
   "Author": "IcySnex",
-  "ApiVersion": "1.1.0",
-  "LastUpdatedAt": "2025-03-15T21:00:00Z",
+  "ApiVersion": "1.1.1",
+  "LastUpdatedAt": "2025-07-11T00:00:00Z",
   "SourceUrl": "https://github.com/IcySnex/Melora/tree/main/Plugins/Melora.Metadata.Default",
   "DownloadUrl": "https://github.com/IcySnex/Melora/releases/download/v0.0.0/Melora.Metadata.Default.mlr",
   "PluginKinds": [

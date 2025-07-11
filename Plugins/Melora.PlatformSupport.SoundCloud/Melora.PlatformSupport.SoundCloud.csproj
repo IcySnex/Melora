@@ -24,7 +24,7 @@
 		</Content>
 	</ItemGroup>
 	<ItemGroup>
-	  <PackageReference Include="SoundCloudExplode" Version="1.6.5" />
+	  <PackageReference Include="SoundCloudExplode" Version="1.6.6" />
 	</ItemGroup>
 
 

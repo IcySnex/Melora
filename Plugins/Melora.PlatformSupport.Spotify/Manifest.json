@@ -2,7 +2,7 @@
   "Name": "Spotify",
   "Description": "Adds support to search & download tracks, albums, playlists & artists from Spotify.",
   "Author": "IcySnex",
-  "ApiVersion": "1.1.0",
+  "ApiVersion": "1.1.1",
   "LastUpdatedAt": "2025-07-11T00:00:00Z",
   "SourceUrl": "https://github.com/IcySnex/Melora/tree/main/Plugins/Melora.PlatformSupport.Spotify",
   "DownloadUrl": "https://github.com/IcySnex/Melora/releases/download/v0.0.0/Melora.PlatformSupport.Spotify.mlr",
