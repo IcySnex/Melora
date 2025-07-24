@@ -43,7 +43,7 @@
 
                 <Image
                     DataContext="{x:Bind viewModel.Track}"
-                    Source="{Binding ArtworklUrl}"
+                    Source="{Binding ArtworkUrl}"
                     Stretch="UniformToFill" />
             </Border>
             <Button

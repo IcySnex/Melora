@@ -37,7 +37,7 @@ public partial class LyricsInfoViewModel : ObservableObject
     [RelayCommand]
     async Task SaveArtworkAsync()
     {
-        if (Track.ArtworklUrl is null || Track.ArtworklUrl.StartsWith("file:///"))
+        if (Track.ArtworkUrl is null || Track.ArtworkUrl.StartsWith("file:///"))
         {
             mainView.ShowNotification("Warning!", "Can't save artwork.", NotificationLevel.Warning, "This track has no artwork set or its source is a local file.");
             logger.LogWarning("[LyricsInfoViewModel-SaveArtworkAsync] Track artwork url is null or a file. Could not save artwork.");
@@ -62,7 +62,7 @@ public partial class LyricsInfoViewModel : ObservableObject
 
         try
         {
-            Stream artwork = await client.GetStreamAsync(Track.ArtworklUrl);
+            Stream artwork = await client.GetStreamAsync(Track.ArtworkUrl);
             logger.LogInformation("[LyricsInfoViewModel-SaveArtworkAsync] Saved stream for arwork");
 
             using Stream fileStream = await file.OpenStreamForWriteAsync();
