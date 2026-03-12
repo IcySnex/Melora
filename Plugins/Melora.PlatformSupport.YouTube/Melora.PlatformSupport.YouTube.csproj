@@ -18,8 +18,9 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="YoutubeExplode" Version="6.5.5" />
-		<PackageReference Include="YouTubeMusicAPI" Version="3.0.2" />
+		<PackageReference Include="System.Text.Json" Version="10.0.5" />
+		<PackageReference Include="YoutubeExplode" Version="6.5.7" />
+		<PackageReference Include="YouTubeMusicAPI" Version="3.0.6" />
 	</ItemGroup>
 
 	<!--  Resources  -->

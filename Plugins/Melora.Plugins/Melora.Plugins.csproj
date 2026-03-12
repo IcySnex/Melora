@@ -10,8 +10,8 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-		<AssemblyVersion>1.1.1</AssemblyVersion>
-		<FileVersion>1.1.1</FileVersion>
+		<AssemblyVersion>1.1.2</AssemblyVersion>
+		<FileVersion>1.1.2</FileVersion>
 
 		<Title>Melora.Plugins</Title>
 		<Version>$(AssemblyVersion)</Version>
@@ -33,7 +33,7 @@
 	<!--  Dependencies  -->
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.7" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.5" />
 	</ItemGroup>
 
 	<!--  Resources  -->

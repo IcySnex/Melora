@@ -197,7 +197,7 @@ internal partial class SoundCloudWrapper
         logger?.LogInformation("[SoundCloudWrapper-SearchSetAsync] Searching for query...");
         progress.Report("Searching for query...");
 
-        IAsyncEnumerable<Track> tracks = client.Search.GetTracksAsync(query, cancellationToken);
+        IAsyncEnumerable<Track> tracks = client.Search.GetTracksAsync(query, 0, 50, cancellationToken);
 
         int totalTracksToBuffer = Math.Min(config.SearchResultsLimit.GetValueOrDefault(int.MaxValue), 50);
         string leftTracksToBuffer = totalTracksToBuffer != 0 ? $"/{totalTracksToBuffer}" : string.Empty;

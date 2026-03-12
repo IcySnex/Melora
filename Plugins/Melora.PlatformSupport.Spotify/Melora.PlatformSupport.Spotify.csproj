@@ -19,8 +19,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="GeniusAPI" Version="1.1.2" />
-		<PackageReference Include="SpotifyAPI.Web" Version="7.2.1" />
-		<PackageReference Include="YouTubeMusicAPI" Version="3.0.2" />
+		<PackageReference Include="SpotifyAPI.Web" Version="7.4.2" />
+		<PackageReference Include="YouTubeMusicAPI" Version="3.0.6" />
 	</ItemGroup>
 
 	<!--  Resources  -->

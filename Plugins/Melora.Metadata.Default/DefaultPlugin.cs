@@ -53,7 +53,7 @@ public class DefaultPlugin : MetadataPlugin
         file.Album = track.Album ?? string.Empty;
         file.AlbumArtist = track.Artists.Split(", ")[0];
         file.Genre = track.Genre ?? string.Empty;
-        file.Lyrics.UnsynchronizedLyrics = track.Lyrics ?? string.Empty;
+        file.Lyrics = track.Lyrics is not null ? [new() { UnsynchronizedLyrics = track.Lyrics }] : null;
         file.TrackNumber = track.TrackNumber;
         file.TrackTotal = track.TotalTracks;
         file.DiscNumber = track.DiscNumber;

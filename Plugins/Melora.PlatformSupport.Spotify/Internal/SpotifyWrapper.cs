@@ -233,7 +233,7 @@ internal partial class SpotifyWrapper
         progress.Report("Searching for playlist...");
 
         FullPlaylist playlist = await client.Playlists.Get(id, cancellationToken);
-        Paging<PlaylistTrack<IPlayableItem>> playlistTracks = await client.Playlists.GetItems(id, cancellationToken);
+        Paging<PlaylistTrack<IPlayableItem>> playlistTracks = await client.Playlists.GetPlaylistItems(id, cancellationToken);
         IAsyncEnumerable<PlaylistTrack<IPlayableItem>> tracks = client.Paginate(playlistTracks, null, cancellationToken);
 
         int totalTracksToBuffer = Math.Min(config.SearchResultsLimit.GetValueOrDefault(int.MaxValue), playlistTracks.Total.GetValueOrDefault(0));
@@ -280,29 +280,8 @@ internal partial class SpotifyWrapper
         progress.Report("Searching for artist...");
 
         FullArtist artist = await client.Artists.Get(id, cancellationToken);
-        ArtistsTopTracksResponse response = await client.Artists.GetTopTracks(id, new(config.GetStringOption("Search Market")), cancellationToken);
 
-        string albumName = $"{artist.Name}'s Top Tracks";
-
-        IEnumerable<SearchResult> results = response.Tracks.Select(track => new SearchResult(
-            title: track.Name,
-            artists: string.Join(", ", track.Artists.Select(artist => artist.Name)),
-            duration: TimeSpan.FromMilliseconds(track.DurationMs),
-            imageUrl: GetLowResArtworkUrl(track.Album.Images),
-            id: track.Id,
-            items: new()
-            {
-                { "PrimaryArtistId", track.Artists[0].Id },
-                { "Explicit", track.Explicit },
-                { "ReleaseDate", track.Album.ReleaseDate },
-                { "ReleaseDatePrecision", track.Album.ReleaseDatePrecision },
-                { "AlbumName", config.GetBoolOption("Playlist As Album") ? albumName : track.Album.Name },
-                { "AlbumTotalTracks", track.Album.TotalTracks },
-                { "TrackNumber", track.TrackNumber },
-                { "DiscNumber", track.DiscNumber },
-                { "FullArtwork", GetHighResArtworklUrl(track.Album.Images) }
-            }));
-        return config.SearchResultsLimit.HasValue ? results.Take(config.SearchResultsLimit.Value) : results;
+        return await SearchQueryAsync(artist.Name, progress, cancellationToken);
     }
 
     public async Task<IEnumerable<SearchResult>> SearchQueryAsync(
