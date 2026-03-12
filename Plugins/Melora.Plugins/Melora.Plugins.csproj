@@ -27,7 +27,8 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageTags>melora;music;downloader;music-downloadr;spotify;youtube;youtube-music</PackageTags>
-		<PackageReleaseNotes>- Updated packages</PackageReleaseNotes>
+		<PackageReleaseNotes>- Updated packages
+- Switched to net10.0</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<!--  Dependencies  -->

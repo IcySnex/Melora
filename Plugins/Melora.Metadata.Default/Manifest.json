@@ -15,6 +15,7 @@
     "Ude.NetStandard.dll",
     "System.Drawing.Common.dll",
     "Microsoft.Win32.SystemEvents.dll",
-    "System.Private.Windows.Core.dll"
+    "System.Private.Windows.Core.dll",
+    "System.Private.Windows.GdiPlus.dll"
   ]
 }

@@ -14,8 +14,6 @@
     "YoutubeExplode.dll",
     "AngleSharp.dll",
     "Microsoft.Bcl.AsyncInterfaces.dll",
-    "System.Text.Json.dll",
-    "System.IO.Pipelines.dll",
     "YouTubeMusicAPI.dll",
     "Newtonsoft.Json.dll",
     "Jint.dll",
