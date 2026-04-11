@@ -20,7 +20,7 @@
 	<ItemGroup>
 		<PackageReference Include="System.Text.Json" Version="10.0.5" />
 		<PackageReference Include="YoutubeExplode" Version="6.5.7" />
-		<PackageReference Include="YouTubeMusicAPI" Version="3.0.6" />
+		<PackageReference Include="YouTubeMusicAPI" Version="3.0.7" />
 	</ItemGroup>
 
 	<!--  Resources  -->
