@@ -295,7 +295,7 @@ internal partial class SpotifyWrapper
         SearchResponse response = await client.Search.Item(new(SearchRequest.Types.Track, query)
         {
             Market = config.GetStringOption("Search Market"),
-            Limit = Math.Min(config.SearchResultsLimit.GetValueOrDefault(int.MaxValue), 50),
+            Limit = Math.Min(config.SearchResultsLimit.GetValueOrDefault(int.MaxValue), 10),
         }, cancellationToken);
 
         if (response.Tracks.Items is null)
@@ -330,12 +330,13 @@ internal partial class SpotifyWrapper
         logger?.LogInformation("[SpotifyWrapper-PrepareDownloadAsync] Preparing track '{id}' for download...", searchResult.Id);
 
         bool saveLyrics = config.GetBoolOption("Save Lyrics");
+        bool fetchGenre = config.GetBoolOption("Fetch Genre");
 
         string? fullArtwork = searchResult.GetItem<string?>("FullArtwork");
         bool @explicit = searchResult.GetItem<bool>("Explicit");
         DateTime releaseDate = GetDateTime(searchResult.GetItem<string>("ReleaseDate"), searchResult.GetItem<string>("ReleaseDatePrecision"));
         string albumName = searchResult.GetItem<string>("AlbumName");
-        string? genre = await GetArtistGenreAsync(searchResult.GetItem<string>("PrimaryArtistId"), cancellationToken);
+        string? genre = fetchGenre ? await GetArtistGenreAsync(searchResult.GetItem<string>("PrimaryArtistId"), cancellationToken) : null;
         string? lyrics = saveLyrics ? await GetLyricsAsync(searchResult.Title, searchResult.Artists.Split(',')[0], cancellationToken) : null;
         int trackNumber = searchResult.GetItem<int>("TrackNumber");
         int albumTotalTracks = searchResult.GetItem<int>("AlbumTotalTracks");

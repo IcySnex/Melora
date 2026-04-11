@@ -20,6 +20,7 @@ public class SpotifyPlugin : PlatformSupportPlugin
                 defaultOptions:
                 [
                     new BoolOption("Save Lyrics", "Whether to search & save lyrics from Genius automatically", true),
+                    new BoolOption("Fetch Genre", "Whether to fetch the genre of a track using the primary artist", false),
                     new BoolOption("Playlist As Album", "Whether to set the playlist name as the album if possible", false),
                     new StringOption("Search Market", "The region code for the Spotify search market", "US", 2),
                     new StringOption("YTM Search Format", "The format used to search on YouTube Music. Embeds: {title}, {album}, {artists}, {year}", "{title} {artists}", 100),
