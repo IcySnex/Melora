@@ -4,6 +4,7 @@ using Melora.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 
 namespace Melora.Views;
 
@@ -44,6 +45,34 @@ public sealed partial class DownloadsView : Page
 
                 ViewModel.ShowTracksFrom.Remove(plugin.GetHashCode());
             });
+    }
+
+
+    // Swaps the queue position number for a drag handle while hovering a row, unless the queue is currently downloading (reordering is disabled then).
+    void OnRowPointerEntered(object sender, PointerRoutedEventArgs _)
+    {
+        if (ViewModel.DownloadAllCommand.IsRunning)
+            return;
+
+        SetReorderHandleVisible((Grid)sender, true);
+    }
+
+    void OnRowPointerExited(object sender, PointerRoutedEventArgs _) =>
+        SetReorderHandleVisible((Grid)sender, false);
+
+    static void SetReorderHandleVisible(Grid root, bool visible)
+    {
+        foreach (UIElement child in root.Children)
+            if (child is FrameworkElement element)
+                switch (element.Tag as string)
+                {
+                    case "ReorderHandle":
+                        element.Opacity = visible ? 0.35 : 0;
+                        break;
+                    case "Position":
+                        element.Opacity = visible ? 0 : 1;
+                        break;
+                }
     }
 
 

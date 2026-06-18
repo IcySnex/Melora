@@ -58,8 +58,16 @@ public partial class DownloadsViewModel : ObservableObject
         };
 
         Config.Downloads.PropertyChanged += OnConfigPropertyChanged;
+        Downloads.CollectionChanged += (_, _) => UpdatePositions();
 
         logger.LogInformation("[DownloadsViewModel-.ctor] DownloadsViewModel has been initialized");
+    }
+
+
+    void UpdatePositions()
+    {
+        for (int i = 0; i < Downloads.Count; i++)
+            Downloads[i].Position = i + 1;
     }
 
 

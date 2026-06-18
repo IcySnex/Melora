@@ -35,6 +35,9 @@ public partial class DownloadContainer(
 
 
     [ObservableProperty]
+    int position;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsIdle))]
     int progress = -1;
 

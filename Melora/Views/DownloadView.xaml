@@ -19,12 +19,21 @@
         <ListView
             Name="DownloadsContainer"
             Padding="24,116,24,24"
+            AllowDrop="{x:Bind ViewModel.DownloadAllCommand.IsRunning, Mode=OneWay, Converter={StaticResource InverseBoolConverter}}"
+            CanDragItems="{x:Bind ViewModel.DownloadAllCommand.IsRunning, Mode=OneWay, Converter={StaticResource InverseBoolConverter}}"
+            CanReorderItems="{x:Bind ViewModel.DownloadAllCommand.IsRunning, Mode=OneWay, Converter={StaticResource InverseBoolConverter}}"
             ItemsSource="{x:Bind ViewModel.Downloads}"
             SelectionMode="None">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="mdl:DownloadContainer">
-                    <Grid Padding="12">
+                    <Grid
+                        Padding="12"
+                        Background="Transparent"
+                        PointerEntered="OnRowPointerEntered"
+                        PointerExited="OnRowPointerExited">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="28" />
+                            <ColumnDefinition Width="12" />
                             <ColumnDefinition Width="50" />
                             <ColumnDefinition Width="12" />
                             <ColumnDefinition Width="3*" />
@@ -40,7 +49,32 @@
                             <ColumnDefinition Width="32" />
                         </Grid.ColumnDefinitions>
 
-                        <Border Style="{StaticResource PlaceholderImage}">
+                        <TextBlock
+                            Grid.Column="0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                            Tag="Position"
+                            Text="{x:Bind Position, Mode=OneWay}"
+                            TextAlignment="Center">
+                            <TextBlock.OpacityTransition>
+                                <ScalarTransition Duration="0:0:0.1" />
+                            </TextBlock.OpacityTransition>
+                        </TextBlock>
+                        <FontIcon
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Glyph="&#xe76f;"
+                            Opacity="0"
+                            Tag="ReorderHandle"
+                            ToolTipService.ToolTip="Drag to reorder">
+                            <FontIcon.OpacityTransition>
+                                <ScalarTransition Duration="0:0:0.1" />
+                            </FontIcon.OpacityTransition>
+                        </FontIcon>
+
+                        <Border Grid.Column="2" Style="{StaticResource PlaceholderImage}">
                             <Image
                                 HorizontalAlignment="Center"
                                 Source="{Binding Track.ArtworkUrl, Mode=OneWay}"
@@ -48,34 +82,34 @@
                         </Border>
 
                         <TextBlock
-                            Grid.Column="2"
+                            Grid.Column="4"
                             VerticalAlignment="Center"
                             FontSize="22"
                             Style="{StaticResource FlyoutPickerTitleTextBlockStyle}"
                             Text="{x:Bind Track.Title, Mode=OneWay, TargetNullValue='N/A'}"
                             TextTrimming="CharacterEllipsis" />
                         <TextBlock
-                            Grid.Column="4"
+                            Grid.Column="6"
                             VerticalAlignment="Center"
                             Opacity="0.7"
                             Text="{x:Bind Track.Artists, Mode=OneWay, TargetNullValue='N/A'}"
                             TextTrimming="CharacterEllipsis" />
                         <TextBlock
-                            Grid.Column="6"
+                            Grid.Column="8"
                             VerticalAlignment="Center"
                             Opacity="0.7"
                             Text="{x:Bind Track.Album, Mode=OneWay, TargetNullValue='N/A'}"
                             TextTrimming="CharacterEllipsis" />
 
                         <TextBlock
-                            Grid.Column="8"
+                            Grid.Column="10"
                             VerticalAlignment="Center"
                             Opacity="0.7"
                             Text="{x:Bind Track.Duration, Mode=OneWay, Converter={StaticResource TimeSpanStringConverter}}"
                             TextTrimming="CharacterEllipsis" />
 
                         <ProgressRing
-                            Grid.Column="10"
+                            Grid.Column="12"
                             Width="24"
                             Height="24"
                             Background="{ThemeResource ControlFillColorSecondaryBrush}"
@@ -83,7 +117,7 @@
                             Value="{x:Bind Progress, Mode=OneWay}" />
 
                         <Button
-                            Grid.Column="12"
+                            Grid.Column="14"
                             Width="32"
                             Height="32"
                             Padding="4">

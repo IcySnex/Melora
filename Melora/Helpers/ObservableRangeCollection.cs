@@ -129,7 +129,7 @@ public class ObservableRangeCollection<T> : Collection<T>, INotifyCollectionChan
         CheckReentrancy();
         T removedItem = this[oldIndex];
 
-        originalList.RemoveAt(oldIndex);
+        originalList.Remove(removedItem);
         originalList.Insert(newIndex, removedItem);
 
         base.RemoveItem(oldIndex);
@@ -175,7 +175,7 @@ public class ObservableRangeCollection<T> : Collection<T>, INotifyCollectionChan
         CheckReentrancy();
         T removedItem = this[index];
 
-        originalList.RemoveAt(index);
+        originalList.Remove(removedItem);
 
         base.RemoveItem(index);
 
