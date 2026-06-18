@@ -28,7 +28,7 @@ public class AppStartupHandler
                 await settingsViewModel.TryGetUpdatesAsync();
         };
 
-        mainView.SetSize(1100, 559);
+        mainView.SetSize(1100, 565);
         mainView.SetMinSize(800, 525);
         mainView.SetIcon("icon.ico");
         mainView.Activate();
