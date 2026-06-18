@@ -54,6 +54,11 @@ public partial class DownloadContainer(
     public CancellationTokenSource CancellationSource { get; private set; } = new();
 
 
+    public int? BatchPosition { get; set; }
+
+    public int? BatchTotal { get; set; }
+
+
     public void Reset()
     {
         if (isDisposed)

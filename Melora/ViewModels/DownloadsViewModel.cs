@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml.Controls;
 using System.ComponentModel;
+using System.Numerics;
 using Windows.System;
 
 namespace Melora.ViewModels;
@@ -174,10 +175,12 @@ public partial class DownloadsViewModel : ObservableObject
                 .Replace("{artists}", download.Track.Artists.Split(", ")[0])
                 .Replace("{album}", download.Track.Album)
                 .Replace("{release}", download.Track.ReleasedAt.ToString("MM-dd-yyyyy"))
-                .Replace("{trackNumber}", download.Track.TrackNumber.ToString())
-                .Replace("{totalTracks}", download.Track.TotalTracks.ToString())
-                .Replace("{discNumber}", download.Track.DiscNumber.ToString())
-                .Replace("{totalDiscs}", download.Track.TotalDiscs.ToString())
+                .Replace("{track}", download.Track.TrackNumber.ToString())
+                .Replace("{tracks}", download.Track.TotalTracks.ToString())
+                .Replace("{disc}", download.Track.DiscNumber.ToString())
+                .Replace("{discs}", download.Track.TotalDiscs.ToString())
+                .Replace("{pos}", (download.BatchPosition ?? download.Position).ToString())
+                .Replace("{max}", (download.BatchTotal ?? Downloads.Count).ToString())
                 .ToLegitFileName()
                 .Trim('\\');
             filePath = Path.Combine(Config.Paths.DownloadLocation, Path.ChangeExtension(fileName, $".{plugin.Config.Format}"));
@@ -263,30 +266,49 @@ public partial class DownloadsViewModel : ObservableObject
         }
 
         logger.LogInformation("[DownloadsViewModel-DownloadAllAsync] Starting to download all tracks...");
-        foreach (DownloadContainer download in Downloads.ToArray())
+
+        DownloadContainer[] queue = [.. Downloads];
+        for (int i = 0; i < queue.Length; i++)
         {
-            if (cancellationToken.IsCancellationRequested)
-                return;
-            if (!download.IsIdle || download.IsDisposed)
-                continue;
+            queue[i].BatchPosition = i + 1;
+            queue[i].BatchTotal = queue.Length;
+        }
 
-            CancellationTokenRegistration registration = cancellationToken.Register(download.CancellationSource.Cancel);
+        try
+        {
+            foreach (DownloadContainer download in queue)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                    return;
+                if (!download.IsIdle || download.IsDisposed)
+                    continue;
 
-            await DownloadCommand.ExecuteAsync(download);
-            await registration.DisposeAsync();
+                CancellationTokenRegistration registration = cancellationToken.Register(download.CancellationSource.Cancel);
 
-            if (((Task<Exception?>?)DownloadCommand.ExecutionTask)?.Result is Exception ex)
-                switch (Config.Downloads.ErrorBehavior)
-                {
-                    case ErrorBehavior.Ask:
-                        if (await mainView.AlertAsync($"A track failed to download. Would you like to continue downloading the queue or stop?\n\n{ex.ToFormattedString()}", "Warning!", "Stop", "Continue") != ContentDialogResult.Primary)
+                await DownloadCommand.ExecuteAsync(download);
+                await registration.DisposeAsync();
+
+                if (((Task<Exception?>?)DownloadCommand.ExecutionTask)?.Result is Exception ex)
+                    switch (Config.Downloads.ErrorBehavior)
+                    {
+                        case ErrorBehavior.Ask:
+                            if (await mainView.AlertAsync($"A track failed to download. Would you like to continue downloading the queue or stop?\n\n{ex.ToFormattedString()}", "Warning!", "Stop", "Continue") != ContentDialogResult.Primary)
+                                return;
+                            break;
+                        case ErrorBehavior.Stop:
                             return;
-                        break;
-                    case ErrorBehavior.Stop:
-                        return;
-                    case ErrorBehavior.Ignore:
-                        continue;
-                }
+                        case ErrorBehavior.Ignore:
+                            continue;
+                    }
+            }
+        }
+        finally
+        {
+            foreach (DownloadContainer download in queue)
+            {
+                download.BatchPosition = null;
+                download.BatchTotal = null;
+            }
         }
         logger.LogInformation("[DownloadsViewModel-DownloadAsync] Finished downloading all tracks");
 

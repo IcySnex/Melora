@@ -30,7 +30,7 @@ Melora uses FFmpeg internally to encode your downloaded tracks into your desired
 ![](/guide/getting-started-ffmpeg.webp)
 
 ### Other Paths
-In the Settings menu, you can also specify the download location for your tracks. Additionally, you can customize the file name by embedding track information using placeholders like *{title}*, *{artists}*, *{album}*, and *{release}*.
+In the Settings menu, you can also specify the download location for your tracks. Additionally, you can customize the file name by embedding track information using placeholders like *{title}*, *{artists}*, *{album}*, *{release}* (MM-dd-yyyy), *{track}* (album track number), *{tracks}* (album track count), *{disc}* (album disc number), *{dics}* (album discs count), *{pos}* (download queue position) and *{max}* (download queue count).
 
 To organize your tracks into a folder structure, use the '\\' character. For example, setting the file name as *"{artists}\\{album}\\{title}"* would save the track within a folder named after the album, which is nested inside a folder named after the artist. This allows for a neatly organized music library.
 
