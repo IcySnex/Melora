@@ -446,10 +446,27 @@
 
                     <!--  Filename  -->
                     <ContentControl
-                        hlp:Attributes.Description="Replacements: {title}, {artists}, {album}, {release}, {track}, {tracks}, {disc}, {discs}, {pos}, {max} - Use '\' to create a Folder"
+                        hlp:Attributes.Description="Use tags to format the filename. Hover over the text box for a cheat sheet."
                         hlp:Attributes.Title="Filename"
                         Template="{StaticResource SettingsCard}">
-                        <TextBox Width="300" Text="{x:Bind viewModel.Config.Paths.Filename, Mode=TwoWay}" />
+                        <TextBox Width="300" Text="{x:Bind viewModel.Config.Paths.Filename, Mode=TwoWay}">
+                            <ToolTipService.ToolTip>
+                                <TextBlock>
+                                    <Run FontWeight="Bold" Text="Available Tags:" /><LineBreak />
+                                    <Run Text="• {title}, {album}, {artists} - Basic Metadata" /><LineBreak />
+                                    <Run Text="• {track}, {tracks}, {disc}, {discs} - Album Information" /><LineBreak />
+                                    <Run Text="• {pos}, {max} - Download Queue Tracking" /><LineBreak />
+                                    <LineBreak />
+                                    <Run FontWeight="Bold" Text="Formatting Examples:" /><LineBreak />
+                                    <Run Text="• {track:00} ➔ 01, 02, 03..." /><LineBreak />
+                                    <Run Text="• {release:yyyy-MM} ➔ 2026-06" /><LineBreak />
+                                    <Run Text="• {artists:&amp;} ➔ Artist 1 &amp; Artist 2" /><LineBreak />
+                                    <Run Text="• {artists:first} ➔ Artist 1" /><LineBreak />
+                                    <LineBreak />
+                                    <Run Text="Use '\' to create subfolders." />
+                                </TextBlock>
+                            </ToolTipService.ToolTip>
+                        </TextBox>
                     </ContentControl>
 
                     <!--  FFmpeg location  -->

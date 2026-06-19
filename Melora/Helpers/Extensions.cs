@@ -2,11 +2,16 @@
 using Microsoft.UI.Xaml.Media;
 using Serilog.Events;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Melora.Helpers;
 
-public static class Extensions
+public static partial class Extensions
 {
+    [GeneratedRegex(@"\{(?<key>\w+)(?:\:(?<format>[^}]+))?\}")]
+    private static partial Regex FormatFileNameRegex();
+
+
     public static string ToFormattedString(
         this Exception ex,
         string? message = null)
@@ -56,6 +61,51 @@ public static class Extensions
             input = input.Replace(c, '_');
 
         return input;
+    }
+
+
+    public static string FormatFileName(
+        this string template,
+        string title,
+        string artists,
+        string? album,
+        DateTime releaseDate,
+        int trackNumber,
+        int totalTracks,
+        int discNumber,
+        int totalDiscs,
+        int position,
+        int total)
+    {
+        return FormatFileNameRegex().Replace(template, match =>
+        {
+            string key = match.Groups["key"].Value.ToLowerInvariant();
+            string format = match.Groups["format"].Value;
+
+            return key switch
+            {
+                "title" => title,
+                "album" => album ?? string.Empty,
+
+                "artists" => format.ToLowerInvariant() switch
+                {
+                    "first" => artists.Split(", ")[0],      // "Artist 1"
+                    "&" => artists.Replace(", ", " & "),    // "Artist 1 & Artist 2"
+                    "-" => artists.Replace(", ", "-"),      // "Artist 1-Artist 2"
+                    _ => artists                            // "Artist 1, Artist 2"
+                },
+
+                "release" => releaseDate.ToString(string.IsNullOrEmpty(format) ? "MM-dd-yyyy" : format),
+                "track" => trackNumber.ToString(format),
+                "tracks" => totalTracks.ToString(format),
+                "disc" => discNumber.ToString(format),
+                "discs" => totalDiscs.ToString(format),
+                "pos" => position.ToString(format),
+                "max" => total.ToString(format),
+
+                _ => match.Value
+            };
+        });
     }
 
 

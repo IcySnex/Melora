@@ -171,16 +171,17 @@ public partial class DownloadsViewModel : ObservableObject
                 ?? throw new Exception($"Could not get Metadata plugin ({Config.Downloads.SelectedMetadatePlugin}).", new("Please make sure a plugin is loaded and selected (https://icysnex.github.io/Melora/guide/metadata.html#selecting-a-metadata-plugin)."));
 
             string fileName = Config.Paths.Filename
-                .Replace("{title}", download.Track.Title)
-                .Replace("{artists}", download.Track.Artists.Split(", ")[0])
-                .Replace("{album}", download.Track.Album)
-                .Replace("{release}", download.Track.ReleasedAt.ToString("MM-dd-yyyyy"))
-                .Replace("{track}", download.Track.TrackNumber.ToString())
-                .Replace("{tracks}", download.Track.TotalTracks.ToString())
-                .Replace("{disc}", download.Track.DiscNumber.ToString())
-                .Replace("{discs}", download.Track.TotalDiscs.ToString())
-                .Replace("{pos}", (download.BatchPosition ?? download.Position).ToString())
-                .Replace("{max}", (download.BatchTotal ?? Downloads.Count).ToString())
+                .FormatFileName(
+                    download.Track.Title,
+                    download.Track.Artists,
+                    download.Track.Album,
+                    download.Track.ReleasedAt,
+                    download.Track.TrackNumber,
+                    download.Track.TotalTracks,
+                    download.Track.DiscNumber,
+                    download.Track.TotalDiscs,
+                    download.BatchPosition ?? download.Position,
+                    download.BatchTotal ?? Downloads.Count)
                 .ToLegitFileName()
                 .Trim('\\');
             filePath = Path.Combine(Config.Paths.DownloadLocation, Path.ChangeExtension(fileName, $".{plugin.Config.Format}"));
