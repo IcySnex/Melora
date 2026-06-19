@@ -66,8 +66,6 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="4" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="4" />
-                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <Button
@@ -104,18 +102,6 @@
                     <StackPanel Spacing="8">
                         <FontIcon Glyph="&#xE72D;" />
                         <TextBlock Text="Share" />
-                    </StackPanel>
-                </Button>
-                <Button
-                    Grid.Column="6"
-                    Height="70"
-                    HorizontalAlignment="Stretch"
-                    Command="{x:Bind viewModel.OpenBrowserCommand}"
-                    CommandParameter="https://discord.gg/Z8kweuryux"
-                    ToolTipService.ToolTip="Open Discord server invite">
-                    <StackPanel Spacing="8">
-                        <FontIcon Glyph="&#xE8BD;" />
-                        <TextBlock Text="Discord" />
                     </StackPanel>
                 </Button>
             </Grid>
