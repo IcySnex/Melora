@@ -30,9 +30,28 @@ Melora uses FFmpeg internally to encode your downloaded tracks into your desired
 ![](/guide/getting-started-ffmpeg.webp)
 
 ### Other Paths
-In the Settings menu, you can also specify the download location for your tracks. Additionally, you can customize the file name by embedding track information using placeholders like *{title}*, *{artists}*, *{album}*, *{release}* (MM-dd-yyyy), *{track}* (album track number), *{tracks}* (album track count), *{disc}* (album disc number), *{dics}* (album discs count), *{pos}* (download queue position) and *{max}* (download queue count).
+In the Settings menu, you can also specify the download location for your tracks and customize the file name structure using dynamic placeholders.
 
-To organize your tracks into a folder structure, use the '\\' character. For example, setting the file name as *"{artists}\\{album}\\{title}"* would save the track within a folder named after the album, which is nested inside a folder named after the artist. This allows for a neatly organized music library.
+**Available Placeholders:**
+* `{title}`, `{album}` - Tracl title and albums
+* `{artists}` - Track artists (defaults to `Artist 1, Artist 2, ...`)
+* `{release}` - Release date (defaults to `MM-dd-yyyy`)
+* `{track}` / `{tracks}` - Album track number / Total track count
+* `{disc}` / `{discs}` - Disc number / Total disc count
+* `{pos}` / `{max}` - Download queue position / Total queue count
+
+**Formatting Options:**
+You can customize how numbers, dates, and artists are displayed by appending a colon (`:`) and a modifier inside the brackets. For a full list of formats, see the [official .NET Formatting Docs](https://learn.microsoft.com/en-us/dotnet/standard/base-types/formatting-types).
+
+* **Numbers:** Add zeros to pad digits (e.g., `{track:000}` ➔ `001`, `001`, ...).
+* **Dates:** Use standard date codes (e.g., `{release:yyyy}` ➔ `2026`, `{release:yy-MM}` ➔ `26-06`).
+* **Artists:** Change how multiple artists are separated:
+  * `{artists:first}` ➔ Only the main artist (`Artist 1`)
+  * `{artists:&}` ➔ Joins with an ampersand (`Artist 1 & Artist 2`)
+  * `{artists:-}` ➔ Joins with a hyphen (`Artist 1-Artist 2`)
+
+**Folder Organization:**
+To automatically organize your music into folders, use the backslash (`\`) character. For example, setting the file name to `"{artists}\{album}\{track:00} - {title}"` will save your track inside an album folder, which is nested inside an artist folder.
 
 ![](/guide/getting-started-otherpaths.webp)
 
