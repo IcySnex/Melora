@@ -12,6 +12,7 @@
   "EntryPoint": "Melora.PlatformSupport.YouTube.dll",
   "Dependencies": [
     "YoutubeExplode.dll",
+    "JsonExtensions.dll",
     "AngleSharp.dll",
     "Microsoft.Bcl.AsyncInterfaces.dll",
     "YouTubeMusicAPI.dll",
