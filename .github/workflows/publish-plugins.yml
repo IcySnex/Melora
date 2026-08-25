@@ -1,0 +1,211 @@
+name: Publish plugin bundles
+
+run-name: >-
+  Publish ${{ github.event_name == 'workflow_dispatch' && inputs.plugin || 'changed plugins' }} to v0.0.0
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Plugins/**"
+  workflow_dispatch:
+    inputs:
+      plugin:
+        description: Plugin bundle to publish
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - Melora.Metadata.Default
+          - Melora.Metadata.ITunes
+          - Melora.PlatformSupport.SoundCloud
+          - Melora.PlatformSupport.Spotify
+          - Melora.PlatformSupport.YouTube
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-plugin-bundles
+  queue: max
+  cancel-in-progress: false
+
+env:
+  CONFIGURATION: Release
+  RELEASE_TAG: v0.0.0
+  ARTIFACT_DIR: ${{ github.workspace }}/artifacts
+
+jobs:
+  publish:
+    name: Build and replace release assets
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Select plugins
+        id: selection
+        shell: pwsh
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          MANUAL_PLUGIN: ${{ inputs.plugin }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+
+          $allPlugins = @(
+            'Melora.Metadata.Default'
+            'Melora.Metadata.ITunes'
+            'Melora.PlatformSupport.SoundCloud'
+            'Melora.PlatformSupport.Spotify'
+            'Melora.PlatformSupport.YouTube'
+          )
+
+          if ($env:EVENT_NAME -eq 'workflow_dispatch') {
+            $selectedPlugins = if ($env:MANUAL_PLUGIN -eq 'all') {
+              $allPlugins
+            } else {
+              @($env:MANUAL_PLUGIN)
+            }
+          } else {
+            $beforeIsAvailable =
+              $env:BEFORE_SHA -and
+              $env:BEFORE_SHA -notmatch '^0+$' -and
+              ((git cat-file -t $env:BEFORE_SHA 2>$null) -eq 'commit')
+
+            if (-not $beforeIsAvailable) {
+              $selectedPlugins = $allPlugins
+            } else {
+              $changedPaths = @(git diff --name-only $env:BEFORE_SHA $env:GITHUB_SHA)
+              if ($LASTEXITCODE -ne 0) {
+                throw 'Could not determine the files changed by this push.'
+              }
+
+              $sharedApiChanged = $changedPaths | Where-Object {
+                $_ -like 'Plugins/Melora.Plugins/*'
+              }
+              $unknownPluginPathChanged = $changedPaths | Where-Object {
+                $changedPath = $_
+                $changedPath -like 'Plugins/*' -and
+                $changedPath -notlike 'Plugins/Melora.Plugins/*' -and
+                -not ($allPlugins | Where-Object {
+                  $changedPath -like "Plugins/$_/*"
+                })
+              }
+
+              if ($sharedApiChanged -or $unknownPluginPathChanged) {
+                $selectedPlugins = $allPlugins
+              } else {
+                $selectedPlugins = @($allPlugins | Where-Object {
+                  $pluginName = $_
+                  $changedPaths | Where-Object { $_ -like "Plugins/$pluginName/*" }
+                })
+              }
+            }
+          }
+
+          $selectedPlugins = @($selectedPlugins | Select-Object -Unique)
+          if ($selectedPlugins.Count -eq 0) {
+            throw 'The workflow was triggered without a plugin project to publish.'
+          }
+
+          $pluginsJson = ConvertTo-Json -Compress -InputObject @($selectedPlugins)
+          "plugins=$pluginsJson" >> $env:GITHUB_OUTPUT
+          "Publishing: $($selectedPlugins -join ', ')" >> $env:GITHUB_STEP_SUMMARY
+
+      - name: Verify target release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release view $env:RELEASE_TAG --json id,tagName,url
+
+      - name: Build plugin bundles
+        shell: pwsh
+        env:
+          PLUGINS_JSON: ${{ steps.selection.outputs.plugins }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $plugins = @($env:PLUGINS_JSON | ConvertFrom-Json)
+
+          New-Item -ItemType Directory -Path $env:ARTIFACT_DIR -Force | Out-Null
+          Add-Type -AssemblyName System.IO.Compression
+
+          foreach ($pluginName in $plugins) {
+            $projectPath = Join-Path $env:GITHUB_WORKSPACE "Plugins/$pluginName/$pluginName.csproj"
+            $publishDir = Join-Path $env:RUNNER_TEMP "publish/$pluginName"
+            $zipPath = Join-Path $env:ARTIFACT_DIR "$pluginName.zip"
+            $bundlePath = Join-Path $env:ARTIFACT_DIR "$pluginName.mlr"
+
+            dotnet publish $projectPath `
+              --configuration $env:CONFIGURATION `
+              --output $publishDir `
+              "-p:SolutionDir=$env:GITHUB_WORKSPACE\"
+            if ($LASTEXITCODE -ne 0) {
+              throw "Publishing $pluginName failed."
+            }
+
+            foreach ($requiredFile in @('Manifest.json', "$pluginName.dll")) {
+              $requiredPath = Join-Path $publishDir $requiredFile
+              if (-not (Test-Path -LiteralPath $requiredPath -PathType Leaf)) {
+                throw "Expected plugin file is missing: $requiredPath"
+              }
+            }
+
+            Compress-Archive -Path (Join-Path $publishDir '*') -DestinationPath $zipPath
+            Move-Item -LiteralPath $zipPath -Destination $bundlePath
+
+            $archive = [System.IO.Compression.ZipFile]::OpenRead($bundlePath)
+            try {
+              $entryNames = @($archive.Entries | ForEach-Object FullName)
+              foreach ($requiredEntry in @('Manifest.json', "$pluginName.dll")) {
+                if ($requiredEntry -notin $entryNames) {
+                  throw "$bundlePath does not contain $requiredEntry at its root."
+                }
+              }
+            } finally {
+              $archive.Dispose()
+            }
+          }
+
+          '### Plugin bundles' >> $env:GITHUB_STEP_SUMMARY
+          Get-ChildItem -LiteralPath $env:ARTIFACT_DIR -Filter '*.mlr' |
+            Sort-Object Name |
+            ForEach-Object {
+              $hash = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+              "- $($_.Name) - ``sha256:$hash``" >> $env:GITHUB_STEP_SUMMARY
+            }
+
+      - name: Preserve workflow artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: plugin-bundles-${{ github.run_id }}
+          path: artifacts/*.mlr
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Replace plugin assets on release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $assets = @(Get-ChildItem -LiteralPath $env:ARTIFACT_DIR -Filter '*.mlr')
+          if ($assets.Count -eq 0) {
+            throw 'No plugin bundles were produced.'
+          }
+
+          gh release upload $env:RELEASE_TAG $assets.FullName --clobber
+          if ($LASTEXITCODE -ne 0) {
+            throw 'Uploading the plugin release assets failed.'
+          }
