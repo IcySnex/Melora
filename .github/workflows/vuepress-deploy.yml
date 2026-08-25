@@ -4,7 +4,10 @@ name: Deploy to GitHub pages
   push:
     branches:
       - main
-    workflow_dispatch: null
+    paths:
+      - 'Website/**'
+      - '.github/workflows/vuepress-deploy.yml'
+  workflow_dispatch:
     
 jobs:
   build:
