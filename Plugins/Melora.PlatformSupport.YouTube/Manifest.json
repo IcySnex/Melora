@@ -3,7 +3,7 @@
   "Description": "Adds support to search & download videos, playlists & channels from YouTube, as well as songs/videos, albums, community playlists & artists from YouTube Music.",
   "Author": "IcySnex",
   "ApiVersion": "1.1.2",
-  "LastUpdatedAt": "2026-07-31T00:00:00Z",
+  "LastUpdatedAt": "2026-08-25T00:00:00Z",
   "SourceUrl": "https://github.com/IcySnex/Melora/tree/main/Plugins/Melora.PlatformSupport.YouTube",
   "DownloadUrl": "https://github.com/IcySnex/Melora/releases/download/v0.0.0/Melora.PlatformSupport.YouTube.mlr",
   "PluginKinds": [
@@ -12,8 +12,6 @@
   "EntryPoint": "Melora.PlatformSupport.YouTube.dll",
   "Dependencies": [
     "YoutubeExplode.dll",
-    "JsonExtensions.dll",
-    "AngleSharp.dll",
     "Microsoft.Bcl.AsyncInterfaces.dll",
     "YouTubeMusicAPI.dll",
     "Newtonsoft.Json.dll",
